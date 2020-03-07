@@ -1,0 +1,40 @@
+{
+    "name": "weareferal/backup",
+    "description": "Backup your database and assets to a remote location",
+    "type": "craft-plugin",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "backup"
+    ],
+    "support": {
+        "docs": "https://github.com/weareferal/craft-backup/blob/master/README.md",
+        "issues": "https://github.com/weareferal/craft-backup/issues"
+    },
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Timmy O'Mahony",
+            "homepage": "https://weareferal.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1",
+        "aws/aws-sdk-php": "^3.129"
+    },
+    "autoload": {
+        "psr-4": {
+            "weareferal\\backup\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Backup",
+        "handle": "backup",
+        "hasCpSettings": true,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/weareferal/craft-backup/master/CHANGELOG.md",
+        "class": "weareferal\\backup\\Backup"
+    }
+}

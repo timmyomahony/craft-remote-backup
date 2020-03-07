@@ -1,0 +1,43 @@
+{% import "_includes/forms" as forms %}
+{% if not settingConfigured %}
+    <div class="field">
+        <p class="warning"><strong>{{ 'Plugin settings have not been configured yet'|t('backup') }}</strong></p>
+    </div>
+{% else %}
+    <section class='backup-utility-section'>
+        <h1>{{ "Database Backup"|t('backup') }}</h1>
+        <hr>
+        <div>
+            <h2 data-icon="database">{{ "Create Database Backup"|t('backup') }}</h2>
+            <p class="light">{{ "This will create a new .sql database backup in your local backup folder"|t('backup') }}</p>
+            <form id="create-database-backup" class="backup-utility-form" method="post">    
+                {{ actionInput('backup/sync/create-database-backup') }}
+                {{ csrfInput() }}
+                <div class='backup-utility-submit'>
+                    <input class="btn submit" type="submit" value="{{ 'Create Database Backup'|t('backup') }}">
+                    <div class="utility-status"></div>
+                </div>
+            </form>
+            <hr>
+        </div>
+    </section>
+
+    <section class='backup-utility-section'>
+        <h1>{{ "Assets Backup"|t('backup') }}</h1>
+        <hr>
+        <div>
+            <h2 data-icon="asset">{{ "Create Assets Backup"|t('backup') }}</h2>
+            <p class="light">{{ "This will create a new zipped archive of all assets in your local backup folder"|t('backup') }}</p>
+            <form id="create-volumes-backup" class="backup-utility-form" method="post">    
+                {{ actionInput('backup/sync/create-volumes-backup') }}
+                {{ csrfInput() }}
+                <div class='backup-utility-submit'>
+                    <input class="btn submit {{ volumeCount > 0 ? '' : 'disabled' }}" type="submit" value="{{ 'Create Assets Backup'|t('backup') }}">
+                    <div class="utility-status"></div>
+                </div>
+                {% if not volumeCount %}<p class="light">{{ 'No volumes created yet'|t('backup') }}</p>{% endif %}
+            </form>
+            <hr>
+        </div>
+    </section>
+{% endif %}

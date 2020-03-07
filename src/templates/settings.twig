@@ -1,0 +1,152 @@
+{% import "_includes/forms" as forms %}
+
+{% macro configWarning(setting, file) -%}
+    {%- set configArray = craft.app.config.getConfigFromFile(file) -%}
+    {%- if configArray[setting] is defined -%}
+        {{- "This is being overridden by the `#{setting}` setting in the `config/#{file}.php` file." |raw }}
+    {%- else -%}
+        {{ false }}
+    {%- endif -%}
+{%- endmacro %}
+{% from _self import configWarning %}
+
+{{ forms.selectField({
+    first: true,
+    label: "Cloud Provider"|t('backup'),
+    id: 'cloudProvider',
+    name: 'cloudProvider',
+    options: [
+        { label: 'Amazon S3', value: 's3' }
+    ],
+    value: settings.cloudProvider,
+    required: true,
+    errors: settings.getErrors('cloudProvider'),
+    warning: configWarning('cloudProvider', 'backup')
+}) }}
+
+{{ forms.autosuggestField({
+    label: "S3 Access Key"|t('backup'),
+    instructions: "The access key associated with your IAM user"|t('backup'),
+    name: 's3AccessKey',
+    id: 's3AccessKey',
+    suggestEnvVars: true,
+    suggestAliases: true,
+    value: settings.s3AccessKey,
+    required: (settings.s3AccessKey == 's3'),
+    type: 'password',
+    errors: settings.getErrors('s3AccessKey'),
+    warning: configWarning('s3AccessKey', 'backup')
+}) }}
+
+{{ forms.autosuggestField({
+    label: "S3 Secret Key",
+    instructions: "The secret key associated with your IAM user"|t('backup'),
+    name: 's3SecretKey',
+    id: 's3SecretKey',
+    suggestEnvVars: true,
+    suggestAliases: true,
+    value: settings.s3SecretKey,
+    required: (settings.s3SecretKey == 's3'),
+    type: 'password',
+    errors: settings.getErrors('s3SecretKey'),
+    warning: configWarning('s3SecretKey', 'backup')
+}) }}
+
+{{ forms.autosuggestField({
+    label: "S3 Bucket Name"|t('backup'),
+    instructions: "The name of the S3 bucket you want to sync backups to"|t('backup'),
+    name: 's3BucketName',
+    id: 's3BucketName',
+    suggestEnvVars: true,
+    suggestAliases: true,
+    value: settings.s3BucketName,
+    placeholder: "my-craft-backups",
+    required: (settings.s3BucketName == 's3'),
+    errors: settings.getErrors('s3BucketName'),
+    warning: configWarning('s3BucketName', 'backup')
+}) }}
+
+{{ forms.autosuggestField({
+    label: "S3 Region Name"|t('backup'),
+    instructions: "The AWS region your S3 bucket is in"|t('backup'),
+    name: 's3RegionName',
+    id: 's3RegionName',
+    suggestEnvVars: true,
+    suggestAliases: true,
+    value: settings.s3RegionName,
+    placeholder: "us-west-2",
+    required: (settings.s3RegionName == 's3'),
+    errors: settings.getErrors('s3RegionName'),
+    warning: configWarning('s3RegionName', 'backup')
+}) }}
+
+{{ forms.autosuggestField({
+    label: "S3 Bucket Prefix"|t('backup'),
+    instructions: "A path within your S3 bucket to prefix your backups with. Do not include a leading or trailing slash"|t('backup'),
+    name: 's3BucketPrefix',
+    id: 's3BucketPrefix',
+    suggestEnvVars: true,
+    suggestAliases: true,
+    value: settings.s3BucketPrefix,
+    placeholder: "craft-backups/my-site",
+    errors: settings.getErrors('s3BucketPrefix'),
+    warning: configWarning('s3BucketPrefix', 'backup')
+}) }}
+
+<hr>
+
+{{ forms.lightswitchField({
+    label: "Use Queue"|t('backup'),
+    instructions: "Use the built-in Craft queue for performing backup operations"|t('backup'),
+    name: 'useQueue',
+    id: 'useQueue',
+    on: settings.useQueue,
+    errors: settings.getErrors('useQueue'),
+    warning: configWarning('useQueue', 'backup')
+}) }}
+
+<hr>
+
+{{ forms.textField({
+    label: "Daily backups"|t('backup'),
+    type: "number",
+    instructions: "The number of daily backups to keep"|t('backup'),
+    name: 'pruneDailyCount',
+    id: 'pruneDailyCount',
+    value: settings.pruneDailyCount,
+    errors: settings.getErrors('pruneDailyCount'),
+    warning: configWarning('pruneDailyCount', 'backup')
+}) }}
+
+{{ forms.textField({
+    label: "Weekly backups"|t('backup'),
+    type: "number",
+    instructions: "The number of weekly backups to keep"|t('backup'),
+    name: 'pruneWeeklyCount',
+    id: 'pruneWeeklyCount',
+    value: settings.pruneWeeklyCount,
+    errors: settings.getErrors('pruneWeeklyCount'),
+    warning: configWarning('pruneWeeklyCount', 'backup')
+}) }}
+
+{{ forms.textField({
+    label: "Monthly backups"|t('backup'),
+    type: "number",
+    instructions: "The number of monthly backups to keep"|t('backup'),
+    name: 'pruneMonthlyCount',
+    id: 'pruneMonthlyCount',
+    value: settings.pruneMonthlyCount,
+    errors: settings.getErrors('pruneMonthlyCount'),
+    warning: configWarning('pruneMonthlyCount', 'backup')
+}) }}
+
+{{ forms.textField({
+    label: "Yearly backups"|t('backup'),
+    type: "number",
+    instructions: "The number of yearly backups to keep"|t('backup'),
+    name: 'pruneYearlyCount',
+    id: 'pruneYearlyCount',
+    value: settings.pruneYearlyCount,
+    errors: settings.getErrors('pruneYearlyCount'),
+    warning: configWarning('pruneYearlyCount', 'backup')
+}) }}

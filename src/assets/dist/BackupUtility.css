@@ -1,0 +1,32 @@
+.backup-utility-section {
+  margin-bottom: 50px;
+}
+
+.backup-utility-section > div {
+  padding-left: 25px;
+}
+
+.backup-utility-submit {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+}
+
+.backup-utility-submit .utility-status {
+  width: 100px;
+  margin-left: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.backup-utility-submit .utility-status .progressbar {
+  width: 20%;
+  left: auto;
+  top: auto;
+}
+
+.backup-utility-form select {
+  min-width: 200px;
+}
