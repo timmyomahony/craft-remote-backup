@@ -39,21 +39,22 @@ class RemoteBackupController extends Controller
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
 
-        try {
-            $useQueue = RemoteBackup::getInstance()->getSettings()->useQueue;
-            $prune = RemoteBackup::getInstance()->getSettings()->prune;
+        $settings = RemoteBackup::getInstance()->getSettings();
+        $service = RemoteBackup::getInstance()->remotebackup;
+        $queue = Craft::$app->queue;
 
-            if ($useQueue) {
-                Craft::$app->queue->push(new CreateDatabaseBackupJob());
+        try {
+            if ($settings->useQueue) {
+                $queue->push(new CreateDatabaseBackupJob());
             } else {
-                RemoteBackup::getInstance()->remotebackup->createDatabaseBackup();
+                $service->createDatabaseBackup();
             }
 
-            if ($prune) {
-                if ($useQueue) {
-                    Craft::$app->queue->push(new PruneDatabaseBackupsJob());
+            if ($settings->prune) {
+                if ($settings->useQueue) {
+                    $queue->push(new PruneDatabaseBackupsJob());
                 } else {
-                    RemoteBackup::getInstance()->remotebackup->pruneDatabaseBackups();
+                    $service->pruneDatabaseBackups();
                 }
             }
         } catch (\Exception $e) {
@@ -84,25 +85,25 @@ class RemoteBackupController extends Controller
 
     public function actionCreateVolumeBackup()
     {
-        $this->requirePostRequest();
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
 
-        try {
-            $useQueue = RemoteBackup::getInstance()->getSettings()->useQueue;
-            $prune = RemoteBackup::getInstance()->getSettings()->prune;
+        $settings = RemoteBackup::getInstance()->getSettings();
+        $service = RemoteBackup::getInstance()->remotebackup;
+        $queue = Craft::$app->queue;
 
-            if ($useQueue) {
-                Craft::$app->queue->push(new CreateVolumeBackupJob());
+        try {
+            if ($settings->useQueue) {
+                $queue->push(new CreateVolumeBackupJob());
             } else {
-                RemoteBackup::getInstance()->remotebackup->createVolumeBackup();
+                $service->createVolumeBackup();
             }
 
-            if ($prune) {
-                if ($useQueue) {
-                    Craft::$app->queue->push(new PruneVolumeBackupsJob());
+            if ($settings->prune) {
+                if ($settings->useQueue) {
+                    $queue->push(new PruneVolumeBackupsJob());
                 } else {
-                    RemoteBackup::getInstance()->remotebackup->pruneVolumeBackups();
+                    $service->pruneVolumeBackups();
                 }
             }
         } catch (\Exception $e) {

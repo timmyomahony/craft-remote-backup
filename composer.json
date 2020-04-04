@@ -10,8 +10,8 @@
         "backup"
     ],
     "support": {
-        "docs": "https://github.com/weareferal/craft-remoate-backup/blob/master/README.md",
-        "issues": "https://github.com/weareferal/craft-remoate-backup/issues"
+        "docs": "https://github.com/weareferal/craft-remote-backup/blob/master/README.md",
+        "issues": "https://github.com/weareferal/craft-remote-backup/issues"
     },
     "license": "proprietary",
     "authors": [
