@@ -9,16 +9,16 @@
  * @copyright Copyright (c) 2019 test
  */
 
-namespace weareferal\backup\console\controllers;
+namespace weareferal\remotebackup\console\controllers;
 
-use weareferal\backup\Test;
+use weareferal\remotebackup\Test;
 
 use Craft;
 use yii\console\Controller;
 use yii\helpers\Console;
 use yii\console\ExitCode;
 
-use weareferal\backup\Backup;
+use weareferal\remotebackup\RemoteBackup;
 
 /**
  * Backup volumes backup

@@ -1,15 +1,13 @@
 <?php
 
 /**
- * Craft Backup plugin for Craft CMS 3.x
- *
- * Backup your assets and database offsite
+ * Craft Remote Backup plugin for Craft CMS 3.x
  *
  * @link      https://weareferal.com
  * @copyright Copyright (c) 2020 Timmy O'Mahony
  */
 
-namespace weareferal\backup;
+namespace weareferal\remotebackup;
 
 use Craft;
 use craft\base\Plugin;
@@ -20,13 +18,13 @@ use craft\services\UserPermissions;
 
 use yii\base\Event;
 
-use weareferal\backup\utilities\BackupUtility;
-use weareferal\backup\models\Settings;
-use weareferal\backup\services\BackupService;
-use weareferal\backup\assets\BackupSettingAsset;
+use weareferal\remotebackup\utilities\RemoteBackupUtility;
+use weareferal\remotebackup\models\Settings;
+use weareferal\remotebackup\services\RemoteBackupService;
+use weareferal\remotebackup\assets\remotebackupsettings\RemoteBackupSettingAsset;
 
 
-class Backup extends Plugin
+class RemoteBackup extends Plugin
 {
     public $hasCpSettings = true;
 
@@ -41,12 +39,12 @@ class Backup extends Plugin
         self::$plugin = $this;
 
         $this->setComponents([
-            'backup' => BackupService::create($this->getSettings()->cloudProvider)
+            'remotebackup' => RemoteBackupService::create($this->getSettings()->cloudProvider)
         ]);
 
         // Register console commands
         if (Craft::$app instanceof ConsoleApplication) {
-            $this->controllerNamespace = 'weareferal\backup\console\controllers';
+            $this->controllerNamespace = 'weareferal\remotebackup\console\controllers';
         }
 
         // Register permissions
@@ -54,8 +52,8 @@ class Backup extends Plugin
             UserPermissions::class,
             UserPermissions::EVENT_REGISTER_PERMISSIONS,
             function (RegisterUserPermissionsEvent $event) {
-                $event->permissions['Backup'] = [
-                    'backup' => [
+                $event->permissions['RemoteBackup'] = [
+                    'remotebackup' => [
                         'label' => 'Backup database and assets',
                     ],
                 ];
@@ -67,7 +65,7 @@ class Backup extends Plugin
             Utilities::class,
             Utilities::EVENT_REGISTER_UTILITY_TYPES,
             function (RegisterComponentTypesEvent $event) {
-                $event->types[] = BackupUtility::class;
+                $event->types[] = RemoteBackupUtility::class;
             }
         );
     }
@@ -80,10 +78,10 @@ class Backup extends Plugin
     protected function settingsHtml(): string
     {
         $view = Craft::$app->getView();
-        $view->registerAssetBundle(BackupSettingAsset::class);
-        $view->registerJs("new Craft.BackupSettings('main-form');");
+        $view->registerAssetBundle(RemoteBackupSettingAsset::class);
+        $view->registerJs("new Craft.RemoteBackupSettings('main-form');");
         return $view->renderTemplate(
-            'backup/settings',
+            'remote-backup/settings',
             [
                 'settings' => $this->getSettings()
             ]

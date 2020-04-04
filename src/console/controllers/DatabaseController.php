@@ -9,16 +9,16 @@
  * @copyright Copyright (c) 2019 test
  */
 
-namespace weareferal\backup\console\controllers;
+namespace weareferal\remotebackup\console\controllers;
 
-use weareferal\backup\Test;
+use weareferal\remotebackup\Test;
 
 use Craft;
 use yii\console\Controller;
 use yii\helpers\Console;
 use yii\console\ExitCode;
 
-use weareferal\backup\Backup;
+use weareferal\remotebackup\RemoteBackup;
 
 /**
  * Backup database backups
@@ -35,8 +35,8 @@ class DatabaseController extends Controller
     public function actionCreate()
     {
         try {
-            $path = Backup::getInstance()->backup->createDatabaseBackup();
-            $this->stdout("Created local database backup: " . $path . PHP_EOL, Console::FG_GREEN);
+            $path = RemoteBackup::getInstance()->remotebackup->createDatabaseBackup();
+            $this->stdout("Created database backup: " . $path . PHP_EOL, Console::FG_GREEN);
         } catch (\Exception $e) {
             Craft::$app->getErrorHandler()->logException($e);
             $this->stderr('Error: ' . $e->getMessage() . PHP_EOL, Console::FG_RED);

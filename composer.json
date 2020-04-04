@@ -1,5 +1,5 @@
 {
-    "name": "weareferal/backup",
+    "name": "weareferal/remote-backup",
     "description": "Backup your database and assets to a remote location",
     "type": "craft-plugin",
     "keywords": [
@@ -10,8 +10,8 @@
         "backup"
     ],
     "support": {
-        "docs": "https://github.com/weareferal/craft-backup/blob/master/README.md",
-        "issues": "https://github.com/weareferal/craft-backup/issues"
+        "docs": "https://github.com/weareferal/craft-remoate-backup/blob/master/README.md",
+        "issues": "https://github.com/weareferal/craft-remoate-backup/issues"
     },
     "license": "proprietary",
     "authors": [
@@ -26,15 +26,15 @@
     },
     "autoload": {
         "psr-4": {
-            "weareferal\\backup\\": "src/"
+            "weareferal\\remotebackup\\": "src/"
         }
     },
     "extra": {
-        "name": "Backup",
-        "handle": "backup",
+        "name": "Remote Backup",
+        "handle": "remote-backup",
         "hasCpSettings": true,
         "hasCpSection": false,
-        "changelogUrl": "https://raw.githubusercontent.com/weareferal/craft-backup/master/CHANGELOG.md",
-        "class": "weareferal\\backup\\Backup"
+        "changelogUrl": "https://raw.githubusercontent.com/weareferal/craft-remote-backup/master/CHANGELOG.md",
+        "class": "weareferal\\remotebackup\\RemoteBackup"
     }
 }

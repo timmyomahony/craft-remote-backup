@@ -1,5 +1,5 @@
 (function($) {
-  Craft.BackupSettings = Garnish.Base.extend({
+  Craft.RemoteBackupSettings = Garnish.Base.extend({
     init: function(formId) {
       this.$form = $("#" + formId);
       this.$pruneLightswitch = $("#settings-prune", this.form);

@@ -1,6 +1,6 @@
 <?php
 
-namespace weareferal\backup\exceptions;
+namespace weareferal\remotebackup\exceptions;
 
 class ProviderException extends \Exception
 {

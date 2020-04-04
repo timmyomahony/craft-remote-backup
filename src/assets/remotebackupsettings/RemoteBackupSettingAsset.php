@@ -1,22 +1,25 @@
 <?php
 
-namespace weareferal\backup\assets;
+namespace weareferal\remotebackup\assets\remotebackupsettings;
 
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
 
-class BackupSettingAsset extends AssetBundle
+class RemoteBackupSettingAsset extends AssetBundle
 {
     public function init()
     {
         $this->sourcePath = __DIR__ . '/dist';
+
         $this->depends = [
             CpAsset::class,
         ];
+
         $this->js = [
-            'BackupSetting.js'
+            'js/RemoteBackupSetting.js'
         ];
+
         parent::init();
     }
 }

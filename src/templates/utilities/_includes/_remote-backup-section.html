@@ -1,0 +1,33 @@
+<section id="{{ id }}" class='rb-utilities-section'>
+    <h2 data-icon="{{ icon }}">{{ "Remote " ~ label ~ " Backups"|t('remote-backup') }}</h2>
+    <table class="data fullwidth rb-utilities-table">
+        {{ actionInput(listAction) }}
+        <thead>
+            <th>{{ "Current Backups"|t('remote-backup') }}</th>
+        </thead>
+        <tbody>
+            <tr class="first template-row default-row">
+                <td class="light"></td>
+            </tr>
+            <tr class="first loading-row default-row">
+                <td class="light">
+                    <img src="{{ craft.app.getAssetManager().getPublishedUrl('@app/web/assets/cp/dist', true, 'images/spinner.gif')}}">
+                </td>
+            </tr>
+            <tr class="first no-results-row default-row">
+                <td class="light">
+                    {{ "No backups"|t('remote-backup') }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <form class="rb-utilities-form" method="post">    
+        {{ actionInput(createAction) }}
+        {{ csrfInput() }}
+        <div class='rb-utilities-submit'>
+            <input class="btn submit {{ not disabled ? '' : 'disabled' }}" type="submit" value="{{ 'Create ' ~ label ~ ' Backup'|t('remote-backup') }}">
+            <div class="utility-status"></div>
+        </div>
+    </form>
+    {% block message %}{% endblock %}
+</section>

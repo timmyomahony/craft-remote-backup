@@ -12,7 +12,7 @@
 
 {{ forms.selectField({
     first: true,
-    label: "Cloud Provider"|t('backup'),
+    label: "Cloud Provider"|t('remote-backup'),
     id: 'cloudProvider',
     name: 'cloudProvider',
     options: [
@@ -21,12 +21,12 @@
     value: settings.cloudProvider,
     required: true,
     errors: settings.getErrors('cloudProvider'),
-    warning: configWarning('cloudProvider', 'backup')
+    warning: configWarning('cloudProvider', 'remote-backup')
 }) }}
 
 {{ forms.autosuggestField({
-    label: "S3 Access Key"|t('backup'),
-    instructions: "The access key associated with your IAM user"|t('backup'),
+    label: "S3 Access Key"|t('remote-backup'),
+    instructions: "The access key associated with your IAM user"|t('remote-backup'),
     name: 's3AccessKey',
     id: 's3AccessKey',
     suggestEnvVars: true,
@@ -35,12 +35,12 @@
     required: (settings.s3AccessKey == 's3'),
     type: 'password',
     errors: settings.getErrors('s3AccessKey'),
-    warning: configWarning('s3AccessKey', 'backup')
+    warning: configWarning('s3AccessKey', 'remote-backup')
 }) }}
 
 {{ forms.autosuggestField({
     label: "S3 Secret Key",
-    instructions: "The secret key associated with your IAM user"|t('backup'),
+    instructions: "The secret key associated with your IAM user"|t('remote-backup'),
     name: 's3SecretKey',
     id: 's3SecretKey',
     suggestEnvVars: true,
@@ -49,12 +49,12 @@
     required: (settings.s3SecretKey == 's3'),
     type: 'password',
     errors: settings.getErrors('s3SecretKey'),
-    warning: configWarning('s3SecretKey', 'backup')
+    warning: configWarning('s3SecretKey', 'remote-backup')
 }) }}
 
 {{ forms.autosuggestField({
-    label: "S3 Bucket Name"|t('backup'),
-    instructions: "The name of the S3 bucket you want to sync backups to"|t('backup'),
+    label: "S3 Bucket Name"|t('remote-backup'),
+    instructions: "The name of the S3 bucket you want to sync backups to"|t('remote-backup'),
     name: 's3BucketName',
     id: 's3BucketName',
     suggestEnvVars: true,
@@ -63,12 +63,12 @@
     placeholder: "my-craft-backups",
     required: (settings.s3BucketName == 's3'),
     errors: settings.getErrors('s3BucketName'),
-    warning: configWarning('s3BucketName', 'backup')
+    warning: configWarning('s3BucketName', 'remote-backup')
 }) }}
 
 {{ forms.autosuggestField({
-    label: "S3 Region Name"|t('backup'),
-    instructions: "The AWS region your S3 bucket is in"|t('backup'),
+    label: "S3 Region Name"|t('remote-backup'),
+    instructions: "The AWS region your S3 bucket is in"|t('remote-backup'),
     name: 's3RegionName',
     id: 's3RegionName',
     suggestEnvVars: true,
@@ -77,12 +77,12 @@
     placeholder: "us-west-2",
     required: (settings.s3RegionName == 's3'),
     errors: settings.getErrors('s3RegionName'),
-    warning: configWarning('s3RegionName', 'backup')
+    warning: configWarning('s3RegionName', 'remote-backup')
 }) }}
 
 {{ forms.autosuggestField({
-    label: "S3 Bucket Prefix"|t('backup'),
-    instructions: "A path within your S3 bucket to prefix your backups with. Do not include a leading or trailing slash"|t('backup'),
+    label: "S3 Bucket Prefix"|t('remote-backup'),
+    instructions: "A path within your S3 bucket to prefix your backups with. Do not include a leading or trailing slash"|t('remote-backup'),
     name: 's3BucketPrefix',
     id: 's3BucketPrefix',
     suggestEnvVars: true,
@@ -90,63 +90,63 @@
     value: settings.s3BucketPrefix,
     placeholder: "craft-backups/my-site",
     errors: settings.getErrors('s3BucketPrefix'),
-    warning: configWarning('s3BucketPrefix', 'backup')
+    warning: configWarning('s3BucketPrefix', 'remote-backup')
 }) }}
 
 <hr>
 
 {{ forms.lightswitchField({
-    label: "Use Queue"|t('backup'),
-    instructions: "Use the built-in Craft queue for performing backup operations"|t('backup'),
+    label: "Use Queue"|t('remote-backup'),
+    instructions: "Use the built-in Craft queue for performing backup operations"|t('remote-backup'),
     name: 'useQueue',
     id: 'useQueue',
     on: settings.useQueue,
     errors: settings.getErrors('useQueue'),
-    warning: configWarning('useQueue', 'backup')
+    warning: configWarning('useQueue', 'remote-backup')
 }) }}
 
 <hr>
 
 {{ forms.textField({
-    label: "Daily backups"|t('backup'),
+    label: "Daily backups"|t('remote-backup'),
     type: "number",
-    instructions: "The number of daily backups to keep"|t('backup'),
+    instructions: "The number of daily backups to keep"|t('remote-backup'),
     name: 'pruneDailyCount',
     id: 'pruneDailyCount',
     value: settings.pruneDailyCount,
     errors: settings.getErrors('pruneDailyCount'),
-    warning: configWarning('pruneDailyCount', 'backup')
+    warning: configWarning('pruneDailyCount', 'remote-backup')
 }) }}
 
 {{ forms.textField({
-    label: "Weekly backups"|t('backup'),
+    label: "Weekly backups"|t('remote-backup'),
     type: "number",
-    instructions: "The number of weekly backups to keep"|t('backup'),
+    instructions: "The number of weekly backups to keep"|t('remote-backup'),
     name: 'pruneWeeklyCount',
     id: 'pruneWeeklyCount',
     value: settings.pruneWeeklyCount,
     errors: settings.getErrors('pruneWeeklyCount'),
-    warning: configWarning('pruneWeeklyCount', 'backup')
+    warning: configWarning('pruneWeeklyCount', 'remote-backup')
 }) }}
 
 {{ forms.textField({
-    label: "Monthly backups"|t('backup'),
+    label: "Monthly backups"|t('remote-backup'),
     type: "number",
-    instructions: "The number of monthly backups to keep"|t('backup'),
+    instructions: "The number of monthly backups to keep"|t('remote-backup'),
     name: 'pruneMonthlyCount',
     id: 'pruneMonthlyCount',
     value: settings.pruneMonthlyCount,
     errors: settings.getErrors('pruneMonthlyCount'),
-    warning: configWarning('pruneMonthlyCount', 'backup')
+    warning: configWarning('pruneMonthlyCount', 'remote-backup')
 }) }}
 
 {{ forms.textField({
-    label: "Yearly backups"|t('backup'),
+    label: "Yearly backups"|t('remote-backup'),
     type: "number",
-    instructions: "The number of yearly backups to keep"|t('backup'),
+    instructions: "The number of yearly backups to keep"|t('remote-backup'),
     name: 'pruneYearlyCount',
     id: 'pruneYearlyCount',
     value: settings.pruneYearlyCount,
     errors: settings.getErrors('pruneYearlyCount'),
-    warning: configWarning('pruneYearlyCount', 'backup')
+    warning: configWarning('pruneYearlyCount', 'remote-backup')
 }) }}

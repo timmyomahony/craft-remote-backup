@@ -1,0 +1,28 @@
+{% import "_includes/forms" as forms %}
+{% if not settingConfigured %}
+    <div class="field">
+        <p class="warning"><strong>{{ 'Plugin settings have not been configured yet'|t('remote-backup') }}</strong></p>
+    </div>
+{% else %}
+    {% include 'remote-backup/utilities/_includes/_remote-backup-section' with {
+        label: 'Database',
+        icon: 'database',
+        id: 'rb-utilities-database',
+        listAction: 'remote-backup/remote-backup/list-database-backups',
+        createAction: 'remote-backup/remote-backup/create-database-backup',
+        disabled: false
+    } %}
+
+    {% embed 'remote-backup/utilities/_includes/_remote-backup-section' with {
+        label: 'Volume',
+        icon: 'asset',
+        id: 'rb-utilities-volumes',
+        listAction: 'remote-backup/remote-backup/list-volume-backups',
+        createAction: 'remote-backup/remote-backup/create-volume-backup',
+        disabled: (volumes|length <= 0)
+    } %}
+        {% block message %}
+            {% if volumes|length <= 0 %}<p class="light">{{ 'No volumes created yet'|t('remote-backup') }}</p>{% endif %}
+        {% endblock %}
+    {% endembed %}
+{% endif %}

@@ -1,6 +1,6 @@
 <?php
 
-namespace weareferal\backup\helpers;
+namespace weareferal\remotebackup\helpers;
 
 use Craft;
 use ZipArchive;

@@ -1,29 +1,75 @@
 <?php
 
-namespace weareferal\backup\services\providers;
+namespace weareferal\remotebackup\services\providers;
 
 use Craft;
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
 
-use weareferal\backup\Backup;
-use weareferal\backup\services\Backupable;
-use weareferal\backup\services\BackupService;
-use weareferal\backup\exceptions\ProviderException;
+use weareferal\remotebackup\RemoteBackup;
+use weareferal\remotebackup\services\Provider;
+use weareferal\remotebackup\services\RemoteBackupService;
+use weareferal\remotebackup\exceptions\ProviderException;
 
 
 
-class S3Service extends BackupService implements Backupable
+class S3Service extends RemoteBackupService implements Provider
 {
-    /**
-     * Pull database backups from cloud to local backup folder
-     * 
-     * @return array An array of paths that were pulled
-     */
-    public function pullDatabaseBackups(): array
+    public function listDatabaseBackups(): array
     {
         try {
-            return $this->pull("sql");
+            return $this->list("sql");
+        } catch (AwsException $exception) {
+            throw new ProviderException($this->createErrorMessage($exception));
+        }
+    }
+
+    public function listVolumeBackups(): array
+    {
+        try {
+            return $this->list("zip");
+        } catch (AwsException $exception) {
+            throw new ProviderException($this->createErrorMessage($exception));
+        }
+    }
+
+    private function list($extension): array
+    {
+        $settings = RemoteBackup::getInstance()->settings;
+        $s3BucketName = Craft::parseEnv($settings->s3BucketName);
+        $s3BucketPrefix = Craft::parseEnv($settings->s3BucketPrefix);
+        $client = $this->getS3Client();
+        $kwargs = [
+            'Bucket' => $s3BucketName,
+        ];
+        if ($s3BucketPrefix) {
+            $kwargs['Prefix'] = $s3BucketPrefix;
+        }
+        $response = $client->listObjects($kwargs);
+
+        $objects = $response['Contents'];
+        if (!$objects) {
+            return [];
+        }
+
+        $keys = [];
+        foreach ($objects as $object) {
+            if (substr($object['Key'], -strlen($extension)) === $extension) {
+                array_push($keys, basename($object['Key']));
+            }
+        }
+        return $keys;
+    }
+
+    /**
+     * Push local volume backups from backup folder to S3
+     * 
+     * @return array An array of paths that were pushed
+     */
+    public function pushVolumeBackups(): array
+    {
+        try {
+            return $this->push("zip");
         } catch (AwsException $exception) {
             throw new ProviderException($this->createErrorMessage($exception));
         }
@@ -44,81 +90,6 @@ class S3Service extends BackupService implements Backupable
     }
 
     /**
-     * Pull local volume backups from cloud to local backup folder
-     * 
-     * @return array An array of paths that were pulled
-     */
-    public function pullVolumeBackups(): array
-    {
-        try {
-            return $this->pull("zip");
-        } catch (AwsException $exception) {
-            throw new ProviderException($this->createErrorMessage($exception));
-        }
-    }
-
-    /**
-     * Push local volume backups from backup folder to S3
-     * 
-     * @return array An array of paths that were pushed
-     */
-    public function pushVolumeBackups(): array
-    {
-        try {
-            return $this->push("zip");
-        } catch (AwsException $exception) {
-            throw new ProviderException($this->createErrorMessage($exception));
-        }
-    }
-
-    /**
-     * Pull objects from remote S3 bucket to our backup folder
-     * 
-     * @param string $extension The extension to target on AWS
-     * @return array An array of paths that were pulled
-     */
-    private function pull($extension): array
-    {
-        $settings = Backup::getInstance()->settings;
-        $s3BucketName = Craft::parseEnv($settings->s3BucketName);
-        $s3BucketPrefix = Craft::parseEnv($settings->s3BucketPrefix);
-
-        $client = $this->getS3Client();
-        $backupPath = Craft::$app->getPath()->getDbBackupPath();
-
-        $paths = [];
-        $results = $client->getPaginator('ListObjectsV2', [
-            'Bucket' => $s3BucketName,
-            'Prefix' => $s3BucketPrefix,
-            'MaxKeys' => 1000
-        ]);
-        foreach ($results as $result) {
-            if ($result['KeyCount'] > 0) {
-                foreach ($result['Contents'] as $object) {
-                    $key = $object['Key'];
-                    $file_info = pathinfo($key);
-                    if ($file_info['extension'] == $extension) {
-                        $path = $backupPath . DIRECTORY_SEPARATOR . $file_info['basename'];
-                        if (!file_exists($path)) {
-                            $client->getObject([
-                                'Bucket' => $s3BucketName,
-                                'Key' => $key,
-                                'SaveAs' => $path
-                            ]);
-                            array_push($paths, $path);
-                        } else {
-                            Craft::info("Skipping pull of '" . $key . "' as file already exists locally", "backup");
-                        }
-                    } else {
-                        Craft::info("Skipping pull of '" . $key . "' as extension doesn't match", "backup");
-                    }
-                }
-            }
-        }
-        return $paths;
-    }
-
-    /**
      * Push all local backups of a particular extension to S3
      * 
      * @param string $extension The extension to target (sql or zip)
@@ -126,7 +97,7 @@ class S3Service extends BackupService implements Backupable
      */
     private function push($extension): array
     {
-        $settings = Backup::getInstance()->settings;
+        $settings = RemoteBackup::getInstance()->settings;
         $s3BucketName = Craft::parseEnv($settings->s3BucketName);
         $client = $this->getS3Client();
 
@@ -160,7 +131,7 @@ class S3Service extends BackupService implements Backupable
     public function deleteRemoteBackups($backups): array
     {
         try {
-            $settings = Backup::getInstance()->settings;
+            $settings = RemoteBackup::getInstance()->settings;
             $s3BucketName = Craft::parseEnv($settings->s3BucketName);
             $client = $this->getS3Client();
             $paths = [];
@@ -191,7 +162,7 @@ class S3Service extends BackupService implements Backupable
      */
     private function getAWSKey($filename): string
     {
-        $settings = Backup::getInstance()->settings;
+        $settings = RemoteBackup::getInstance()->settings;
         $s3BucketPrefix = Craft::parseEnv($settings->s3BucketPrefix);
         if ($s3BucketPrefix) {
             return $s3BucketPrefix . DIRECTORY_SEPARATOR . $filename;
@@ -206,7 +177,7 @@ class S3Service extends BackupService implements Backupable
      */
     private function getS3Client(): S3Client
     {
-        $settings = Backup::getInstance()->settings;
+        $settings = RemoteBackup::getInstance()->settings;
         $s3AccessKey = Craft::parseEnv($settings->s3AccessKey);
         $s3SecretKey = Craft::parseEnv($settings->s3SecretKey);
         $s3RegionName = Craft::parseEnv($settings->s3RegionName);

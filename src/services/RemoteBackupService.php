@@ -1,32 +1,31 @@
 <?php
 
-namespace weareferal\backup\services;
+namespace weareferal\remotebackup\services;
 
 use yii\base\Component;
 use Craft;
 use Craft\helpers\FileHelper;
 use Craft\helpers\StringHelper;
 
-use weareferal\backup\Backup;
-use weareferal\backup\services\providers\S3Service;
-use weareferal\backup\helpers\ZipHelper;
+use weareferal\remotebackup\RemoteBackup;
+use weareferal\remotebackup\services\providers\S3Service;
+use weareferal\remotebackup\helpers\ZipHelper;
 
 /**
  * Backupable interface for all providers
  */
-interface Backupable
+interface Provider
 {
-    public function pullDatabaseBackups(): array;
+    public function listDatabaseBackups(): array;
+    public function listVolumeBackups(): array;
     public function pushDatabaseBackups(): array;
     public function pushVolumeBackups(): array;
-    public function pullVolumeBackups(): array;
-    public function deleteRemoteBackups($backups): array;
 }
 
 /**
  *
  */
-class Backup
+class RemoteBackupInstance
 {
     public $filename;
     public $datetime;
@@ -45,7 +44,9 @@ class Backup
     public function __construct($_filename)
     {
         // Extract values from filename
-        preg_match(Backup::$regex, $_filename, $matches);
+        Craft::info('TESTING1234', 'remote-backup');
+        Craft::info($_filename, 'remote-backup');
+        preg_match(RemoteBackupInstance::$regex, $_filename, $matches);
         $env = $matches[1];
         $date = $matches[2];
         $datetime = date_create_from_format('ymd_Gis', $date);
@@ -67,8 +68,38 @@ class Backup
     }
 }
 
-class BackupService extends Component
+class RemoteBackupService extends Component
 {
+    public function getDatabaseBackups()
+    {
+        $filenames = $this->listDatabaseBackups();
+        $backups = $this->parseBackupFilenames($filenames);
+        $options = [];
+        foreach ($backups as $i => $backup) {
+            $options[$i] = [
+                "label" => $backup->label,
+                "value" => $backup->filename
+            ];
+        }
+
+        return $options;
+    }
+
+    public function getVolumeBackups()
+    {
+        $filenames = $this->listVolumeBackups();
+        $backups = $this->parseBackupFilenames($filenames);
+        $options = [];
+        foreach ($backups as $i => $backup) {
+            $options[$i] = [
+                "label" => $backup->label,
+                "value" => $backup->filename
+            ];
+        }
+
+        return $options;
+    }
+
     /**
      * Create a SQL database dump to our backup folder
      * 
@@ -107,55 +138,6 @@ class BackupService extends Component
         FileHelper::clearDirectory(Craft::$app->getPath()->getTempPath());
 
         return $backupPath;
-    }
-
-    /**
-     * Restore a particular volume backup
-     * 
-     * @param string $filename: The filename (not absolute path) of the 
-     * zipped volumes archive to restore
-     * @return string The path for the restored backup file
-     */
-    public function restoreVolumesBackup($filename)
-    {
-        $backupPath = Craft::$app->getPath()->getDbBackupPath() . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME) . '.zip';
-        $volumes = Craft::$app->getVolumes()->getAllVolumes();
-        $tmpDirName = Craft::$app->getPath()->getTempPath() . DIRECTORY_SEPARATOR . strtolower(StringHelper::randomString(10));
-
-        ZipHelper::unzip($backupPath, $tmpDirName);
-
-        $folders = array_diff(scandir($tmpDirName), array('.', '..'));
-        foreach ($folders as $folder) {
-            foreach ($volumes as $volume) {
-                if ($folder == $volume->handle) {
-                    $dest = $tmpDirName . DIRECTORY_SEPARATOR . $folder;
-                    if (!file_exists($volume->rootPath)) {
-                        FileHelper::createDirectory($volume->rootPath);
-                    } else {
-                        FileHelper::clearDirectory($volume->rootPath);
-                    }
-                    FileHelper::copyDirectory($dest, $volume->rootPath);
-                }
-            }
-        }
-
-        FileHelper::clearDirectory(Craft::$app->getPath()->getTempPath());
-
-        return $backupPath;
-    }
-
-    /**
-     * Restore a particular database backup
-     * 
-     * @param string $filename The filename (not absolute path) of the 
-     * zipped volumes archive to restore
-     * @return string The path for the restored backup file
-     */
-    public function restoreDatabaseBackup($filename): string
-    {
-        $path = Craft::$app->getPath()->getDbBackupPath() . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME) . '.sql';
-        Craft::$app->getDb()->restore($path);
-        return $path;
     }
 
     /**
@@ -258,7 +240,7 @@ class BackupService extends Component
         $backups = [];
 
         foreach ($filenames as $filename) {
-            array_push($backups, new Backup($filename));
+            array_push($backups, new RemoteBackupInstance($filename));
         }
 
         uasort($backups, function ($b1, $b2) {

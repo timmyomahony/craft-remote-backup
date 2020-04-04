@@ -1,6 +1,6 @@
 <?php
 
-namespace weareferal\backup\models;
+namespace weareferal\remotebackup\models;
 
 use craft\base\Model;
 

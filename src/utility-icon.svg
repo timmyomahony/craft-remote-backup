@@ -1,1 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 408 561" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path id="sync" d="M204,76.5l0,-76.5l-102,102l102,102l0,-76.5c84.15,0 153,68.85 153,153c0,25.5 -7.65,51 -17.85,71.4l38.25,38.25c17.85,-33.15 30.6,-68.85 30.6,-109.65c0,-112.2 -91.8,-204 -204,-204Zm0,357c-84.15,0 -153,-68.85 -153,-153c0,-25.5 7.65,-51 17.85,-71.4l-38.25,-38.25c-17.85,33.15 -30.6,68.85 -30.6,109.65c0,112.2 91.8,204 204,204l0,76.5l102,-102l-102,-102l0,76.5Z" style="fill-rule:nonzero;"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 406 272" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="Artboard1" transform="matrix(1,0,0,1,-1.492,-69.2718)">
+        <rect x="1.492" y="69.272" width="405.016" height="271.221" style="fill:none;"/>
+        <clipPath id="_clip1">
+            <rect x="1.492" y="69.272" width="405.016" height="271.221"/>
+        </clipPath>
+        <g clip-path="url(#_clip1)">
+            <g transform="matrix(7.9621,0,0,7.9621,-21.7749,-35.0466)">
+                <path d="M44.877,25.206C44.601,25.15 44.32,25.113 44.036,25.079C43.982,25.073 43.931,25.061 43.877,25.055C43.529,25.019 43.175,25 42.819,25L42.798,25C42.779,25 42.766,24.998 42.75,24.998C42.384,24.998 42.021,25.019 41.664,25.054C40.386,20.885 36.509,17.92 32.009,17.92C31.518,17.92 30.846,17.96 30.224,18.033C28.013,15.067 24.49,13.136 20.505,13.136C13.81,13.136 8.38,18.564 8.38,25.261C8.38,25.53 8.403,25.792 8.422,26.056C5.163,28.068 2.984,31.661 2.984,35.775C2.984,42.076 8.086,47.185 14.387,47.198L14.387,47.2L41.912,47.2L41.908,47.158C42.188,47.178 42.467,47.2 42.751,47.2C48.883,47.2 53.852,42.229 53.852,36.099C53.851,30.694 49.989,26.198 44.877,25.206ZM33.357,33.307L30.1,33.307L30.1,40.59C30.1,41.055 29.722,41.433 29.259,41.433L26.175,41.433C25.71,41.433 25.334,41.055 25.334,40.59L25.334,33.307L22.087,33.307C21.771,33.307 21.481,33.13 21.335,32.848C21.192,32.565 21.22,32.227 21.403,31.971L27.036,24.22C27.195,24.001 27.448,23.872 27.718,23.872C27.986,23.872 28.239,24.001 28.398,24.22L33.959,31.875C34.108,32.026 34.2,32.235 34.2,32.466C34.2,32.929 33.822,33.307 33.357,33.307Z" style="fill-rule:nonzero;"/>
+            </g>
+        </g>
+    </g>
+</svg>
