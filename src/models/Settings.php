@@ -14,7 +14,19 @@ class Settings extends Model
     public $s3BucketPrefix;
 
     public $useQueue = false;
+    public $keepLocal = false;
 
+    /**
+     * Pruning involves keeping a minimum number of the most recent backups
+     * for daily, weekly, monthly and yearly backup periods. The number of 
+     * retained backups is decided by the plugin settings but is usually:
+     * 
+     * 14 of the most recent daily backups
+     * 4 of the most recent weekly backups
+     * 6 of the most recent monthly backups
+     * 3 of the most recent yearly backups
+     */
+    public $prune = true;
     public $pruneDailyCount = 14;
     public $pruneWeeklyCount = 4;
     public $pruneMonthlyCount = 6;
@@ -24,7 +36,7 @@ class Settings extends Model
     {
         return [
             [
-                ['cloudProvider', 's3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName'],
+                ['cloudProvider', 's3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName', 'pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
                 'required'
             ],
             [
@@ -32,7 +44,7 @@ class Settings extends Model
                 'string'
             ],
             [
-                ['useQueue'],
+                ['useQueue', 'keepLocal', 'prune'],
                 'boolean'
             ],
             [

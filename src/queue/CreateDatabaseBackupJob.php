@@ -6,7 +6,7 @@ use craft\queue\BaseJob;
 
 use weareferal\remotebackup\RemoteBackup;
 
-class CreateDatabaseRemoteBackupJob extends BaseJob
+class CreateDatabaseBackupJob extends BaseJob
 {
     public function execute($queue)
     {

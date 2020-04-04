@@ -1,17 +1,6 @@
 <?php
 
-/**
- * test plugin for Craft CMS 3.x
- *
- * test
- *
- * @link      test.com
- * @copyright Copyright (c) 2019 test
- */
-
 namespace weareferal\remotebackup\console\controllers;
-
-use weareferal\remotebackup\Test;
 
 use Craft;
 use yii\console\Controller;
@@ -21,27 +10,52 @@ use yii\console\ExitCode;
 use weareferal\remotebackup\RemoteBackup;
 
 /**
- * Backup database backups
- *
- * @author    test
- * @package   Test
- * @since     1
+ * Manage remote database backups
  */
 class DatabaseController extends Controller
 {
     /**
-     * Create a local database backup
+     * Create a remote database backup
      */
     public function actionCreate()
     {
         try {
-            $path = RemoteBackup::getInstance()->remotebackup->createDatabaseBackup();
-            $this->stdout("Created database backup: " . $path . PHP_EOL, Console::FG_GREEN);
+            $filename = RemoteBackup::getInstance()->remotebackup->createDatabaseBackup();
+            $this->stdout("Created remote database backup: " . $filename . PHP_EOL, Console::FG_GREEN);
         } catch (\Exception $e) {
             Craft::$app->getErrorHandler()->logException($e);
             $this->stderr('Error: ' . $e->getMessage() . PHP_EOL, Console::FG_RED);
             return ExitCode::UNSPECIFIED_ERROR;
         }
         return ExitCode::OK;
+    }
+
+    /**
+     * Delete old remote database backups
+     */
+    public function actionPrune()
+    {
+        if (!RemoteBackup::getInstance()->getSettings()->prune) {
+            $this->stderr("Backup pruning disabled. Please enable via the Remote Backup control panel settings" . PHP_EOL, Console::FG_YELLOW);
+            return ExitCode::CONFIG;
+        } else {
+            try {
+                $results = RemoteBackup::getInstance()->remotebackup->pruneDatabaseBackups();
+                if (!$results['deleted'] || count($results['deleted']) <= 0) {
+                    $this->stdout('No backups deleted' . PHP_EOL, Console::FG_YELLOW);
+                }
+                foreach ($results['deleted'] as $path) {
+                    $this->stdout('Successfully deleted "' . $path . '"' . PHP_EOL, Console::FG_GREEN);
+                }
+                foreach ($results['failed'] as $path) {
+                    $this->stdout('Couldn\'nt delete "' . $path . '"' . PHP_EOL, Console::FG_YELLOW);
+                }
+            } catch (\Exception $e) {
+                Craft::$app->getErrorHandler()->logException($e);
+                $this->stderr('Error: ' . $e->getMessage() . PHP_EOL, Console::FG_RED);
+                return ExitCode::UNSPECIFIED_ERROR;
+            }
+            return ExitCode::OK;
+        }
     }
 }

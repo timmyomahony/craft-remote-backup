@@ -25,7 +25,7 @@ class RemoteBackupController extends Controller
 
         try {
             return $this->asJson([
-                "backups" => RemoteBackup::getInstance()->remotebackup->getDatabaseBackups(),
+                "backups" => RemoteBackup::getInstance()->remotebackup->listDatabaseBackups(),
                 "success" => true
             ]);
         } catch (\Exception $e) {
@@ -40,19 +40,21 @@ class RemoteBackupController extends Controller
         $this->requirePermission('remotebackup');
 
         try {
-            // $prune = RemoteBackup::getInstance()->getSettings()->prune;
             $useQueue = RemoteBackup::getInstance()->getSettings()->useQueue;
-            // if ($prune) {
-            //     if ($useQueue) {
-            //         Craft::$app->queue->push(new PruneDatabaseBackupsJob());
-            //     } else {
-            //         RemoteBackup::getInstance()->remotebackup->pruneDatabaseBackups();
-            //     }
-            // }
+            $prune = RemoteBackup::getInstance()->getSettings()->prune;
+
             if ($useQueue) {
                 Craft::$app->queue->push(new CreateDatabaseBackupJob());
             } else {
                 RemoteBackup::getInstance()->remotebackup->createDatabaseBackup();
+            }
+
+            if ($prune) {
+                if ($useQueue) {
+                    Craft::$app->queue->push(new PruneDatabaseBackupsJob());
+                } else {
+                    RemoteBackup::getInstance()->remotebackup->pruneDatabaseBackups();
+                }
             }
         } catch (\Exception $e) {
             Craft::$app->getErrorHandler()->logException($e);
@@ -71,7 +73,7 @@ class RemoteBackupController extends Controller
 
         try {
             return $this->asJson([
-                "backups" => RemoteBackup::getInstance()->remotebackup->getVolumeBackups(),
+                "backups" => RemoteBackup::getInstance()->remotebackup->listVolumeBackups(),
                 "success" => true
             ]);
         } catch (\Exception $e) {
@@ -87,19 +89,21 @@ class RemoteBackupController extends Controller
         $this->requirePermission('remotebackup');
 
         try {
-            // $prune = RemoteBackup::getInstance()->getSettings()->prune;
             $useQueue = RemoteBackup::getInstance()->getSettings()->useQueue;
-            // if ($prune) {
-            //     if ($useQueue) {
-            //         Craft::$app->queue->push(new PruneVolumeBackupsJob());
-            //     } else {
-            //         RemoteBackup::getInstance()->remotebackup->pruneVolumeBackups();
-            //     }
-            // }
+            $prune = RemoteBackup::getInstance()->getSettings()->prune;
+
             if ($useQueue) {
                 Craft::$app->queue->push(new CreateVolumeBackupJob());
             } else {
                 RemoteBackup::getInstance()->remotebackup->createVolumeBackup();
+            }
+
+            if ($prune) {
+                if ($useQueue) {
+                    Craft::$app->queue->push(new PruneVolumeBackupsJob());
+                } else {
+                    RemoteBackup::getInstance()->remotebackup->pruneVolumeBackups();
+                }
             }
         } catch (\Exception $e) {
             Craft::$app->getErrorHandler()->logException($e);

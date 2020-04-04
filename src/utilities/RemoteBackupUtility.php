@@ -32,14 +32,9 @@ class RemoteBackupUtility extends Utility
         $view->registerJs("new Craft.RemoteBackupUtility('rb-utilities-database')");
         $view->registerJs("new Craft.RemoteBackupUtility('rb-utilities-volumes')");
 
-        $dbBackupOptions = RemoteBackup::getInstance()->remotebackup->getDbBackupOptions();
-        $volumeBackupOptions = RemoteBackup::getInstance()->remotebackup->getVolumeBackupOptions();
-
         return $view->renderTemplate('remote-backup/utilities/remote-backup', [
             "settingConfigured" => RemoteBackup::getInstance()->getSettings()->isConfigured(),
-            "dbBackupOptions" => $dbBackupOptions,
             "volumes" => Craft::$app->getVolumes()->getAllVolumes(),
-            "volumeBackupOptions" => $volumeBackupOptions
         ]);
     }
 }
