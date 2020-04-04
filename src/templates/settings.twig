@@ -127,6 +127,17 @@
 
 <div class="remote-backup-prune-settings" {% if not settings.prune %}style="display: none;"{% endif %}>
     {{ forms.textField({
+        label: "Hourly backups"|t('remote-backup'),
+        type: "number",
+        instructions: "The number of hourly backups to keep"|t('remote-backup'),
+        name: 'pruneHourlyCount',
+        id: 'pruneHourlyCount',
+        value: settings.pruneHourlyCount,
+        errors: settings.getErrors('pruneHourlyCount'),
+        warning: configWarning('pruneHourlyCount', 'remote-backup')
+    }) }}
+
+    {{ forms.textField({
         label: "Daily backups"|t('remote-backup'),
         type: "number",
         instructions: "The number of daily backups to keep"|t('remote-backup'),

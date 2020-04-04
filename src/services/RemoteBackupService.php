@@ -253,6 +253,10 @@ class RemoteBackupService extends Component
         }
 
         $config = [
+            "Hourly" => [
+                "format" => 'Y-m-d H',
+                "limit" => RemoteBackup::getInstance()->getSettings()->pruneHourlyCount
+            ],
             "Daily" => [
                 "format" => 'Y-m-d',
                 "limit" => RemoteBackup::getInstance()->getSettings()->pruneDailyCount
@@ -272,6 +276,7 @@ class RemoteBackupService extends Component
         ];
 
         $data = [
+            "Hourly" => [],
             "Daily" => [],
             "Weekly" => [],
             "Monthly" => [],
@@ -279,6 +284,7 @@ class RemoteBackupService extends Component
         ];
 
         $groups = [
+            "Hourly" => [],
             "Daily" => [],
             "Weekly" => [],
             "Monthly" => [],

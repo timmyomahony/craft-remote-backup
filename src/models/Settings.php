@@ -27,6 +27,7 @@ class Settings extends Model
      * 3 of the most recent yearly backups
      */
     public $prune = true;
+    public $pruneHourlyCount = 6;
     public $pruneDailyCount = 14;
     public $pruneWeeklyCount = 4;
     public $pruneMonthlyCount = 6;
@@ -36,7 +37,7 @@ class Settings extends Model
     {
         return [
             [
-                ['cloudProvider', 's3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName', 'pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
+                ['cloudProvider', 's3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName', 'pruneHourlyCount', 'pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
                 'required'
             ],
             [
@@ -48,7 +49,7 @@ class Settings extends Model
                 'boolean'
             ],
             [
-                ['pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
+                ['pruneHourlyCount', 'pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
                 'number'
             ]
         ];
