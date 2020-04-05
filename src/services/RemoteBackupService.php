@@ -8,7 +8,7 @@ use Craft\helpers\FileHelper;
 use Craft\helpers\StringHelper;
 
 use weareferal\remotebackup\RemoteBackup;
-use weareferal\remotebackup\services\providers\S3Service;
+use weareferal\remotebackup\services\providers\S3Provider;
 use weareferal\remotebackup\helpers\ZipHelper;
 
 
@@ -357,7 +357,7 @@ class RemoteBackupService extends Component
     {
         switch ($provider) {
             case "s3":
-                return S3Service::class;
+                return S3Provider::class;
                 break;
         }
     }
