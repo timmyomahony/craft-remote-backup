@@ -10,7 +10,7 @@ class PruneDatabaseBackupsJob extends BaseJob
 {
     public function execute($queue)
     {
-        RemoteBackup::getInstance()->remotebackup->pruneDatabaseBackups();
+        RemoteBackup::getInstance()->remotebackup->pruneDatabases();
     }
 
     protected function defaultDescription()

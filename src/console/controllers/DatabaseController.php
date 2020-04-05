@@ -15,13 +15,37 @@ use weareferal\remotebackup\RemoteBackup;
 class DatabaseController extends Controller
 {
     /**
+     * List remote database backups
+     */
+    public function actionList()
+    {
+        try {
+            $results = RemoteBackup::getInstance()->remotebackup->listDatabases();
+            if (count($results) <= 0) {
+                $this->stdout("No remote database backups" . PHP_EOL, Console::FG_YELLOW);
+            } else {
+                $this->stdout("Remote database backups:" . PHP_EOL, Console::FG_GREEN);
+                foreach ($results as $result) {
+                    $this->stdout(" " . $result['value'] . PHP_EOL);
+                }
+            }
+        } catch (\Exception $e) {
+            Craft::$app->getErrorHandler()->logException($e);
+            $this->stderr('Error: ' . $e->getMessage() . PHP_EOL, Console::FG_RED);
+            return ExitCode::UNSPECIFIED_ERROR;
+        }
+        return ExitCode::OK;
+    }
+
+    /**
      * Create a remote database backup
      */
     public function actionCreate()
     {
         try {
-            $filename = RemoteBackup::getInstance()->remotebackup->createDatabaseBackup();
-            $this->stdout("Created remote database backup: " . $filename . PHP_EOL, Console::FG_GREEN);
+            $filename = RemoteBackup::getInstance()->remotebackup->pushDatabase();
+            $this->stdout("Created remote database backup:" . PHP_EOL, Console::FG_GREEN);
+            $this->stdout(" " . $filename . PHP_EOL);
         } catch (\Exception $e) {
             Craft::$app->getErrorHandler()->logException($e);
             $this->stderr('Error: ' . $e->getMessage() . PHP_EOL, Console::FG_RED);
@@ -40,15 +64,14 @@ class DatabaseController extends Controller
             return ExitCode::CONFIG;
         } else {
             try {
-                $results = RemoteBackup::getInstance()->remotebackup->pruneDatabaseBackups();
-                if (!$results['deleted'] || count($results['deleted']) <= 0) {
-                    $this->stdout('No backups deleted' . PHP_EOL, Console::FG_YELLOW);
-                }
-                foreach ($results['deleted'] as $path) {
-                    $this->stdout('Successfully deleted "' . $path . '"' . PHP_EOL, Console::FG_GREEN);
-                }
-                foreach ($results['failed'] as $path) {
-                    $this->stdout('Couldn\'nt delete "' . $path . '"' . PHP_EOL, Console::FG_YELLOW);
+                $filenames = RemoteBackup::getInstance()->remotebackup->pruneDatabases();
+                if (count($filenames) <= 0) {
+                    $this->stdout("No databases backups deleted" . PHP_EOL, Console::FG_YELLOW);
+                } else {
+                    $this->stdout("Deleted database backups:" . PHP_EOL, Console::FG_GREEN);
+                    foreach ($filenames as $filename) {
+                        $this->stdout(" " . $filename . PHP_EOL);
+                    }
                 }
             } catch (\Exception $e) {
                 Craft::$app->getErrorHandler()->logException($e);

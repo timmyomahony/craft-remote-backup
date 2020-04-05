@@ -1,93 +1,28 @@
 <?php
 
-namespace weareferal\remotebackup\services\providers;
+namespace weareferal\RemoteBackup\services\providers;
 
 use Craft;
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
 
-use weareferal\remotebackup\RemoteBackup;
-use weareferal\remotebackup\services\Provider;
-use weareferal\remotebackup\services\RemoteBackupService;
-use weareferal\remotebackup\exceptions\ProviderException;
+use weareferal\RemoteBackup\RemoteBackup;
+use weareferal\RemoteBackup\services\Provider;
+use weareferal\RemoteBackup\services\RemoteBackupService;
+use weareferal\RemoteBackup\exceptions\ProviderException;
 
 
 
 class S3Service extends RemoteBackupService implements Provider
 {
-    // Public methods
-
-    public function listRemoteDatabaseBackups(): array
-    {
-        try {
-            return $this->get("sql");
-        } catch (AwsException $exception) {
-            throw new ProviderException($this->createErrorMessage($exception));
-        }
-    }
-
-    public function listRemoteVolumeBackups(): array
-    {
-        try {
-            return $this->get("zip");
-        } catch (AwsException $exception) {
-            throw new ProviderException($this->createErrorMessage($exception));
-        }
-    }
-
-    public function pushRemoteBackup($path): bool
-    {
-        try {
-            return $this->push($path);
-        } catch (AwsException $exception) {
-            throw new ProviderException($this->createErrorMessage($exception));
-        }
-    }
-
-    public function deleteRemoteBackup($filename): bool
-    {
-        try {
-            return $this->delete($filename);
-        } catch (AwsException $exception) {
-            throw new ProviderException($this->createErrorMessage($exception));
-        }
-    }
-
-    // Private methods
-
-    /**
-     * Delete a remote S3 key
-     * 
-     * @return bool Remote key was successfully deleted
-     * @since 1.0.0
-     */
-    private function delete($filename): bool
-    {
-        $settings = RemoteBackup::getInstance()->settings;
-        $s3BucketName = Craft::parseEnv($settings->s3BucketName);
-        $client = $this->getS3Client();
-        $key = $this->getAWSKey($filename);
-        $exists = $client->doesObjectExist($s3BucketName, $key);
-        if ($exists) {
-            $client->deleteObject([
-                'Bucket' => $s3BucketName,
-                'Key'    => $key
-            ]);
-            return true;
-        } else {
-            Craft::warning("Could\'nt delete '" . $key . "' as it doesn't exist on S3", "remote-backup");
-        }
-        return false;
-    }
-
     /**
      * Return S3 keys
      * 
      * @param string $extension The file extension to filter the results by
-     * @return array[string] An array of filenames returned from S3
+     * @return array[string] An array of keys returned from S3
      * @since 1.0.0
      */
-    private function get($extension): array
+    public function list($filterExtension = null): array
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketName = Craft::parseEnv($settings->s3BucketName);
@@ -108,10 +43,20 @@ class S3Service extends RemoteBackupService implements Provider
 
         $keys = [];
         foreach ($objects as $object) {
-            if (substr($object['Key'], -strlen($extension)) === $extension) {
-                array_push($keys, basename($object['Key']));
-            }
+            array_push($keys, basename($object['Key']));
         }
+
+        // Filter by extension
+        if ($filterExtension) {
+            $filteredKeys = [];
+            foreach ($keys as $key) {
+                if (substr($key, -strlen($filterExtension)) === $filterExtension) {
+                    array_push($filteredKeys, basename($key));
+                }
+            }
+            $keys = $filteredKeys;
+        }
+
         return $keys;
     }
 
@@ -122,7 +67,7 @@ class S3Service extends RemoteBackupService implements Provider
      * @return bool If the operation was successful
      * @since 1.0.0
      */
-    private function push($path): bool
+    public function push($path)
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketName = Craft::parseEnv($settings->s3BucketName);
@@ -130,34 +75,81 @@ class S3Service extends RemoteBackupService implements Provider
         $pathInfo = pathinfo($path);
 
         $key = $this->getAWSKey($pathInfo['basename']);
-        $exists = $client->doesObjectExist($s3BucketName, $key);
-        if (!$exists) {
+
+        try {
             $client->putObject([
                 'Bucket' => $s3BucketName,
                 'Key' => $key,
                 'SourceFile' => $path
             ]);
-        } else {
-            Craft::warning("Skipping push of '" . $key . "' as file already exists on S3", "remote-backup");
+        } catch (AwsException $exception) {
+            throw new ProviderException($this->createErrorMessage($exception));
         }
+    }
+
+    public function pull($key, $path)
+    {
+        $settings = RemoteBackup::getInstance()->settings;
+        $s3BucketName = Craft::parseEnv($settings->s3BucketName);
+        $client = $this->getS3Client();
+        $key = $this->getAWSKey($key);
+
+        try {
+            $client->getObject([
+                'Bucket' => $s3BucketName,
+                'SaveAs' => $path,
+                'Key' => $key,
+            ]);
+        } catch (AwsException $exception) {
+            throw new ProviderException($this->createErrorMessage($exception));
+        }
+
         return true;
+    }
+
+    /**
+     * Delete a remote S3 key
+     * 
+     * @return bool Remote key was successfully deleted
+     * @since 1.0.0
+     */
+    public function delete($key)
+    {
+        $settings = RemoteBackup::getInstance()->settings;
+        $s3BucketName = Craft::parseEnv($settings->s3BucketName);
+        $client = $this->getS3Client();
+        $key = $this->getAWSKey($key);
+
+        $exists = $client->doesObjectExist($s3BucketName, $key);
+        if (!$exists) {
+            throw new ProviderException("AWS key does not exist");
+        }
+
+        try {
+            $client->deleteObject([
+                'Bucket' => $s3BucketName,
+                'Key'    => $key
+            ]);
+        } catch (AwsException $exception) {
+            throw new ProviderException($this->createErrorMessage($exception));
+        }
     }
 
     /**
      * Return the AWS key, including any prefix folders
      * 
-     * @param string $filename The filename for the key
+     * @param string $key The key for the key
      * @return string The prefixed key
      * @since 1.0.0
      */
-    private function getAWSKey($filename): string
+    private function getAWSKey($key): string
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketPrefix = Craft::parseEnv($settings->s3BucketPrefix);
         if ($s3BucketPrefix) {
-            return $s3BucketPrefix . DIRECTORY_SEPARATOR . $filename;
+            return $s3BucketPrefix . DIRECTORY_SEPARATOR . $key;
         }
-        return $filename;
+        return $key;
     }
 
     /**

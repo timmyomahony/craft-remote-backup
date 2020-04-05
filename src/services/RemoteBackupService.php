@@ -14,10 +14,10 @@ use weareferal\remotebackup\helpers\ZipHelper;
 
 interface Provider
 {
-    public function listRemoteDatabaseBackups(): array;
-    public function listRemoteVolumeBackups(): array;
-    public function pushRemoteBackup($path): bool;
-    public function deleteRemoteBackup($filename): bool;
+    public function list($filterExtensions): array;
+    public function push($path);
+    public function pull($key, $path);
+    public function delete($key);
 }
 
 class RemoteBackupInstance
@@ -62,10 +62,10 @@ class RemoteBackupService extends Component
      * @return array An array of label/filename objects
      * @since 1.0.0
      */
-    public function listDatabaseBackups(): array
+    public function listDatabases(): array
     {
-        $filenames = $this->listRemoteDatabaseBackups();
-        $backups = $this->parseBackupFilenames($filenames);
+        $filenames = $this->list(".sql");
+        $backups = $this->parseFilenames($filenames);
         $options = [];
         foreach ($backups as $i => $backup) {
             $options[$i] = [
@@ -82,10 +82,10 @@ class RemoteBackupService extends Component
      * @return array An array of label/filename objects
      * @since 1.0.0
      */
-    public function listVolumeBackups(): array
+    public function listVolumes(): array
     {
-        $filenames = $this->listRemoteVolumeBackups();
-        $backups = $this->parseBackupFilenames($filenames);
+        $filenames = $this->list('.zip');
+        $backups = $this->parseFilenames($filenames);
         $options = [];
         foreach ($backups as $i => $backup) {
             $options[$i] = [
@@ -97,38 +97,41 @@ class RemoteBackupService extends Component
     }
 
     /**
-     * Create a new remote backup of the database
+     * Create a new Remote Sync of the database
      * 
-     * @return string The filename of the newly created remote backup
+     * @return string The filename of the newly created Remote Sync
      * @since 1.0.0
      */
-    public function createDatabaseBackup()
+    public function pushDatabase()
     {
-        $dir = Craft::$app->getPath()->getDbBackupPath();
-        $filename = $this->getBackupFileName();
+        $dir = $this->getLocalDir();
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        $filename = $this->getFilename();
         $path = $dir . DIRECTORY_SEPARATOR . $filename . '.sql';
-
         Craft::$app->getDb()->backupTo($path);
-        $this->pushRemoteBackup($path);
-
+        $this->push($path);
         if (!RemoteBackup::getInstance()->getSettings()->keepLocal) {
             unlink($path);
         }
-
         return $filename;
     }
 
     /**
-     * Create a new remote backup of all asset volumes
+     * Push all volumes
      * 
-     * @return string The filename of the newly created remote backup
+     * @return string The filename of the newly created Remote Sync
      * @return null If no volumes exist
      * @since 1.0.0
      */
-    public function createVolumeBackup()
+    public function pushVolumes(): string
     {
-        $dir = Craft::$app->getPath()->getDbBackupPath();
-        $filename = $this->getBackupFileName();
+        $dir = $this->getLocalDir();
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        $filename = $this->getFilename();
         $path = $dir . DIRECTORY_SEPARATOR . $filename . '.zip';
         $volumes = Craft::$app->getVolumes()->getAllVolumes();
         $tmpDirName = Craft::$app->getPath()->getTempPath() . DIRECTORY_SEPARATOR . strtolower(StringHelper::randomString(10));
@@ -145,59 +148,13 @@ class RemoteBackupService extends Component
         ZipHelper::recursiveZip($tmpDirName, $path);
         FileHelper::clearDirectory(Craft::$app->getPath()->getTempPath());
 
-        $this->pushRemoteBackup($path);
+        $this->push($path);
 
         if (!RemoteBackup::getInstance()->getSettings()->keepLocal) {
             unlink($path);
         }
 
         return $filename;
-    }
-
-    /**
-     * Prune old database backups
-     * 
-     * @param bool $dryRun Skip the actual deletion of files
-     * @return array An array of filenames that were deleted
-     */
-    public function pruneDatabaseBackups($dryRun = false): array
-    {
-        $filenames = $this->listRemoteDatabaseBackups();
-        return $this->prune($filenames, $dryRun);
-    }
-
-    /**
-     * Prune old volume backups
-     * 
-     * @param bool $dryRun Skip the actual deletion of files
-     * @return array An array containing the deleted local and remote path 
-     */
-    public function pruneVolumeBackups($dryRun = false)
-    {
-        $filenames = $this->listRemoteVolumeBackups();
-        return $this->prune($filenames, $dryRun);
-    }
-
-    private function prune($filenames, $dryRun = false)
-    {
-        $backups = $this->parseBackupFilenames($filenames);
-        $backups = $this->getOldBackups($backups);
-        $results = [
-            'deleted' => [],
-            'failed' => []
-        ];
-        foreach ($backups as $backup) {
-            $filename = $backup->filename;
-            if (!$dryRun) {
-                $deleted = $this->deleteRemoteBackup($backup->filename);
-                if ($deleted) {
-                    array_push($results['deleted'], $filename);
-                } else {
-                    array_push($results['failed'], $filename);
-                }
-            }
-        }
-        return $results;
     }
 
     /**
@@ -209,7 +166,7 @@ class RemoteBackupService extends Component
      * 
      * @return string The unique backup filename
      */
-    private function getBackupFileName(): string
+    private function getFilename(): string
     {
         $currentVersion = 'v' . Craft::$app->getVersion();
         $systemName = FileHelper::sanitizeFilename(Craft::$app->getInfo()->name, ['asciiOnly' => true]);
@@ -224,7 +181,7 @@ class RemoteBackupService extends Component
      * @param string[] Array of filenames
      * @return array[] Array of Backup objects
      */
-    private function parseBackupFilenames($filenames): array
+    private function parseFilenames($filenames): array
     {
         $backups = [];
 
@@ -237,6 +194,45 @@ class RemoteBackupService extends Component
         });
 
         return array_reverse($backups);
+    }
+
+    /**
+     * Prune old database backups
+     * 
+     * @param bool $dryRun Skip the actual deletion of files
+     * @return array An array of filenames that were deleted
+     */
+    public function pruneDatabases($dryRun = false): array
+    {
+        $filenames = $this->list(".sql");
+        return $this->prune($filenames, $dryRun);
+    }
+
+    /**
+     * Prune old volume backups
+     * 
+     * @param bool $dryRun Skip the actual deletion of files
+     * @return array An array containing the deleted local and remote path 
+     */
+    public function pruneVolumes($dryRun = false)
+    {
+        $filenames = $this->list(".zip");
+        return $this->prune($filenames, $dryRun);
+    }
+
+    private function prune($filenames, $dryRun = false)
+    {
+        $backups = $this->parseFilenames($filenames);
+        $backups = $this->getOldBackups($backups);
+        $results = [];
+        foreach ($backups as $backup) {
+            $filename = $backup->filename;
+            if (!$dryRun) {
+                $this->delete($backup->filename);
+                array_push($results, $filename);
+            }
+        }
+        return $results;
     }
 
     /**
@@ -344,6 +340,11 @@ class RemoteBackupService extends Component
         }
 
         return $oldBackups;
+    }
+
+    protected function getLocalDir()
+    {
+        return Craft::$app->getPath()->getDbBackupPath();
     }
 
     /**

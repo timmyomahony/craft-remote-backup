@@ -1,10 +1,8 @@
 <section id="{{ id }}" class='rb-utilities-section'>
     <h2 data-icon="{{ icon }}">{{ "Remote " ~ label ~ " Backups"|t('remote-backup') }}</h2>
-    <table class="data fullwidth rb-utilities-table">
-        {{ actionInput(listAction) }}
-        <thead>
-            <th>{{ "Current Backups"|t('remote-backup') }}</th>
-        </thead>
+    <table class="data fullwidth rb-utilities-table"
+        data-list-action="{{ listAction }}"
+        data-push-action="{{ pushAction }}">
         <tbody>
             <tr class="first template-row default-row">
                 <td class="light"></td>
@@ -16,23 +14,25 @@
             </tr>
             <tr class="first no-results-row default-row">
                 <td class="light">
-                    {{ "No backups"|t('remote-backup') }}
+                    {{ "No " ~ labelPlural|t('remote-backup') }}
                 </td>
             </tr>
             <tr class="first errors-row default-row">
                 <td class="error">
-                    {{ "Error fetching backups"|t('remote-backup') }}
+                    {{ "Error Fetching " ~ labelPlural|t('remote-backup') }}
                 </td>
             </tr>
         </tbody>
     </table>
-    <form class="rb-utilities-form" method="post">    
-        {{ actionInput(createAction) }}
+    <form class="rb-utilities-form" method="post">
         {{ csrfInput() }}
         <div class='rb-utilities-submit'>
             <input class="btn submit {{ not disabled ? '' : 'disabled' }}" type="submit" value="{{ 'Create ' ~ label ~ ' Backup'|t('remote-backup') }}">
             <div class="utility-status"></div>
         </div>
     </form>
+    <div class="rb-utilities-overlay">
+        <img src="{{ craft.app.getAssetManager().getPublishedUrl('@app/web/assets/cp/dist', true, 'images/spinner.gif')}}">
+    </div>
     {% block message %}{% endblock %}
 </section>

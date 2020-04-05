@@ -18,14 +18,14 @@ class RemoteBackupController extends Controller
      * List database backups
      * 
      */
-    public function actionListDatabaseBackups()
+    public function actionListDatabases()
     {
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
 
         try {
             return $this->asJson([
-                "backups" => RemoteBackup::getInstance()->remotebackup->listDatabaseBackups(),
+                "backups" => RemoteBackup::getInstance()->remotebackup->listDatabases(),
                 "success" => true
             ]);
         } catch (\Exception $e) {
@@ -34,7 +34,23 @@ class RemoteBackupController extends Controller
         }
     }
 
-    public function actionCreateDatabaseBackup()
+    public function actionListVolumes()
+    {
+        $this->requireCpRequest();
+        $this->requirePermission('remotebackup');
+
+        try {
+            return $this->asJson([
+                "backups" => RemoteBackup::getInstance()->remotebackup->listVolumes(),
+                "success" => true
+            ]);
+        } catch (\Exception $e) {
+            Craft::$app->getErrorHandler()->logException($e);
+            return $this->asErrorJson(Craft::t('remote-backup', 'Error getting remote volume backups'));
+        }
+    }
+
+    public function actionPushDatabase()
     {
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
@@ -46,15 +62,17 @@ class RemoteBackupController extends Controller
         try {
             if ($settings->useQueue) {
                 $queue->push(new CreateDatabaseBackupJob());
+                Craft::$app->getSession()->setNotice(Craft::t('remote-backup', 'Job added to queue'));
             } else {
-                $service->createDatabaseBackup();
+                $service->pushDatabase();
+                Craft::$app->getSession()->setNotice(Craft::t('remote-backup', 'Database backup created'));
             }
 
             if ($settings->prune) {
                 if ($settings->useQueue) {
                     $queue->push(new PruneDatabaseBackupsJob());
                 } else {
-                    $service->pruneDatabaseBackups();
+                    $service->pruneDatabases();
                 }
             }
         } catch (\Exception $e) {
@@ -67,23 +85,7 @@ class RemoteBackupController extends Controller
         ]);
     }
 
-    public function actionListVolumeBackups()
-    {
-        $this->requireCpRequest();
-        $this->requirePermission('remotebackup');
-
-        try {
-            return $this->asJson([
-                "backups" => RemoteBackup::getInstance()->remotebackup->listVolumeBackups(),
-                "success" => true
-            ]);
-        } catch (\Exception $e) {
-            Craft::$app->getErrorHandler()->logException($e);
-            return $this->asErrorJson(Craft::t('remote-backup', 'Error getting remote volume backups'));
-        }
-    }
-
-    public function actionCreateVolumeBackup()
+    public function actionPushVolumes()
     {
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
@@ -95,15 +97,17 @@ class RemoteBackupController extends Controller
         try {
             if ($settings->useQueue) {
                 $queue->push(new CreateVolumeBackupJob());
+                Craft::$app->getSession()->setNotice(Craft::t('remote-backup', 'Job added to queue'));
             } else {
-                $service->createVolumeBackup();
+                $service->pushVolumes();
+                Craft::$app->getSession()->setNotice(Craft::t('remote-backup', 'Volume backup created'));
             }
 
             if ($settings->prune) {
                 if ($settings->useQueue) {
                     $queue->push(new PruneVolumeBackupsJob());
                 } else {
-                    $service->pruneVolumeBackups();
+                    $service->pruneVolumes();
                 }
             }
         } catch (\Exception $e) {

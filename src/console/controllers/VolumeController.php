@@ -14,18 +14,39 @@ use weareferal\remotebackup\RemoteBackup;
  */
 class VolumeController extends Controller
 {
+
     /**
-     * Create a remote database backup
+     * List remote volumes backups
+     */
+    public function actionList()
+    {
+        try {
+            $results = RemoteBackup::getInstance()->remotebackup->listVolumes();
+            if (count($results) <= 0) {
+                $this->stdout("No remote volume backups" . PHP_EOL, Console::FG_YELLOW);
+            } else {
+                $this->stdout("Remote volume backups:" . PHP_EOL, Console::FG_GREEN);
+                foreach ($results as $result) {
+                    $this->stdout(" " . $result['value'] . PHP_EOL);
+                }
+            }
+        } catch (\Exception $e) {
+            Craft::$app->getErrorHandler()->logException($e);
+            $this->stderr('Error: ' . $e->getMessage() . PHP_EOL, Console::FG_RED);
+            return ExitCode::UNSPECIFIED_ERROR;
+        }
+        return ExitCode::OK;
+    }
+
+    /**
+     * Create a remote volumes backup
      */
     public function actionCreate()
     {
         try {
-            $path = RemoteBackup::getInstance()->remotebackup->createVolumeBackup();
-            if ($path) {
-                $this->stdout("Created remote volume backup: " . $path . PHP_EOL, Console::FG_GREEN);
-            } else {
-                $this->stdout("No volumes to backup" . PHP_EOL, Console::FG_YELLOW);
-            }
+            $filename = RemoteBackup::getInstance()->remotebackup->pushVolumes();
+            $this->stdout("Created remote volumes backup:" . PHP_EOL, Console::FG_GREEN);
+            $this->stdout(" " . $filename . PHP_EOL);
         } catch (\Exception $e) {
             Craft::$app->getErrorHandler()->logException($e);
             $this->stderr('Error: ' . $e->getMessage() . PHP_EOL, Console::FG_RED);
@@ -44,15 +65,14 @@ class VolumeController extends Controller
             return ExitCode::CONFIG;
         } else {
             try {
-                $results = RemoteBackup::getInstance()->remotebackup->pruneVolumeBackups();
-                if (!$results['deleted'] || count($results['deleted']) <= 0) {
-                    $this->stdout('No backups deleted' . PHP_EOL, Console::FG_YELLOW);
-                }
-                foreach ($results['deleted'] as $path) {
-                    $this->stdout('Successfully deleted "' . $path . '"' . PHP_EOL, Console::FG_GREEN);
-                }
-                foreach ($results['failed'] as $path) {
-                    $this->stdout('Couldn\'nt delete "' . $path . '"' . PHP_EOL, Console::FG_YELLOW);
+                $filenames = RemoteBackup::getInstance()->remotebackup->pruneVolumes();
+                if (count($filenames) <= 0) {
+                    $this->stdout("No volume backups deleted" . PHP_EOL, Console::FG_YELLOW);
+                } else {
+                    $this->stdout("Deleted volume backups:" . PHP_EOL, Console::FG_GREEN);
+                    foreach ($filenames as $filename) {
+                        $this->stdout(" " . $filename . PHP_EOL);
+                    }
                 }
             } catch (\Exception $e) {
                 Craft::$app->getErrorHandler()->logException($e);
