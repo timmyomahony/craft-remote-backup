@@ -206,6 +206,24 @@ Here is an example daily cron entry to backup and prune daily at 01:00:
 04 01 * * * /path/to/project/craft remote-backup/volume/prune
 ```
 
+## Pairing with Craft Remote Sync
+
+[Craft Remote Sync](https://github.com/weareferal/craft-remote-sync) is a complimentary plugin that allows you to sync database and volume files between environments using same remote providers. Using these plugins together is a great way to manage remote files with your website.
+
+When using these plugins together, it's sensible to use a different remote folder to hold your synced files and your backup files. To do this we recommend configuring your environment variables to include two separate file paths: one for sync and one for backup. 
+
+With AWS this might look like:
+
+```sh
+AWS_ACCESS_KEY=
+AWS_SECRET_KEY=
+AWS_REGION="us-west-1"
+AWS_BUCKET_NAME="feral-backups"
+AWS_BUCKET_NAME="feral-backups"
+AWS_BUCKET_SYNC_PREFIX="craft-sync/craft-test"
+AWS_BUCKET_BACKUP_PREFIX="craft-backups/craft-test"
+```
+
 ## Troubleshooting
 
 If you are getting errors while pushing/pulling/creating/restoring or pruning, the first thing to check is the Craft logs at `storage/logs/web.log`.
