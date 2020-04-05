@@ -52,22 +52,24 @@ class RemoteBackup extends Plugin
             UserPermissions::class,
             UserPermissions::EVENT_REGISTER_PERMISSIONS,
             function (RegisterUserPermissionsEvent $event) {
-                $event->permissions['RemoteBackup'] = [
+                $event->permissions['Remote Backup'] = [
                     'remotebackup' => [
-                        'label' => 'Backup database and assets',
+                        'label' => 'Create remote backups of database and assets',
                     ],
                 ];
             }
         );
 
         // Register with Utilities service
-        Event::on(
-            Utilities::class,
-            Utilities::EVENT_REGISTER_UTILITY_TYPES,
-            function (RegisterComponentTypesEvent $event) {
-                $event->types[] = RemoteBackupUtility::class;
-            }
-        );
+        if ($this->getSettings()->enabled) {
+            Event::on(
+                Utilities::class,
+                Utilities::EVENT_REGISTER_UTILITY_TYPES,
+                function (RegisterComponentTypesEvent $event) {
+                    $event->types[] = RemoteBackupUtility::class;
+                }
+            );
+        }
     }
 
     protected function createSettingsModel(): Settings

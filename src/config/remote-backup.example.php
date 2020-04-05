@@ -1,6 +1,7 @@
 <?php
 return [
     '*' => [
+        'enabled' => true,
         'cloudProvider' => 's3',
         //...
         'useQueue' => false,
