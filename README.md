@@ -2,8 +2,6 @@
 
 Backup your database and assets to a remote destination like S3 easily through the Craft Control Panel and command line.
 
-![Craft Remote Backup Logo](resources/img/plugin-logo.png)
-
 ## Installation
 
 To install the plugin, follow these instructions.
