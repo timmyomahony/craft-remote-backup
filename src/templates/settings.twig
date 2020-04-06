@@ -8,10 +8,23 @@
         {{ false }}
     {%- endif -%}
 {%- endmacro %}
+
 {% from _self import configWarning %}
 
-{{ forms.selectField({
+{{ forms.lightswitchField({
     first: true,
+    label: "Enabled"|t('remote-backup'),
+    instructions: "Enable the plugin"|t('remote-backup'),
+    name: 'enabled',
+    id: 'enabled',
+    on: settings.enabled,
+    errors: settings.getErrors('enabled'),
+    warning: configWarning('enabled', 'remote-backup')
+}) }}
+
+<hr>
+
+{{ forms.selectField({
     label: "Cloud Provider"|t('remote-backup'),
     id: 'cloudProvider',
     name: 'cloudProvider',
@@ -105,6 +118,8 @@
     warning: configWarning('useQueue', 'remote-backup')
 }) }}
 
+<hr>
+
 {{ forms.lightswitchField({
     label: "Keep Local Backups"|t('remote-backup'),
     instructions: "Keep a copy of newly created backups locally on the server"|t('remote-backup'),
@@ -114,6 +129,8 @@
     errors: settings.getErrors('keepLocal'),
     warning: configWarning('keepLocal', 'remote-backup')
 }) }}
+
+<hr>
 
 {{ forms.lightswitchField({
     label: "Prune Backups"|t('remote-backup'),
@@ -125,59 +142,58 @@
     warning: configWarning('prune', 'remote-backup')
 }) }}
 
-<div class="remote-backup-prune-settings" {% if not settings.prune %}style="display: none;"{% endif %}>
-    {{ forms.textField({
-        label: "Hourly backups"|t('remote-backup'),
-        type: "number",
-        instructions: "The number of hourly backups to keep"|t('remote-backup'),
-        name: 'pruneHourlyCount',
-        id: 'pruneHourlyCount',
-        value: settings.pruneHourlyCount,
-        errors: settings.getErrors('pruneHourlyCount'),
-        warning: configWarning('pruneHourlyCount', 'remote-backup')
-    }) }}
 
-    {{ forms.textField({
-        label: "Daily backups"|t('remote-backup'),
-        type: "number",
-        instructions: "The number of daily backups to keep"|t('remote-backup'),
-        name: 'pruneDailyCount',
-        id: 'pruneDailyCount',
-        value: settings.pruneDailyCount,
-        errors: settings.getErrors('pruneDailyCount'),
-        warning: configWarning('pruneDailyCount', 'remote-backup')
-    }) }}
+{{ forms.textField({
+    label: "Hourly backups"|t('remote-backup'),
+    type: "number",
+    instructions: "The number of hourly backups to keep"|t('remote-backup'),
+    name: 'pruneHourlyCount',
+    id: 'pruneHourlyCount',
+    value: settings.pruneHourlyCount,
+    errors: settings.getErrors('pruneHourlyCount'),
+    warning: configWarning('pruneHourlyCount', 'remote-backup')
+}) }}
 
-    {{ forms.textField({
-        label: "Weekly backups"|t('remote-backup'),
-        type: "number",
-        instructions: "The number of weekly backups to keep"|t('remote-backup'),
-        name: 'pruneWeeklyCount',
-        id: 'pruneWeeklyCount',
-        value: settings.pruneWeeklyCount,
-        errors: settings.getErrors('pruneWeeklyCount'),
-        warning: configWarning('pruneWeeklyCount', 'remote-backup')
-    }) }}
+{{ forms.textField({
+    label: "Daily backups"|t('remote-backup'),
+    type: "number",
+    instructions: "The number of daily backups to keep"|t('remote-backup'),
+    name: 'pruneDailyCount',
+    id: 'pruneDailyCount',
+    value: settings.pruneDailyCount,
+    errors: settings.getErrors('pruneDailyCount'),
+    warning: configWarning('pruneDailyCount', 'remote-backup')
+}) }}
 
-    {{ forms.textField({
-        label: "Monthly backups"|t('remote-backup'),
-        type: "number",
-        instructions: "The number of monthly backups to keep"|t('remote-backup'),
-        name: 'pruneMonthlyCount',
-        id: 'pruneMonthlyCount',
-        value: settings.pruneMonthlyCount,
-        errors: settings.getErrors('pruneMonthlyCount'),
-        warning: configWarning('pruneMonthlyCount', 'remote-backup')
-    }) }}
+{{ forms.textField({
+    label: "Weekly backups"|t('remote-backup'),
+    type: "number",
+    instructions: "The number of weekly backups to keep"|t('remote-backup'),
+    name: 'pruneWeeklyCount',
+    id: 'pruneWeeklyCount',
+    value: settings.pruneWeeklyCount,
+    errors: settings.getErrors('pruneWeeklyCount'),
+    warning: configWarning('pruneWeeklyCount', 'remote-backup')
+}) }}
 
-    {{ forms.textField({
-        label: "Yearly backups"|t('remote-backup'),
-        type: "number",
-        instructions: "The number of yearly backups to keep"|t('remote-backup'),
-        name: 'pruneYearlyCount',
-        id: 'pruneYearlyCount',
-        value: settings.pruneYearlyCount,
-        errors: settings.getErrors('pruneYearlyCount'),
-        warning: configWarning('pruneYearlyCount', 'remote-backup')
-    }) }}
-</div>
+{{ forms.textField({
+    label: "Monthly backups"|t('remote-backup'),
+    type: "number",
+    instructions: "The number of monthly backups to keep"|t('remote-backup'),
+    name: 'pruneMonthlyCount',
+    id: 'pruneMonthlyCount',
+    value: settings.pruneMonthlyCount,
+    errors: settings.getErrors('pruneMonthlyCount'),
+    warning: configWarning('pruneMonthlyCount', 'remote-backup')
+}) }}
+
+{{ forms.textField({
+    label: "Yearly backups"|t('remote-backup'),
+    type: "number",
+    instructions: "The number of yearly backups to keep"|t('remote-backup'),
+    name: 'pruneYearlyCount',
+    id: 'pruneYearlyCount',
+    value: settings.pruneYearlyCount,
+    errors: settings.getErrors('pruneYearlyCount'),
+    warning: configWarning('pruneYearlyCount', 'remote-backup')
+}) }}

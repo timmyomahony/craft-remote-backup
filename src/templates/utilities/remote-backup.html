@@ -1,5 +1,5 @@
 {% import "_includes/forms" as forms %}
-{% if not settings.isConfigured() %}
+{% if not settings.configured() %}
     <div class="field">
         <p class="warning"><strong>{{ 'Plugin settings have not been configured yet'|t('remote-backup') }}</strong></p>
     </div>

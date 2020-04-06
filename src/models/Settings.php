@@ -6,6 +6,7 @@ use craft\base\Model;
 
 class Settings extends Model
 {
+    public $enabled = true;
     public $cloudProvider = 's3';
     public $s3AccessKey;
     public $s3SecretKey;
@@ -16,16 +17,6 @@ class Settings extends Model
     public $useQueue = false;
     public $keepLocal = false;
 
-    /**
-     * Pruning involves keeping a minimum number of the most recent backups
-     * for daily, weekly, monthly and yearly backup periods. The number of 
-     * retained backups is decided by the plugin settings but is usually:
-     * 
-     * 14 of the most recent daily backups
-     * 4 of the most recent weekly backups
-     * 6 of the most recent monthly backups
-     * 3 of the most recent yearly backups
-     */
     public $prune = true;
     public $pruneHourlyCount = 6;
     public $pruneDailyCount = 14;
@@ -37,15 +28,25 @@ class Settings extends Model
     {
         return [
             [
-                ['cloudProvider', 's3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName', 'pruneHourlyCount', 'pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
-                'required'
+                ['s3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName', 'pruneHourlyCount'],
+                'required',
+                'when' => function ($model) {
+                    return $model->cloudProvider == 's3' & $model->enabled == 1;
+                }
+            ],
+            [
+                ['pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
+                'required',
+                'when' => function ($model) {
+                    return $model->prune == 1 & $model->enabled == 1;
+                }
             ],
             [
                 ['cloudProvider', 's3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName', 's3BucketPrefix'],
                 'string'
             ],
             [
-                ['useQueue', 'keepLocal', 'prune'],
+                ['enabled', 'useQueue', 'keepLocal', 'prune'],
                 'boolean'
             ],
             [
@@ -55,7 +56,7 @@ class Settings extends Model
         ];
     }
 
-    public function isConfigured(): bool
+    public function configured(): bool
     {
         $vars = [
             $this->s3AccessKey,
@@ -63,7 +64,6 @@ class Settings extends Model
             $this->s3RegionName,
             $this->s3BucketName
         ];
-        $configured = true;
         foreach ($vars as $var) {
             if (!$var || $var == '') {
                 return false;

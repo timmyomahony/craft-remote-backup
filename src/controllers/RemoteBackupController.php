@@ -2,6 +2,8 @@
 
 namespace weareferal\remotebackup\controllers;
 
+use yii\web\BadRequestHttpException;
+
 use Craft;
 use craft\web\Controller;
 
@@ -14,6 +16,20 @@ use weareferal\remotebackup\queue\PruneVolumeBackupsJob;
 
 class RemoteBackupController extends Controller
 {
+    public function requirePluginEnabled()
+    {
+        if (!RemoteBackup::getInstance()->getSettings()->enabled) {
+            throw new BadRequestHttpException('Plugin is not enabled');
+        }
+    }
+
+    public function requirePluginConfigured()
+    {
+        if (!RemoteBackup::getInstance()->getSettings()->configured()) {
+            throw new BadRequestHttpException('Plugin is not correctly configured');
+        }
+    }
+
     /**
      * List database backups
      * 
@@ -22,6 +38,8 @@ class RemoteBackupController extends Controller
     {
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
+        $this->requirePluginEnabled();
+        $this->requiredPluginConfigured();
 
         try {
             return $this->asJson([
@@ -38,6 +56,8 @@ class RemoteBackupController extends Controller
     {
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
+        $this->requirePluginEnabled();
+        $this->requiredPluginConfigured();
 
         try {
             return $this->asJson([
@@ -54,6 +74,8 @@ class RemoteBackupController extends Controller
     {
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
+        $this->requirePluginEnabled();
+        $this->requiredPluginConfigured();
 
         $settings = RemoteBackup::getInstance()->getSettings();
         $service = RemoteBackup::getInstance()->remotebackup;
@@ -89,6 +111,8 @@ class RemoteBackupController extends Controller
     {
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
+        $this->requirePluginEnabled();
+        $this->requiredPluginConfigured();
 
         $settings = RemoteBackup::getInstance()->getSettings();
         $service = RemoteBackup::getInstance()->remotebackup;
