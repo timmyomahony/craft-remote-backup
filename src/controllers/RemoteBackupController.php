@@ -39,7 +39,7 @@ class RemoteBackupController extends Controller
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
         $this->requirePluginEnabled();
-        $this->requiredPluginConfigured();
+        $this->requirePluginConfigured();
 
         try {
             return $this->asJson([
@@ -57,7 +57,7 @@ class RemoteBackupController extends Controller
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
         $this->requirePluginEnabled();
-        $this->requiredPluginConfigured();
+        $this->requirePluginConfigured();
 
         try {
             return $this->asJson([
@@ -75,7 +75,7 @@ class RemoteBackupController extends Controller
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
         $this->requirePluginEnabled();
-        $this->requiredPluginConfigured();
+        $this->requirePluginConfigured();
 
         $settings = RemoteBackup::getInstance()->getSettings();
         $service = RemoteBackup::getInstance()->remotebackup;
@@ -112,7 +112,7 @@ class RemoteBackupController extends Controller
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
         $this->requirePluginEnabled();
-        $this->requiredPluginConfigured();
+        $this->requirePluginConfigured();
 
         $settings = RemoteBackup::getInstance()->getSettings();
         $service = RemoteBackup::getInstance()->remotebackup;
