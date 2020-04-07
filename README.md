@@ -1,8 +1,16 @@
-# Craft Remote Backup plugin for Craft CMS 3.x
+# Craft Remote Backup
 
-Backup your database and assets to a remote destination like S3 easily through the Craft Control Panel and command line.
+<img src="src/icon.svg" width="125px">
 
-![Craft Remote Backup Logo](resources/img/plugin-logo.png)
+Backup your database and assets to a remote destination like AWS S3.
+
+## Overview
+
+![Craft Remote Backup Overview](resources/img/utilities-screenshot.png)
+
+Craft Remote Backup makes it easy to create offsite remote backups from the comfort of the Craft Control Panel. Along with a few CLI commands, this gives you the ability to take regular snapshots of your database and assets and rest assured that they are stored securely offsite.
+
+It provides an easy-to-configure settings page as well as an interface in Craft's "utilties" section to create new remote database and volume backups.
 
 ## Installation
 
@@ -21,14 +29,6 @@ To install the plugin, follow these instructions.
    ```
 
 3. In the Control Panel, go to Settings → Plugins and click the _Install_ button for Craft Remote Backup.
-
-## Overview
-
-![Craft Remote Backup Overview](resources/img/utilities-screenshot.png)
-
-Craft Remote Backup makes it easy to create offsite remote backups from the comfort of the Craft Control Panel. Along with a few CLI commands, this gives you the ability to take regular snapshots of your database and assets and rest assured that they are stored securely offsite.
-
-It provides an easy-to-configure settings page as well as an interface in Craft's "utilties" section to create new remote database and volume backups.
 
 ## Configuration
 
@@ -226,16 +226,14 @@ AWS_BUCKET_BACKUP_PREFIX="craft-backups/craft-test"
 
 ## Troubleshooting
 
-If you are getting errors while pushing/pulling/creating/restoring or pruning, the first thing to check is the Craft logs at `storage/logs/web.log`.
-
-### Credentials
-
-For pushing and pulling, the most likely issue is with your credentials, so double check that those are OK.
+If you are getting errors, the first thing to check is the Craft logs at `storage/logs/web.log`. The most likely issue is with your credentials, so double check that those are OK.
 
 ### Memory limit creating volumes
 
 When you create a new volume backup, it's possible that your PHP memory limit will cause the process to crash. Make sure your memory limit is > than the volume folder you are trying to backup.
 
-## Credits and support
+## Support
+
+<img src="../craft-remote-sync/resources/img/feral-logo.svg" width="250px" style="text-align:left">
 
 Brought to you by [Feral](https://weareferal.com). Any problems email [timmy@weareferal.com](mailto:timmy@weareferal.com?subject=Craft%20Env%20Sync%20Question) or leave an issue on Github.
