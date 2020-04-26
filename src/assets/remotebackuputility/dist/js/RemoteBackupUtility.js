@@ -2,6 +2,11 @@
   Craft.RemoteBackupUtility = Garnish.Base.extend({
     init: function (id) {
       this.$element = $("#" + id);
+
+      if (this.$element.length <= 0) {
+        return;
+      }
+  
       this.$form = $("form", this.$element);
       this.$table = $("table", this.$element);
       this.$tbody = $("tbody", this.$table);

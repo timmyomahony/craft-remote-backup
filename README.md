@@ -12,6 +12,10 @@ Craft Remote Backup makes it easy to create offsite remote backups from the comf
 
 It provides an easy-to-configure settings page as well as an interface in Craft's "utilties" section to create new remote database and volume backups.
 
+## Requirements
+
+This plugin requires Craft CMS 3.0.0 or later.
+
 ## Installation
 
 To install the plugin, follow these instructions.
@@ -234,6 +238,6 @@ When you create a new volume backup, it's possible that your PHP memory limit wi
 
 ## Support
 
-<img src="../craft-remote-sync/resources/img/feral-logo.svg" width="250px" style="text-align:left">
+<img src="resources/img/feral-logo.svg" width="250px">
 
 Brought to you by [Feral](https://weareferal.com). Any problems email [timmy@weareferal.com](mailto:timmy@weareferal.com?subject=Craft%20Env%20Sync%20Question) or leave an issue on Github.
