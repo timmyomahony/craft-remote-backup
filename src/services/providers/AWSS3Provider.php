@@ -13,7 +13,7 @@ use weareferal\remotebackup\exceptions\ProviderException;
 
 
 
-class S3Provider extends RemoteBackupService implements Provider
+class AWSS3Provider extends RemoteBackupService implements Provider
 {
     /**
      * Return S3 keys
