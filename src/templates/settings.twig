@@ -163,7 +163,6 @@
         suggestAliases: true,
         value: settings.b2BucketPrefix,
         placeholder: "craft-backups/my-site",
-        required: (settings.cloudProvider == 'b2'),
         errors: settings.getErrors('b2BucketPrefix'),
         warning: configWarning('b2BucketPrefix', 'remote-backup')
     }) }}

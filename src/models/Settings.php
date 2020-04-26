@@ -110,8 +110,7 @@ class Settings extends Model
                 $vars = [
                     $this->b2MasterKeyID,
                     $this->b2MasterAppKey,
-                    $this->b2BucketName,
-                    $this->b2BucketPrefix
+                    $this->b2BucketName
                 ];
                 break;
         }
