@@ -9,3 +9,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 
 - Initial release
+
+## 1.0.1 - 2020-03-06
+
+### Added
+
+- Added ability to hide either the database or volume backups from the utilities panel

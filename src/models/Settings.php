@@ -24,6 +24,9 @@ class Settings extends Model
     public $pruneMonthlyCount = 6;
     public $pruneYearlyCount = 3;
 
+    public $hideDatabases = false;
+    public $hideVolumes = false;
+
     public function rules(): array
     {
         return [
@@ -46,14 +49,29 @@ class Settings extends Model
                 'string'
             ],
             [
-                ['enabled', 'useQueue', 'keepLocal', 'prune'],
+                ['enabled', 'useQueue', 'keepLocal', 'prune', 'hideDatabases', 'hideVolumes'],
                 'boolean'
             ],
             [
                 ['pruneHourlyCount', 'pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
                 'number'
-            ]
+            ],
+            // This seems like a poor API design in Yii 2. We want to show a 
+            // validation when a user hides both the database and volumes. You
+            //  can't create custom validators that run on two separate fields
+            // (as it would run twice)
+            //
+            // https://www.yiiframework.com/doc/guide/2.0/en/input-validation#multiple-attributes-validation
+            ['hideDatabases', 'validateHideRules'],
         ];
+    }
+
+    public function validateHideRules($attribute, $params)
+    {
+        if ($this->hideDatabases && $this->hideVolumes) {
+            $this->addError('hideDatabases', 'You cannot hide both databases and volumes');
+            $this->addError('hideVolumes', 'You cannot hide both databases and volumes');
+        }
     }
 
     public function configured(): bool

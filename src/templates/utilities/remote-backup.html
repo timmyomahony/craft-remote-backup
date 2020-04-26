@@ -1,4 +1,5 @@
 {% import "_includes/forms" as forms %}
+
 {% if not settings.configured() %}
     <div class="field">
         <p class="warning"><strong>{{ 'Plugin settings have not been configured yet'|t('remote-backup') }}</strong></p>
@@ -23,35 +24,36 @@
             }, 3000);
         </script>
     {% endif %}
-
     <div class="rb-utilities">
-        {% include 'remote-backup/utilities/_includes/_remote-backup-section' with {
-            label: 'Database',
-            labelPlural: 'Databases',
-            icon: 'database',
-            id: 'rb-utilities-database',
-            listAction: 'remote-backup/remote-backup/list-databases',
-            pushAction: 'remote-backup/remote-backup/push-database',
-            disabled: false
-        } %}
-
-        {% embed 'remote-backup/utilities/_includes/_remote-backup-section' with {
-            label: 'Volume',
-            labelPlural: 'Volumes',
-            label: 'Volume',
-            icon: 'asset',
-            id: 'rb-utilities-volumes',
-            listAction: 'remote-backup/remote-backup/list-volumes',
-            pushAction: 'remote-backup/remote-backup/push-volumes',
-            disabled: not showVolumes
-        } %}
-            {% block message %}
-                {% if not showVolumes %}<p class="light">{{ 'No volumes created yet'|t('remote-backup') }}</p>{% endif %}
-            {% endblock %}
-        {% endembed %}
-
-        {% if queueActive %}
-            <div class="rb-utilities-guard">&nbsp;</div>
+        {% if not settings.hideDatabases %}
+            {% include 'remote-backup/utilities/_includes/_remote-backup-section' with {
+                label: 'Database',
+                labelPlural: 'Databases',
+                icon: 'database',
+                id: 'rb-utilities-database',
+                listAction: 'remote-backup/remote-backup/list-databases',
+                pushAction: 'remote-backup/remote-backup/push-database',
+                disabled: false
+            } %}
+        {% endif %}
+        {% if not settings.hideVolumes %}
+            {% embed 'remote-backup/utilities/_includes/_remote-backup-section' with {
+                label: 'Volume',
+                labelPlural: 'Volumes',
+                label: 'Volume',
+                icon: 'asset',
+                id: 'rb-utilities-volumes',
+                listAction: 'remote-backup/remote-backup/list-volumes',
+                pushAction: 'remote-backup/remote-backup/push-volumes',
+                disabled: not showVolumes
+            } %}
+                {% block message %}
+                    {% if not showVolumes %}<p class="light">{{ 'No volumes created yet'|t('remote-backup') }}</p>{% endif %}
+                {% endblock %}
+            {% endembed %}
+            {% if queueActive %}
+                <div class="rb-utilities-guard">&nbsp;</div>
+            {% endif %}
         {% endif %}
     </div>
 {% endif %}

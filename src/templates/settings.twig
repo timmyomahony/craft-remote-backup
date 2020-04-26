@@ -197,3 +197,25 @@
     errors: settings.getErrors('pruneYearlyCount'),
     warning: configWarning('pruneYearlyCount', 'remote-backup')
 }) }}
+
+<hr>
+
+{{ forms.lightswitchField({
+    label: "Hide Databases"|t('remote-backup'),
+    instructions: "Hide the database section altogether from the utilities page"|t('remote-backup'),
+    name: 'hideDatabases',
+    id: 'hideDatabases',
+    on: settings.hideDatabases,
+    errors: settings.getErrors('hideDatabases'),
+    warning: configWarning('hideDatabases', 'remote-backup')
+}) }}
+
+{{ forms.lightswitchField({
+    label: "Hide Volumes"|t('remote-backup'),
+    instructions: "Hide the volumes section altogether from the utiltiies page"|t('remote-backup'),
+    name: 'hideVolumes',
+    id: 'hideVolumes',
+    on: settings.hideVolumes,
+    errors: settings.getErrors('hideVolumes'),
+    warning: configWarning('hideVolumes', 'remote-backup')
+}) }}
