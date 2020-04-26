@@ -67,25 +67,14 @@ Whichever approach you choose, you need to first configure your remote provider 
 
 ### Providers
 
-Currently the only available provider is AWS S3 but more are to come soon (if you require another provider, please leave an issue on Github)
+Remote Backup supports a number of providers. Each provider has slightly different configuration so please follow the links below to get a short guide for configuring your preferred provider.
 
-#### AWS
+Bear in mind that you will need to additionally install the relevent SDK for your provider.
 
-The details entered here correspond to your AWS S3 account and bucket that you want to use for backups. It's recommended to set up a new IAM user that has programmatic access (meaning via a acces/secret key) to a private S3 bucket.
-
-Once you have set this bucket up, you can either enter your AWS S3 details directly into the setting page/config file, or you can use environment variables via your `.env` file (this is the recommended approach as seen in the screenshot above). This latter approach is more portable and secure as it prevents any private access/secret key values being included in files that you might commit to Github. Furthermore is means these variables can be reused in other plugins etc.
-
-Here is an example portion of a `.env` file:
-
-```sh
-...
-
-AWS_ACCESS_KEY="..."
-AWS_SECRET_KEY="..."
-AWS_REGION="us-west-2"
-AWS_BUCKET_NAME="feral-backups"
-AWS_BUCKET_PREFIX="craft-backups/my-site"
-```
+- [Amazon S3](https://github.com/weareferal/craft-remote-backup/wiki/Amazon-S3)
+- [Backblaze B2](https://github.com/weareferal/craft-remote-backup/wiki/Backblaze-B2)
+- [Dropbox](https://github.com/weareferal/craft-remote-backup/wiki/Dropbox)
+- [Google Drive](https://github.com/weareferal/craft-remote-backup/wiki/Google-Drive)
 
 ## Usage
 

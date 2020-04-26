@@ -7,12 +7,21 @@ use craft\base\Model;
 class Settings extends Model
 {
     public $enabled = true;
+
     public $cloudProvider = 's3';
+
+    // AWS
     public $s3AccessKey;
     public $s3SecretKey;
     public $s3RegionName;
     public $s3BucketName;
     public $s3BucketPrefix;
+
+    // Backblaze
+    public $b2MasterKeyID;
+    public $b2MasterAppKey;
+    public $b2BucketName;
+    public $b2BucketPrefix;
 
     public $useQueue = false;
     public $keepLocal = false;
@@ -31,29 +40,41 @@ class Settings extends Model
     {
         return [
             [
-                ['s3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName', 'pruneHourlyCount'],
+                ['s3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName'],
                 'required',
                 'when' => function ($model) {
                     return $model->cloudProvider == 's3' & $model->enabled == 1;
                 }
             ],
             [
-                ['pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
+                ['b2MasterKeyID', 'b2MasterAppKey', 'b2BucketName'],
+                'required',
+                'when' => function ($model) {
+                    return $model->cloudProvider == 'b2' & $model->enabled == 1;
+                }
+            ],
+            [
+                ['pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount',
+                 'pruneYearlyCount'],
                 'required',
                 'when' => function ($model) {
                     return $model->prune == 1 & $model->enabled == 1;
                 }
             ],
             [
-                ['cloudProvider', 's3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName', 's3BucketPrefix'],
+                ['cloudProvider', 's3AccessKey', 's3SecretKey', 's3BucketName',
+                 's3RegionName', 's3BucketPrefix', 'b2MasterKeyID', 'b2MasterAppKey',
+                 'b2BucketName', 'b2BucketPrefix'],
                 'string'
             ],
             [
-                ['enabled', 'useQueue', 'keepLocal', 'prune', 'hideDatabases', 'hideVolumes'],
+                ['enabled', 'useQueue', 'keepLocal', 'prune', 'hideDatabases',
+                 'hideVolumes'],
                 'boolean'
             ],
             [
-                ['pruneHourlyCount', 'pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
+                ['pruneHourlyCount', 'pruneDailyCount', 'pruneWeeklyCount',
+                 'pruneMonthlyCount', 'pruneYearlyCount'],
                 'number'
             ],
             // This seems like a poor API design in Yii 2. We want to show a 
@@ -76,12 +97,24 @@ class Settings extends Model
 
     public function configured(): bool
     {
-        $vars = [
-            $this->s3AccessKey,
-            $this->s3SecretKey,
-            $this->s3RegionName,
-            $this->s3BucketName
-        ];
+        switch($this->cloudProvider) {
+            case "s3":
+                $vars = [
+                    $this->s3AccessKey,
+                    $this->s3SecretKey,
+                    $this->s3RegionName,
+                    $this->s3BucketName
+                ];
+                break;
+            case "b2": 
+                $vars = [
+                    $this->b2MasterKeyID,
+                    $this->b2MasterAppKey,
+                    $this->b2BucketName,
+                    $this->b2BucketPrefix
+                ];
+                break;
+        }
         foreach ($vars as $var) {
             if (!$var || $var == '') {
                 return false;

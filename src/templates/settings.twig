@@ -29,7 +29,8 @@
     id: 'cloudProvider',
     name: 'cloudProvider',
     options: [
-        { label: 'Amazon S3', value: 's3' }
+        { label: 'Amazon S3', value: 's3' },
+        { label: 'Backblaze B2', value: 'b2' }
     ],
     value: settings.cloudProvider,
     required: true,
@@ -37,74 +38,136 @@
     warning: configWarning('cloudProvider', 'remote-backup')
 }) }}
 
-{{ forms.autosuggestField({
-    label: "S3 Access Key"|t('remote-backup'),
-    instructions: "The access key associated with your IAM user"|t('remote-backup'),
-    name: 's3AccessKey',
-    id: 's3AccessKey',
-    suggestEnvVars: true,
-    suggestAliases: true,
-    value: settings.s3AccessKey,
-    required: (settings.s3AccessKey == 's3'),
-    type: 'password',
-    errors: settings.getErrors('s3AccessKey'),
-    warning: configWarning('s3AccessKey', 'remote-backup')
-}) }}
+{# AWS #}
+<div class="provider provider-s3">
+    {{ forms.autosuggestField({
+        label: "S3 Access Key"|t('remote-backup'),
+        instructions: "The access key associated with your IAM user"|t('remote-backup'),
+        name: 's3AccessKey',
+        id: 's3AccessKey',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.s3AccessKey,
+        required: (settings.cloudProvider == 's3'),
+        type: 'password',
+        errors: settings.getErrors('s3AccessKey'),
+        warning: configWarning('s3AccessKey', 'remote-backup')
+    }) }}
 
-{{ forms.autosuggestField({
-    label: "S3 Secret Key",
-    instructions: "The secret key associated with your IAM user"|t('remote-backup'),
-    name: 's3SecretKey',
-    id: 's3SecretKey',
-    suggestEnvVars: true,
-    suggestAliases: true,
-    value: settings.s3SecretKey,
-    required: (settings.s3SecretKey == 's3'),
-    type: 'password',
-    errors: settings.getErrors('s3SecretKey'),
-    warning: configWarning('s3SecretKey', 'remote-backup')
-}) }}
+    {{ forms.autosuggestField({
+        label: "S3 Secret Key",
+        instructions: "The secret key associated with your IAM user"|t('remote-backup'),
+        name: 's3SecretKey',
+        id: 's3SecretKey',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.s3SecretKey,
+        required: (settings.cloudProvider == 's3'),
+        type: 'password',
+        errors: settings.getErrors('s3SecretKey'),
+        warning: configWarning('s3SecretKey', 'remote-backup')
+    }) }}
 
-{{ forms.autosuggestField({
-    label: "S3 Bucket Name"|t('remote-backup'),
-    instructions: "The name of the S3 bucket you want to send backups to"|t('remote-backup'),
-    name: 's3BucketName',
-    id: 's3BucketName',
-    suggestEnvVars: true,
-    suggestAliases: true,
-    value: settings.s3BucketName,
-    placeholder: "my-craft-backups",
-    required: (settings.s3BucketName == 's3'),
-    errors: settings.getErrors('s3BucketName'),
-    warning: configWarning('s3BucketName', 'remote-backup')
-}) }}
+    {{ forms.autosuggestField({
+        label: "S3 Bucket Name"|t('remote-backup'),
+        instructions: "The name of the S3 bucket you want to send backups to"|t('remote-backup'),
+        name: 's3BucketName',
+        id: 's3BucketName',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.s3BucketName,
+        placeholder: "my-craft-backups",
+        required: (settings.cloudProvider == 's3'),
+        errors: settings.getErrors('s3BucketName'),
+        warning: configWarning('s3BucketName', 'remote-backup')
+    }) }}
 
-{{ forms.autosuggestField({
-    label: "S3 Region Name"|t('remote-backup'),
-    instructions: "The AWS region your S3 bucket is in"|t('remote-backup'),
-    name: 's3RegionName',
-    id: 's3RegionName',
-    suggestEnvVars: true,
-    suggestAliases: true,
-    value: settings.s3RegionName,
-    placeholder: "us-west-2",
-    required: (settings.s3RegionName == 's3'),
-    errors: settings.getErrors('s3RegionName'),
-    warning: configWarning('s3RegionName', 'remote-backup')
-}) }}
+    {{ forms.autosuggestField({
+        label: "S3 Region Name"|t('remote-backup'),
+        instructions: "The AWS region your S3 bucket is in"|t('remote-backup'),
+        name: 's3RegionName',
+        id: 's3RegionName',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.s3RegionName,
+        placeholder: "us-west-2",
+        required: (settings.cloudProvider == 's3'),
+        errors: settings.getErrors('s3RegionName'),
+        warning: configWarning('s3RegionName', 'remote-backup')
+    }) }}
 
-{{ forms.autosuggestField({
-    label: "S3 Bucket Prefix"|t('remote-backup'),
-    instructions: "A path within your S3 bucket to prefix your backups with. Do not include a leading or trailing slash"|t('remote-backup'),
-    name: 's3BucketPrefix',
-    id: 's3BucketPrefix',
-    suggestEnvVars: true,
-    suggestAliases: true,
-    value: settings.s3BucketPrefix,
-    placeholder: "craft-backups/my-site",
-    errors: settings.getErrors('s3BucketPrefix'),
-    warning: configWarning('s3BucketPrefix', 'remote-backup')
-}) }}
+    {{ forms.autosuggestField({
+        label: "S3 Bucket Prefix"|t('remote-backup'),
+        instructions: "A path within your S3 bucket to prefix your backups with. Do not include a leading or trailing slash"|t('remote-backup'),
+        name: 's3BucketPrefix',
+        id: 's3BucketPrefix',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.s3BucketPrefix,
+        placeholder: "craft-backups/my-site",
+        errors: settings.getErrors('s3BucketPrefix'),
+        warning: configWarning('s3BucketPrefix', 'remote-backup')
+    }) }}
+</div>
+
+{# Backblaze B2 #}
+<div class="provider provider-b2">
+    {{ forms.autosuggestField({
+        label: "B2 Master Key ID"|t('remote-backup'),
+        instructions: "Your Backblaze master 'keyID'"|t('remote-backup'),
+        name: 'b2MasterKeyID',
+        id: 'b2MasterKeyID',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.b2MasterKeyID,
+        required: (settings.cloudProvider == 'b2'),
+        type: 'password',
+        errors: settings.getErrors('b2MasterKeyID'),
+        warning: configWarning('b2MasterKeyID', 'remote-backup')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "B2 Master Application Key",
+        instructions: "Your Backblaze master 'applicationKey'"|t('remote-backup'),
+        name: 'b2MasterAppKey',
+        id: 'b2MasterAppKey',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.b2MasterAppKey,
+        required: (settings.cloudProvider == 'b2'),
+        type: 'password',
+        errors: settings.getErrors('b2MasterAppKey'),
+        warning: configWarning('b2MasterAppKey', 'remote-backup')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "S2 Bucket Name"|t('remote-backup'),
+        instructions: "The name of the B2 bucket you want to send backups to"|t('remote-backup'),
+        name: 'b2BucketName',
+        id: 'b2BucketName',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.b2BucketName,
+        placeholder: "my-craft-backups",
+        required: (settings.cloudProvider == 'b2'),
+        errors: settings.getErrors('b2BucketName'),
+        warning: configWarning('b2BucketName', 'remote-backup')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "B2 Bucket Prefix"|t('remote-backup'),
+        instructions: "A path within your B2 bucket to prefix your backups with. Do not include a leading or trailing slash"|t('remote-backup'),
+        name: 'b2BucketPrefix',
+        id: 'b2BucketPrefix',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.b2BucketPrefix,
+        placeholder: "craft-backups/my-site",
+        required: (settings.cloudProvider == 'b2'),
+        errors: settings.getErrors('b2BucketPrefix'),
+        warning: configWarning('b2BucketPrefix', 'remote-backup')
+    }) }}
+</div>
 
 <hr>
 

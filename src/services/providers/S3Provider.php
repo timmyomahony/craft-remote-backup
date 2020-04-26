@@ -1,15 +1,15 @@
 <?php
 
-namespace weareferal\RemoteBackup\services\providers;
+namespace weareferal\remotebackup\services\providers;
 
 use Craft;
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
 
-use weareferal\RemoteBackup\RemoteBackup;
-use weareferal\RemoteBackup\services\Provider;
-use weareferal\RemoteBackup\services\RemoteBackupService;
-use weareferal\RemoteBackup\exceptions\ProviderException;
+use weareferal\remotebackup\RemoteBackup;
+use weareferal\remotebackup\services\Provider;
+use weareferal\remotebackup\services\RemoteBackupService;
+use weareferal\remotebackup\exceptions\ProviderException;
 
 
 
@@ -64,7 +64,6 @@ class S3Provider extends RemoteBackupService implements Provider
      * Push a file path to S3
      *  
      * @param string $path The full filesystem path to file
-     * @return bool If the operation was successful
      * @since 1.0.0
      */
     public function push($path)
@@ -74,7 +73,7 @@ class S3Provider extends RemoteBackupService implements Provider
         $client = $this->getS3Client();
         $pathInfo = pathinfo($path);
 
-        $key = $this->getAWSKey($pathInfo['basename']);
+        $key = $this->getPrefixedKey($pathInfo['basename']);
 
         try {
             $client->putObject([
@@ -87,30 +86,9 @@ class S3Provider extends RemoteBackupService implements Provider
         }
     }
 
-    public function pull($key, $path)
-    {
-        $settings = RemoteBackup::getInstance()->settings;
-        $s3BucketName = Craft::parseEnv($settings->s3BucketName);
-        $client = $this->getS3Client();
-        $key = $this->getAWSKey($key);
-
-        try {
-            $client->getObject([
-                'Bucket' => $s3BucketName,
-                'SaveAs' => $path,
-                'Key' => $key,
-            ]);
-        } catch (AwsException $exception) {
-            throw new ProviderException($this->createErrorMessage($exception));
-        }
-
-        return true;
-    }
-
     /**
      * Delete a remote S3 key
      * 
-     * @return bool Remote key was successfully deleted
      * @since 1.0.0
      */
     public function delete($key)
@@ -118,7 +96,7 @@ class S3Provider extends RemoteBackupService implements Provider
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketName = Craft::parseEnv($settings->s3BucketName);
         $client = $this->getS3Client();
-        $key = $this->getAWSKey($key);
+        $key = $this->getPrefixedKey($key);
 
         $exists = $client->doesObjectExist($s3BucketName, $key);
         if (!$exists) {
@@ -142,7 +120,7 @@ class S3Provider extends RemoteBackupService implements Provider
      * @return string The prefixed key
      * @since 1.0.0
      */
-    private function getAWSKey($key): string
+    private function getPrefixedKey($key): string
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketPrefix = Craft::parseEnv($settings->s3BucketPrefix);

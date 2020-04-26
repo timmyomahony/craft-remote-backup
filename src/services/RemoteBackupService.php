@@ -8,15 +8,16 @@ use Craft\helpers\FileHelper;
 use Craft\helpers\StringHelper;
 
 use weareferal\remotebackup\RemoteBackup;
-use weareferal\remotebackup\services\providers\S3Provider;
 use weareferal\remotebackup\helpers\ZipHelper;
+
+use weareferal\remotebackup\services\providers\S3Provider;
+use weareferal\remotebackup\services\providers\BackblazeB2Provider;
 
 
 interface Provider
 {
     public function list($filterExtensions): array;
     public function push($path);
-    public function pull($key, $path);
     public function delete($key);
 }
 
@@ -358,6 +359,9 @@ class RemoteBackupService extends Component
         switch ($provider) {
             case "s3":
                 return S3Provider::class;
+                break;
+            case "b2":
+                return BackblazeB2Provider::class;
                 break;
         }
     }
