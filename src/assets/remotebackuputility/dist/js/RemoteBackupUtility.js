@@ -67,7 +67,7 @@
             $row.removeClass("first");
           }
           $td.text(backups[i].label);
-          $td.attr("title", backups[i].value);
+          $td.attr("title", backups[i].title);
           $td.attr("data-filename", backups[i].value);
           if (backups.length > 1 && i === 0) {
             $td.append($("<span>").text("latest"));

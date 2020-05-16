@@ -9,6 +9,7 @@ use Craft\helpers\StringHelper;
 
 use weareferal\remotebackup\RemoteBackup;
 use weareferal\remotebackup\helpers\ZipHelper;
+use weareferal\remotebackup\helpers\TimeHelper;
 
 use weareferal\remotebackup\services\providers\AWSS3Provider;
 use weareferal\remotebackup\services\providers\BackblazeB2Provider;
@@ -28,6 +29,7 @@ class RemoteBackupInstance
 {
     public $filename;
     public $datetime;
+    public $timesince;
     public $label;
     public $env;
 
@@ -47,12 +49,14 @@ class RemoteBackupInstance
         $env = $matches[1];
         $date = $matches[2];
         $datetime = date_create_from_format('ymd_Gis', $date);
+        $timesince = TimeHelper::time_since($datetime->getTimestamp());
         $label = $datetime->format('Y-m-d H:i:s');
         if ($env) {
             $label = $label  . ' (' . $env . ')';
         }
         $this->filename = $_filename;
         $this->datetime = $datetime;
+        $this->timesince = $timesince;
         $this->label = $label;
         $this->env = $env;
     }
@@ -74,7 +78,8 @@ class RemoteBackupService extends Component
         foreach ($backups as $i => $backup) {
             $options[$i] = [
                 "label" => $backup->label,
-                "value" => $backup->filename
+                "value" => $backup->filename,
+                "title" => $backup->timesince . " ago"
             ];
         }
         return $options;
