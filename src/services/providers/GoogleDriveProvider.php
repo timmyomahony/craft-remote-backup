@@ -92,17 +92,11 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
     {
         $mimeType = mime_content_type($path);
         $settings = RemoteBackup::getInstance()->settings;
-        $googleTeamDriveId = Craft::parseEnv($settings->googleTeamDriveId);
         $googleDriveFolderId = Craft::parseEnv($settings->googleDriveFolderId);
 
         $service = new Google_Service_Drive($this->getClient());
         $gFile = new Google_Service_Drive_DriveFile();
         $gFile->setName(basename($path));
-
-        # Upload to team drive
-        if ($googleTeamDriveId) {
-            $gFile->setTeamDriveId($googleTeamDriveId);
-        }
 
         # Upload to specified folder
         if ($googleDriveFolderId) {

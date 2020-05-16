@@ -28,7 +28,6 @@ class Settings extends Model
     public $googleClientId;
     public $googleClientSecret;
     public $googleAuthRedirect;
-    public $googleTeamDriveId;
     public $googleDriveFolderId;
 
     public $useQueue = false;
@@ -87,7 +86,7 @@ class Settings extends Model
                     's3RegionName', 's3BucketPrefix', 'b2MasterKeyID', 'b2MasterAppKey',
                     'b2BucketName', 'b2BucketPrefix', 'googleClientId',
                     'googleClientSecret', 'googleProjectName', 'googleAuthRedirect',
-                    'googleTeamDriveId', 'googleDriveFolderId'
+                    'googleDriveFolderId'
                 ],
                 'string'
             ],

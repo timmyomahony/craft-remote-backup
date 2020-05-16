@@ -227,18 +227,6 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "Google Drive Team Drive ID",
-        instructions: "The ID for the team drive you want to upload backups to (this is optional)"|t('remote-backup'),
-        name: 'googleTeamDriveId',
-        id: 'googleTeamDriveId',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.googleTeamDriveId,
-        errors: settings.getErrors('googleTeamDriveId'),
-        warning: configWarning('googleTeamDriveId', 'remote-backup')
-    }) }}
-
-    {{ forms.autosuggestField({
         label: "Google Drive Folder ID",
         instructions: "The ID for the folder you want to upload backups to (optional but recommended)"|t('remote-backup'),
         name: 'googleDriveFolderId',
