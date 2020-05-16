@@ -225,6 +225,31 @@
         errors: settings.getErrors('googleAuthRedirect'),
         warning: configWarning('googleAuthRedirect', 'remote-backup')
     }) }}
+
+    {{ forms.autosuggestField({
+        label: "Google Drive Team Drive ID",
+        instructions: "The ID for the team drive you want to upload backups to (this is optional)"|t('remote-backup'),
+        name: 'googleTeamDriveId',
+        id: 'googleTeamDriveId',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.googleTeamDriveId,
+        errors: settings.getErrors('googleTeamDriveId'),
+        warning: configWarning('googleTeamDriveId', 'remote-backup')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "Google Drive Folder ID",
+        instructions: "The ID for the folder you want to upload backups to (optional but recommended)"|t('remote-backup'),
+        name: 'googleDriveFolderId',
+        id: 'googleDriveFolderId',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.googleDriveFolderId,
+        errors: settings.getErrors('googleDriveFolderId'),
+        warning: configWarning('googleDriveFolderId', 'remote-backup')
+    }) }}    
+
     {% if isConfigured and not isAuthenticated %}
         <div>
             <a href="/admin/remote-backup/google-drive/auth" class="btn">{{"Authenticate with Google Drive"|t}}</a>

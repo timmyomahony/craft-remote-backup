@@ -6,6 +6,7 @@ use Craft;
 
 use Google_Client;
 use Google_Service_Drive;
+use Google_Service_Drive_DriveFile;
 
 use weareferal\remotebackup\RemoteBackup;
 use weareferal\remotebackup\services\Provider;
@@ -13,7 +14,20 @@ use weareferal\remotebackup\services\RemoteBackupService;
 use weareferal\remotebackup\exceptions\ProviderException;
 
 
-
+/**
+ * 
+ * Bear in mind that the version of this PHP Client library (v2) is different
+ * to the actual Google Drive API (which is v3). In other words, we're using
+ * v2 of this client library to access v3 of the Google Drive API. Confusing.
+ * 
+ * Furthermore, the Google Drive docs are terrible, so here are some of the
+ * slightly more relevent links:
+ * 
+ * https://developers.google.com/drive/api/v3/quickstart/php
+ * https://developers.google.com/resources/api-libraries/documentation/drive/v3/php/latest
+ * https://github.com/googleapis/google-api-php-client/tree/master/src/Google/Service
+ * https://github.com/googleapis/google-api-php-client-services/blob/master/src/Google/Service/Drive.php
+ */
 class GoogleDriveProvider extends RemoteBackupService implements Provider
 {
     private $tokenFileName = "google-drive-remote-backup-token";
@@ -45,7 +59,7 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
             // Try refresh
             $isExpired = $client->getRefreshToken() == null;
         }
-        return ! $isExpired;
+        return !$isExpired;
     }
 
     /**
@@ -57,6 +71,14 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
      */
     public function list($filterExtension = null): array
     {
+        $client = $this->getClient();
+        $service = new Google_Service_Drive($client);
+        // 1H3TJgy-maP0SOG1J9PKqwEwYlvX4Xh8z
+        $params = array(
+            'spaces' => 'drive',
+            'q' => "'1H3TJgy-maP0SOG1J9PKqwEwYlvX4Xh8z' in parents"
+        );
+        $results = $service->files->listFiles($params);
         return [];
     }
 
@@ -68,6 +90,34 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
      */
     public function push($path)
     {
+        $mimeType = mime_content_type($path);
+        $settings = RemoteBackup::getInstance()->settings;
+        $googleTeamDriveId = Craft::parseEnv($settings->googleTeamDriveId);
+        $googleDriveFolderId = Craft::parseEnv($settings->googleDriveFolderId);
+
+        $service = new Google_Service_Drive($this->getClient());
+        $gFile = new Google_Service_Drive_DriveFile();
+        $gFile->setName(basename($path));
+
+        # Upload to team drive
+        if ($googleTeamDriveId) {
+            $gFile->setTeamDriveId($googleTeamDriveId);
+        }
+
+        # Upload to specified folder
+        if ($googleDriveFolderId) {
+            $gFile->setParents([$googleDriveFolderId]);
+        }
+
+        $service->files->create(
+            $gFile,
+            array(
+                'data' => file_get_contents($path),
+                'mimeType' => $mimeType,
+                'uploadType' => 'multipart',
+                'supportsAllDrives' => true
+            )
+        );
     }
 
     /**
@@ -79,13 +129,14 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
     {
     }
 
-    public function getTokenPath() {
+    public function getTokenPath()
+    {
         return Craft::$app->path->getStoragePath()
-        . DIRECTORY_SEPARATOR
-        . "remote-backup"
-        . DIRECTORY_SEPARATOR
-        . $this->tokenFileName
-        . ".json";
+            . DIRECTORY_SEPARATOR
+            . "remote-backup"
+            . DIRECTORY_SEPARATOR
+            . $this->tokenFileName
+            . ".json";
     }
 
     /**
@@ -94,7 +145,7 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
      * @return Client The Google SDK client object
      * @since 1.1.0
      */
-    function getClient()
+    function getClient(): Google_Client
     {
         $settings = RemoteBackup::getInstance()->settings;
         $client = new Google_Client();
