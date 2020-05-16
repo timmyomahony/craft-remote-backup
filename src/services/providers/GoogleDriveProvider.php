@@ -136,8 +136,24 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
      * 
      * @since 1.1.0
      */
-    public function delete($key)
+    public function delete($filename)
     {
+        $settings = RemoteBackup::getInstance()->settings;
+        $googleDriveFolderId = Craft::parseEnv($settings->googleDriveFolderId);
+        $service = new Google_Service_Drive($this->getClient());
+
+        $q = "name = '${filename}'";
+        if ($googleDriveFolderId) {
+            $q = "'${googleDriveFolderId}' in parents and " . $q;
+        }
+
+        $params = array(
+            'spaces' => 'drive',
+            'q' => $q
+        );
+
+        $results = $service->files->listFiles($params);
+        $service->files->delete($results[0]->id);
     }
 
     public function getTokenPath()
