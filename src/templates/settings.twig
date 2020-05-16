@@ -31,7 +31,8 @@
     options: [
         { label: 'Amazon S3', value: 's3' },
         { label: 'Backblaze B2', value: 'b2' },
-        { label: 'Google Drive', value: 'google' }
+        { label: 'Google Drive', value: 'google' },
+        { label: 'Dropbox', value: 'dropbox' }
     ],
     value: settings.cloudProvider,
     required: true,
@@ -243,6 +244,22 @@
             <a href="/admin/remote-backup/google-drive/auth" class="btn">{{"Authenticate with Google Drive"|t}}</a>
         </div>
     {% endif %}
+</div>
+
+{# Dropbox #}
+<div class="provider provider-dropbox">
+    {{ forms.autosuggestField({
+        label: "Dropbox Access Token",
+        instructions: "You Dropbox app's access token"|t('remote-backup'),
+        name: 'dropboxAccessToken',
+        id: 'dropboxAccessToken',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.dropboxAccessToken,
+        required: (settings.cloudProvider == 'dropbox'),
+        errors: settings.getErrors('dropboxAccessToken'),
+        warning: configWarning('dropboxAccessToken', 'remote-backup')
+    }) }}
 </div>
 
 <hr>
