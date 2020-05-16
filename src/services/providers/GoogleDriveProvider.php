@@ -77,10 +77,15 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
         $googleDriveFolderId = Craft::parseEnv($settings->googleDriveFolderId);
         $service = new Google_Service_Drive($this->getClient());
 
-        $params = array('spaces' => 'drive');
+        $q = "name contains '${filterExtension}'";
         if ($googleDriveFolderId) {
-            $params['q'] = "'${googleDriveFolderId}' in parents and name contains '${filterExtension}'";
+            $q = "'${googleDriveFolderId}' in parents and " . $q;
         }
+
+        $params = array(
+            'spaces' => 'drive',
+            'q' => $q
+        );
 
         $results = $service->files->listFiles($params);
 
@@ -88,9 +93,6 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
         foreach ($results as $result) {
             array_push($filenames, $result->getName());
         }
-
-
-        Craft::info($filenames, "remote-backup");
 
         return $filenames;
     }
