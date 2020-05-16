@@ -36,6 +36,7 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
      * Is Configured
      * 
      * @return boolean whether this provider is properly configured
+     * @since 1.1.0
      */
     public function isConfigured(): bool
     {
@@ -50,6 +51,7 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
      * Is Authenticated
      * 
      * @return boolean whether this provider is properly authenticated
+     * @since 1.1.0
      */
     public function isAuthenticated(): bool
     {
@@ -69,7 +71,7 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
      * 
      * @param string $extension The file extension to filter the results by
      * @return array[string] An array of files from Google Drive
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function list($filterExtension = null): array
     {
@@ -101,7 +103,7 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
      * Push a file to Google Drive
      *  
      * @param string $path The full filesystem path to file
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function push($path)
     {
@@ -132,7 +134,7 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
     /**
      * Delete a remote Google Drive file
      * 
-     * @since 1.0.0
+     * @since 1.1.0
      */
     public function delete($key)
     {

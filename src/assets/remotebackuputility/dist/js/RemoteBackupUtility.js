@@ -6,7 +6,7 @@
       if (this.$element.length <= 0) {
         return;
       }
-  
+
       this.$form = $("form", this.$element);
       this.$table = $("table", this.$element);
       this.$tbody = $("tbody", this.$table);
@@ -69,6 +69,9 @@
           $td.text(backups[i].label);
           $td.attr("title", backups[i].value);
           $td.attr("data-filename", backups[i].value);
+          if (backups.length > 1 && i === 0) {
+            $td.append($("<span>").text("latest"));
+          }
           this.$tbody.append($row);
         }
       } else {
