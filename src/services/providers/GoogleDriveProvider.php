@@ -65,21 +65,34 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
     /**
      * Return Google Drive files
      * 
+     * https://github.com/googleapis/google-api-php-client-services/blob/82f6213007f4d2acccdafd1372fd88447f728008/src/Google/Service/Drive/Resource/Files.php#L230
+     * 
      * @param string $extension The file extension to filter the results by
      * @return array[string] An array of files from Google Drive
      * @since 1.0.0
      */
     public function list($filterExtension = null): array
     {
-        $client = $this->getClient();
-        $service = new Google_Service_Drive($client);
-        // 1H3TJgy-maP0SOG1J9PKqwEwYlvX4Xh8z
-        $params = array(
-            'spaces' => 'drive',
-            'q' => "'1H3TJgy-maP0SOG1J9PKqwEwYlvX4Xh8z' in parents"
-        );
+        $settings = RemoteBackup::getInstance()->settings;
+        $googleDriveFolderId = Craft::parseEnv($settings->googleDriveFolderId);
+        $service = new Google_Service_Drive($this->getClient());
+
+        $params = array('spaces' => 'drive');
+        if ($googleDriveFolderId) {
+            $params['q'] = "'${googleDriveFolderId}' in parents and name contains '${filterExtension}'";
+        }
+
         $results = $service->files->listFiles($params);
-        return [];
+
+        $filenames = [];
+        foreach ($results as $result) {
+            array_push($filenames, $result->getName());
+        }
+
+
+        Craft::info($filenames, "remote-backup");
+
+        return $filenames;
     }
 
     /**
