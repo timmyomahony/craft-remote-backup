@@ -23,7 +23,7 @@ class DatabaseController extends Controller
 
     public function requirePluginConfigured()
     {
-        if (!RemoteBackup::getInstance()->getSettings()->configured()) {
+        if (!RemoteBackup::getInstance()->remotebackup->isConfigured()) {
             throw new \Exception('Remote Backup Plugin not correctly configured');
         }
     }

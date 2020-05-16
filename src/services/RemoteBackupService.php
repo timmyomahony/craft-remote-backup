@@ -12,10 +12,13 @@ use weareferal\remotebackup\helpers\ZipHelper;
 
 use weareferal\remotebackup\services\providers\AWSS3Provider;
 use weareferal\remotebackup\services\providers\BackblazeB2Provider;
+use weareferal\remotebackup\services\providers\GoogleDriveProvider;
 
 
 interface Provider
 {
+    public function isConfigured(): bool;
+    public function isAuthenticated(): bool;
     public function list($filterExtensions): array;
     public function push($path);
     public function delete($key);
@@ -362,6 +365,9 @@ class RemoteBackupService extends Component
                 break;
             case "b2":
                 return BackblazeB2Provider::class;
+                break;
+            case "google":
+                return GoogleDriveProvider::class;
                 break;
         }
     }

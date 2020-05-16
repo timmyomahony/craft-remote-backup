@@ -16,6 +16,32 @@ use weareferal\remotebackup\exceptions\ProviderException;
 class AWSS3Provider extends RemoteBackupService implements Provider
 {
     /**
+     * Is Configured
+     * 
+     * @return boolean whether this provider is properly configured
+     * @since 1.1.0
+     */
+    public function isConfigured()
+    {
+        $settings = RemoteBackup::getInstance()->settings;
+        return isset($settings->s3AccessKey) &&
+            isset($settings->s3SecretKey) &&
+            isset($settings->s3RegionName);
+    }
+
+    /**
+     * Is Authenticated
+     * 
+     * @return boolean whether this provider is properly authenticated
+     * @todo currently we assume that if you have the keys you are 
+     * authenitcated. We should do a check here
+     * @since 1.1.0
+     */
+    public function isAuthenticated() {
+        return true;
+    }
+
+    /**
      * Return S3 keys
      * 
      * @param string $extension The file extension to filter the results by
@@ -27,7 +53,7 @@ class AWSS3Provider extends RemoteBackupService implements Provider
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketName = Craft::parseEnv($settings->s3BucketName);
         $s3BucketPrefix = Craft::parseEnv($settings->s3BucketPrefix);
-        $client = $this->getS3Client();
+        $client = $this->getClient();
         $kwargs = [
             'Bucket' => $s3BucketName,
         ];
@@ -70,7 +96,7 @@ class AWSS3Provider extends RemoteBackupService implements Provider
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketName = Craft::parseEnv($settings->s3BucketName);
-        $client = $this->getS3Client();
+        $client = $this->getClient();
         $pathInfo = pathinfo($path);
 
         $key = $this->getPrefixedKey($pathInfo['basename']);
@@ -95,7 +121,7 @@ class AWSS3Provider extends RemoteBackupService implements Provider
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketName = Craft::parseEnv($settings->s3BucketName);
-        $client = $this->getS3Client();
+        $client = $this->getClient();
         $key = $this->getPrefixedKey($key);
 
         $exists = $client->doesObjectExist($s3BucketName, $key);
@@ -136,7 +162,7 @@ class AWSS3Provider extends RemoteBackupService implements Provider
      * @return S3Client The S3 client object
      * @since 1.0.0
      */
-    private function getS3Client(): S3Client
+    private function getClient(): S3Client
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3AccessKey = Craft::parseEnv($settings->s3AccessKey);

@@ -13,9 +13,10 @@ use Craft;
 use craft\base\Plugin;
 use craft\services\Utilities;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\services\UserPermissions;
-
+use craft\web\UrlManager;
 use yii\base\Event;
 
 use weareferal\remotebackup\utilities\RemoteBackupUtility;
@@ -70,6 +71,18 @@ class RemoteBackup extends Plugin
                 }
             );
         }
+
+        // Extra urls
+        if ($this->getSettings()->cloudProvider == "google") {
+            Event::on(
+                UrlManager::class,
+                UrlManager::EVENT_REGISTER_CP_URL_RULES,
+                function (RegisterUrlRulesEvent $event) {
+                    $event->rules['remote-backup/google-drive/auth'] = 'remote-backup/google-drive/auth';
+                    $event->rules['remote-backup/google-drive/auth-redirect'] = 'remote-backup/google-drive/auth-redirect';
+                }
+            );
+        }
     }
 
     protected function createSettingsModel(): Settings
@@ -82,10 +95,15 @@ class RemoteBackup extends Plugin
         $view = Craft::$app->getView();
         $view->registerAssetBundle(RemoteBackupSettingAsset::class);
         $view->registerJs("new Craft.RemoteBackupSettings('main-form');");
+
+        $isAuthenticated = $this->remotebackup->isAuthenticated();
+        $isConfigured = $this->remotebackup->isConfigured();
         return $view->renderTemplate(
             'remote-backup/settings',
             [
-                'settings' => $this->getSettings()
+                'settings' => $this->getSettings(),
+                'isConfigured' => $isConfigured,
+                'isAuthenticated' => $isAuthenticated
             ]
         );
     }

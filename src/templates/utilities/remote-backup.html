@@ -1,59 +1,65 @@
 {% import "_includes/forms" as forms %}
 
-{% if not settings.configured() %}
+{% if not isConfigured %}
     <div class="field">
         <p class="warning"><strong>{{ 'Plugin settings have not been configured yet'|t('remote-backup') }}</strong></p>
     </div>
 {% else %}
-    {% if queueActive %}
+    {% if not isAuthenticated %}
         <div class="field">
-            <p class="warning">{{ 'Your operation is currently in the queue. The page will automatically reload when complete.'|t('remote-backup') }}</p>
+            <p class="warning"><strong>{{ 'You need to authenticate with your provider'|t('remote-backup') }}</strong></p>
         </div>
-        <script>
-            // Reload the page when the queue empties
-            setInterval(function() {
-                $.get({
-                    url: Craft.getActionUrl("queue/get-job-info"),
-                    dataType: "json",
-                    success: function (response) {
-                        if (response['total'] <= 0) {
-                            window.location.reload();
-                        }
-                    },
-                });
-            }, 3000);
-        </script>
-    {% endif %}
-    <div class="rb-utilities">
-        {% if not settings.hideDatabases %}
-            {% include 'remote-backup/utilities/_includes/_remote-backup-section' with {
-                label: 'Database',
-                labelPlural: 'Databases',
-                icon: 'database',
-                id: 'rb-utilities-database',
-                listAction: 'remote-backup/remote-backup/list-databases',
-                pushAction: 'remote-backup/remote-backup/push-database',
-                disabled: false
-            } %}
+    {% else %}
+        {% if queueActive %}
+            <div class="field">
+                <p class="warning">{{ 'Your operation is currently in the queue. The page will automatically reload when complete.'|t('remote-backup') }}</p>
+            </div>
+            <script>
+                // Reload the page when the queue empties
+                setInterval(function() {
+                    $.get({
+                        url: Craft.getActionUrl("queue/get-job-info"),
+                        dataType: "json",
+                        success: function (response) {
+                            if (response['total'] <= 0) {
+                                window.location.reload();
+                            }
+                        },
+                    });
+                }, 3000);
+            </script>
         {% endif %}
-        {% if not settings.hideVolumes %}
-            {% embed 'remote-backup/utilities/_includes/_remote-backup-section' with {
-                label: 'Volume',
-                labelPlural: 'Volumes',
-                label: 'Volume',
-                icon: 'asset',
-                id: 'rb-utilities-volumes',
-                listAction: 'remote-backup/remote-backup/list-volumes',
-                pushAction: 'remote-backup/remote-backup/push-volumes',
-                disabled: not showVolumes
-            } %}
-                {% block message %}
-                    {% if not showVolumes %}<p class="light">{{ 'No volumes created yet'|t('remote-backup') }}</p>{% endif %}
-                {% endblock %}
-            {% endembed %}
-            {% if queueActive %}
-                <div class="rb-utilities-guard">&nbsp;</div>
+        <div class="rb-utilities">
+            {% if not hideDatabases %}
+                {% include 'remote-backup/utilities/_includes/_remote-backup-section' with {
+                    label: 'Database',
+                    labelPlural: 'Databases',
+                    icon: 'database',
+                    id: 'rb-utilities-database',
+                    listAction: 'remote-backup/remote-backup/list-databases',
+                    pushAction: 'remote-backup/remote-backup/push-database',
+                    disabled: false
+                } %}
             {% endif %}
-        {% endif %}
-    </div>
+            {% if not hideVolumes %}
+                {% embed 'remote-backup/utilities/_includes/_remote-backup-section' with {
+                    label: 'Volume',
+                    labelPlural: 'Volumes',
+                    label: 'Volume',
+                    icon: 'asset',
+                    id: 'rb-utilities-volumes',
+                    listAction: 'remote-backup/remote-backup/list-volumes',
+                    pushAction: 'remote-backup/remote-backup/push-volumes',
+                    disabled: not haveVolumes
+                } %}
+                    {% block message %}
+                        {% if not haveVolumes %}<p class="light">{{ 'No volumes created yet'|t('remote-backup') }}</p>{% endif %}
+                    {% endblock %}
+                {% endembed %}
+                {% if queueActive %}
+                    <div class="rb-utilities-guard">&nbsp;</div>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endif %}
 {% endif %}

@@ -16,6 +16,31 @@ use weareferal\remotebackup\exceptions\ProviderException;
 class BackblazeB2Provider extends RemoteBackupService implements Provider
 {
     /**
+     * Is Configured
+     * 
+     * @return boolean whether this provider is properly configured
+     * @since 1.1.0
+     /
+    public function isConfigured()
+    {
+        $settings = RemoteBackup::getInstance()->settings;
+        return isset($settings->b2MasterKeyID) &&
+            isset($settings->b2MasterAppKey);
+    }
+
+    /**
+     * Is Authenticated
+     * 
+     * @return boolean whether this provider is properly authenticated
+     * @todo currently we assume that if you have the keys you are 
+     * authenitcated. We should do a check here
+     * @since 1.1.0
+     */
+    public function isAuthenticated() {
+        return true;
+    }
+
+    /**
      * Return B2 files
      * 
      * @param string $extension The file extension to filter the results by
@@ -27,9 +52,9 @@ class BackblazeB2Provider extends RemoteBackupService implements Provider
         $settings = RemoteBackup::getInstance()->settings;
         $b2BucketName = Craft::parseEnv($settings->b2BucketName);
         $b2BucketPrefix = Craft::parseEnv($settings->b2BucketPrefix);
-        $client = $this->getB2Client();
+        $client = $this->getClient();
         $options = [
-            'BucketName'=> $b2BucketName
+            'BucketName' => $b2BucketName
         ];
         if ($b2BucketPrefix) {
             $options['Prefix'] = $b2BucketPrefix;
@@ -66,12 +91,12 @@ class BackblazeB2Provider extends RemoteBackupService implements Provider
     {
         $settings = RemoteBackup::getInstance()->settings;
         $b2BucketName = Craft::parseEnv($settings->b2BucketName);
-        $client = $this->getB2Client();
+        $client = $this->getClient();
         $pathInfo = pathinfo($path);
         $filename = $this->getPrefixedFilename($pathInfo['basename']);
 
         $client->upload([
-            'BucketName'=> $b2BucketName,
+            'BucketName' => $b2BucketName,
             'FileName' => $filename,
             'Body' => fopen($path, 'r')
         ]);
@@ -87,17 +112,17 @@ class BackblazeB2Provider extends RemoteBackupService implements Provider
         $settings = RemoteBackup::getInstance()->settings;
         $b2BucketName = Craft::parseEnv($settings->b2BucketName);
         $b2BucketPrefix = Craft::parseEnv($settings->b2BucketPrefix);
-        $client = $this->getB2Client();
+        $client = $this->getClient();
         $filename = $this->getPrefixedFilename($filename);
 
         $options = [
-            'BucketName'=> $b2BucketName,
+            'BucketName' => $b2BucketName,
             'FileName' => $filename
         ];
         if ($b2BucketPrefix) {
             $options['Prefix'] = $b2BucketPrefix;
         }
-        
+
         $exists = $client->fileExists($options);
         if (!$exists) {
             throw new ProviderException("B2 file does not exist");
@@ -129,7 +154,7 @@ class BackblazeB2Provider extends RemoteBackupService implements Provider
      * @return Client The B2 client object
      * @since 1.1.0
      */
-    private function getB2Client(): Client
+    private function getClient(): Client
     {
         $settings = RemoteBackup::getInstance()->settings;
         $b2MasterKeyID = Craft::parseEnv($settings->b2MasterKeyID);

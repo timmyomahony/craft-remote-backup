@@ -30,7 +30,8 @@
     name: 'cloudProvider',
     options: [
         { label: 'Amazon S3', value: 's3' },
-        { label: 'Backblaze B2', value: 'b2' }
+        { label: 'Backblaze B2', value: 'b2' },
+        { label: 'Google Drive', value: 'google' }
     ],
     value: settings.cloudProvider,
     required: true,
@@ -166,6 +167,69 @@
         errors: settings.getErrors('b2BucketPrefix'),
         warning: configWarning('b2BucketPrefix', 'remote-backup')
     }) }}
+</div>
+
+
+{# Google Drive #}
+<div class="provider provider-google">
+    {{ forms.autosuggestField({
+        label: "Google Drive Project Name",
+        instructions: "The name of your project in the Google Developer Console"|t('remote-backup'),
+        name: 'googleProjectName',
+        id: 'googleProjectName',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.googleProjectName,
+        required: (settings.cloudProvider == 'google'),
+        errors: settings.getErrors('googleProjectName'),
+        warning: configWarning('googleProjectName', 'remote-backup')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "Google Drive Client ID"|t('remote-backup'),
+        instructions: "The generated oauth client ID"|t('remote-backup'),
+        name: 'googleClientId',
+        id: 'googleClientId',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        type: 'password',
+        value: settings.googleClientId,
+        required: (settings.cloudProvider == 'google'),
+        errors: settings.getErrors('googleClientId'),
+        warning: configWarning('googleClientId', 'remote-backup')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "Google Drive Client Secret",
+        instructions: "The generated oauth secret key"|t('remote-backup'),
+        name: 'googleClientSecret',
+        id: 'googleClientSecret',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        type: 'password',
+        value: settings.googleClientSecret,
+        required: (settings.cloudProvider == 'google'),
+        errors: settings.getErrors('googleClientSecret'),
+        warning: configWarning('googleClientSecret', 'remote-backup')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "Google Drive Auth Redirect",
+        instructions: "The URL to redirect to after succesful oauth authentication"|t('remote-backup'),
+        name: 'googleAuthRedirect',
+        id: 'googleAuthRedirect',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.googleAuthRedirect,
+        required: (settings.cloudProvider == 'google'),
+        errors: settings.getErrors('googleAuthRedirect'),
+        warning: configWarning('googleAuthRedirect', 'remote-backup')
+    }) }}
+    {% if isConfigured and not isAuthenticated %}
+        <div>
+            <a href="/admin/remote-backup/google-drive/auth" class="btn">{{"Authenticate with Google Drive"|t}}</a>
+        </div>
+    {% endif %}
 </div>
 
 <hr>
