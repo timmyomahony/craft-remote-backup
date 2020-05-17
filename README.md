@@ -45,11 +45,11 @@ Bear in mind that you will need to additionally install the relevent SDK for you
 - [Dropbox](https://github.com/weareferal/craft-remote-backup/wiki/Dropbox)
 - [Google Drive](https://github.com/weareferal/craft-remote-backup/wiki/Google-Drive)
 
-Regardless of your provider, the easiest way to configure Remote Backup is via the settings page:
+In each case you will be required to configure the plugin via the Contorl Panel settings page and optional (but recommended) environment variables.
 
-![Craft Remote Backup Overview](resources/img/settings-screenshot.png)
+### Multi-environment Configuration
 
-Alternatively, if you want to configure the plugin on a per-environment basis, you can copy the `config/remote-backup.example.php` to your project's `config/remote-backup.php` file. These settings will override the Control Panel settings.
+If you want to configure the plugin on a per-environment basis, you can copy the `config/remote-backup.example.php` to your project's `config/remote-backup.php` file. These settings will override the Control Panel settings.
 
 ```php
 <?php
@@ -71,8 +71,6 @@ return [
     'production' => [],
 ];
 ```
-
-Whichever approach you choose, you need to first configure your remote provider settings.
 
 ## Usage
 
