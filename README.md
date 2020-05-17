@@ -36,7 +36,16 @@ To install the plugin, follow these instructions.
 
 ## Configuration
 
-The easiest way to configure Remote Backup is via the settings page:
+Remote Backup supports a number of destinations to push backups to. Each provider has slightly different configuration so please follow the links below to get a short guide for configuring your preferred provider.
+
+Bear in mind that you will need to additionally install the relevent SDK for your provider.
+
+- [Amazon S3](https://github.com/weareferal/craft-remote-backup/wiki/Amazon-S3)
+- [Backblaze B2](https://github.com/weareferal/craft-remote-backup/wiki/Backblaze-B2)
+- [Dropbox](https://github.com/weareferal/craft-remote-backup/wiki/Dropbox)
+- [Google Drive](https://github.com/weareferal/craft-remote-backup/wiki/Google-Drive)
+
+Regardless of your provider, the easiest way to configure Remote Backup is via the settings page:
 
 ![Craft Remote Backup Overview](resources/img/settings-screenshot.png)
 
@@ -64,17 +73,6 @@ return [
 ```
 
 Whichever approach you choose, you need to first configure your remote provider settings.
-
-### Providers
-
-Remote Backup supports a number of providers. Each provider has slightly different configuration so please follow the links below to get a short guide for configuring your preferred provider.
-
-Bear in mind that you will need to additionally install the relevent SDK for your provider.
-
-- [Amazon S3](https://github.com/weareferal/craft-remote-backup/wiki/Amazon-S3)
-- [Backblaze B2](https://github.com/weareferal/craft-remote-backup/wiki/Backblaze-B2)
-- [Dropbox](https://github.com/weareferal/craft-remote-backup/wiki/Dropbox)
-- [Google Drive](https://github.com/weareferal/craft-remote-backup/wiki/Google-Drive)
 
 ## Usage
 
@@ -203,7 +201,7 @@ Here is an example daily cron entry to backup and prune daily at 01:00:
 
 [Craft Remote Sync](https://github.com/weareferal/craft-remote-sync) is a complimentary plugin that allows you to sync database and volume files between environments using same remote providers. Using these plugins together is a great way to manage remote files with your website.
 
-When using these plugins together, it's sensible to use a different remote folder to hold your synced files and your backup files. To do this we recommend configuring your environment variables to include two separate file paths: one for sync and one for backup. 
+When using these plugins together, it's sensible to use a different remote folder to hold your synced files and your backup files. To do this we recommend configuring your environment variables to include two separate file paths: one for sync and one for backup.
 
 With AWS this might look like:
 
