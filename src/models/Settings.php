@@ -31,7 +31,10 @@ class Settings extends Model
     public $googleDriveFolderId;
 
     // Dropbox
+    public $dropboxAppKey;
+    public $dropboxSecretKey;
     public $dropboxAccessToken;
+    public $dropboxFolder;
 
     public $useQueue = false;
     public $keepLocal = false;
@@ -75,7 +78,7 @@ class Settings extends Model
             ],
             [
                 [
-                    'dropboxAccessToken',
+                    'dropboxAppKey', 'dropboxSecretKey', 'dropboxAccessToken',
                 ],
                 'required',
                 'when' => function ($model) {
@@ -98,7 +101,8 @@ class Settings extends Model
                     's3RegionName', 's3BucketPrefix', 'b2MasterKeyID', 'b2MasterAppKey',
                     'b2BucketName', 'b2BucketPrefix', 'googleClientId',
                     'googleClientSecret', 'googleProjectName', 'googleAuthRedirect',
-                    'googleDriveFolderId', 'dropboxAccessToken'
+                    'googleDriveFolderId', 'dropboxAppKey', 'dropboxSecretKey',
+                    'dropboxAccessToken', 'dropboxFolder'
                 ],
                 'string'
             ],

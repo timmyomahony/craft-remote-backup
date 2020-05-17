@@ -14,6 +14,7 @@ use weareferal\remotebackup\helpers\TimeHelper;
 use weareferal\remotebackup\services\providers\AWSS3Provider;
 use weareferal\remotebackup\services\providers\BackblazeB2Provider;
 use weareferal\remotebackup\services\providers\GoogleDriveProvider;
+use weareferal\remotebackup\services\providers\DropboxProvider;
 
 
 interface Provider
@@ -357,6 +358,23 @@ class RemoteBackupService extends Component
     }
 
     /**
+     * Filter filenames by extension
+     * 
+     * @param string $extension the file extension to filter by
+     * @return array list of filtered filenames
+     */
+    protected function filterByExtension($filenames, $extension)
+    {
+        $filtered_filenames = [];
+        foreach ($filenames as $filename) {
+            if (substr($filename, -strlen($extension)) === $extension) {
+                array_push($filtered_filenames, basename($filename));
+            }
+        }
+        return $filtered_filenames;
+    }
+
+    /**
      * Factory method to return appropriate class depending on provider
      * setting
      * 
@@ -367,13 +385,12 @@ class RemoteBackupService extends Component
         switch ($provider) {
             case "s3":
                 return AWSS3Provider::class;
-                break;
             case "b2":
                 return BackblazeB2Provider::class;
-                break;
             case "google":
                 return GoogleDriveProvider::class;
-                break;
+            case "dropbox":
+                return DropboxProvider::class;
         }
     }
 }

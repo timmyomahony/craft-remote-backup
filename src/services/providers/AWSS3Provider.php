@@ -37,7 +37,8 @@ class AWSS3Provider extends RemoteBackupService implements Provider
      * authenitcated. We should do a check here
      * @since 1.1.0
      */
-    public function isAuthenticated() {
+    public function isAuthenticated()
+    {
         return true;
     }
 
@@ -72,15 +73,8 @@ class AWSS3Provider extends RemoteBackupService implements Provider
             array_push($keys, basename($object['Key']));
         }
 
-        // Filter by extension
         if ($filterExtension) {
-            $filteredKeys = [];
-            foreach ($keys as $key) {
-                if (substr($key, -strlen($filterExtension)) === $filterExtension) {
-                    array_push($filteredKeys, basename($key));
-                }
-            }
-            $keys = $filteredKeys;
+            return $this->filterByExtension($keys, $filterExtension);
         }
 
         return $keys;

@@ -249,6 +249,32 @@
 {# Dropbox #}
 <div class="provider provider-dropbox">
     {{ forms.autosuggestField({
+        label: "Dropbox App Key",
+        instructions: "You Dropbox app's app key"|t('remote-backup'),
+        name: 'dropboxAppKey',
+        id: 'dropboxAppKey',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.dropboxAppKey,
+        required: (settings.cloudProvider == 'dropbox'),
+        errors: settings.getErrors('dropboxAppKey'),
+        warning: configWarning('dropboxAppKey', 'remote-backup')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "Dropbox Secret Key",
+        instructions: "You Dropbox app's secret key"|t('remote-backup'),
+        name: 'dropboxSecretKey',
+        id: 'dropboxSecretKey',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.dropboxSecretKey,
+        required: (settings.cloudProvider == 'dropbox'),
+        errors: settings.getErrors('dropboxSecretKey'),
+        warning: configWarning('dropboxSecretKey', 'remote-backup')
+    }) }}
+
+    {{ forms.autosuggestField({
         label: "Dropbox Access Token",
         instructions: "You Dropbox app's access token"|t('remote-backup'),
         name: 'dropboxAccessToken',
@@ -259,6 +285,19 @@
         required: (settings.cloudProvider == 'dropbox'),
         errors: settings.getErrors('dropboxAccessToken'),
         warning: configWarning('dropboxAccessToken', 'remote-backup')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "Dropbox Folder",
+        instructions: "An optional folder path within Dropbox to store backups. Must start with a slash but not end with one"|t('remote-backup'),
+        name: 'dropboxFolder',
+        placeholder: '/craft-backups/my-backups',
+        id: 'dropboxFolder',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.dropboxFolder,
+        errors: settings.getErrors('dropboxFolder'),
+        warning: configWarning('dropboxFolder', 'remote-backup')
     }) }}
 </div>
 
