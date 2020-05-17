@@ -72,6 +72,8 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
      * @param string $extension The file extension to filter the results by
      * @return array[string] An array of files from Google Drive
      * @since 1.1.0
+     * @todo I've just thrown parameters at the wall to get team drives working.
+     * Google are not clear whether these parameters actually are needed.
      */
     public function list($filterExtension = null): array
     {
@@ -85,8 +87,11 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
         }
 
         $params = array(
+            'corpora' => 'allDrives',
+            'includeItemsFromAllDrives' => true,
+            'supportsAllDrives' => true,
             'spaces' => 'drive',
-            'q' => $q
+            'q' => $q,
         );
 
         $results = $service->files->listFiles($params);
@@ -194,7 +199,6 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
         $client->setPrompt('select_account consent');
 
         $tokenPath = $this->getTokenPath();
-        Craft::debug($tokenPath, 'remote-backup');
         if (file_exists($tokenPath)) {
             $accessToken = json_decode(file_get_contents($tokenPath), true);
             $client->setAccessToken($accessToken);

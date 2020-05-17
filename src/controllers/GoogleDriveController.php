@@ -59,7 +59,7 @@ class GoogleDriveController extends Controller
             Craft::$app->session->setFlash('notice', Craft::t("remote-backup", "Google Drive already authenticated"));
             return $this->redirect("/admin/settings/plugins/remote-backup");
         }
-        
+
         // Try refresh token 
         if ($isExpired) {
             $refreshToken = $client->getRefreshToken();
@@ -114,6 +114,8 @@ class GoogleDriveController extends Controller
 
         // Save the access token to the storage folder
         $tokenPath = $service->getTokenPath();
+        Craft::info("FOOBAR", 'remote-backup');
+        Craft::info($tokenPath, 'remote-backup');
         if (!file_exists(dirname($tokenPath))) {
             mkdir(dirname($tokenPath), 0700, true);
         }
