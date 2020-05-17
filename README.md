@@ -89,10 +89,12 @@ There are also console commands available for creating, pushing and pulling back
 ```sh
 - remote-backup/database                    Manage remote database backups
     remote-backup/database/create           Create a remote database backup
+    remote-backup/database/list             List remote database backups
     remote-backup/database/prune            Delete old remote database backups
 
 - remote-backup/volume                      Manage remote volume backups
-    remote-backup/volume/create             Create a remote database backup
+    remote-backup/volume/create             Create a remote volumes backup
+    remote-backup/volume/list               List remote volumes backups
     remote-backup/volume/prune              Delete old remote volume backups
 ```
 
