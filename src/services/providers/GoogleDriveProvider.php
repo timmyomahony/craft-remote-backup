@@ -15,6 +15,7 @@ use weareferal\remotebackup\exceptions\ProviderException;
 
 
 /**
+ * Google Drive Provider
  * 
  * Bear in mind that the version of this PHP Client library (v2) is different
  * to the actual Google Drive API (which is v3). In other words, we're using
@@ -75,7 +76,7 @@ class GoogleDriveProvider extends RemoteBackupService implements Provider
      * @todo I've just thrown parameters at the wall to get team drives working.
      * Google are not clear whether these parameters actually are needed.
      */
-    public function list($filterExtension = null): array
+    public function list($filterExtension): array
     {
         $settings = RemoteBackup::getInstance()->settings;
         $googleDriveFolderId = Craft::parseEnv($settings->googleDriveFolderId);

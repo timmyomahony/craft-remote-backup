@@ -114,8 +114,6 @@ class GoogleDriveController extends Controller
 
         // Save the access token to the storage folder
         $tokenPath = $service->getTokenPath();
-        Craft::info("FOOBAR", 'remote-backup');
-        Craft::info($tokenPath, 'remote-backup');
         if (!file_exists(dirname($tokenPath))) {
             mkdir(dirname($tokenPath), 0700, true);
         }

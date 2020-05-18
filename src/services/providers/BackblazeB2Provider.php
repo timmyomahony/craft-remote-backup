@@ -12,7 +12,11 @@ use weareferal\remotebackup\services\RemoteBackupService;
 use weareferal\remotebackup\exceptions\ProviderException;
 
 
-
+/**
+ * Backblaze provider
+ * 
+ * https://github.com/gliterd/backblaze-b2
+ */
 class BackblazeB2Provider extends RemoteBackupService implements Provider
 {
     /**
@@ -20,8 +24,8 @@ class BackblazeB2Provider extends RemoteBackupService implements Provider
      * 
      * @return boolean whether this provider is properly configured
      * @since 1.1.0
-     /
-    public function isConfigured()
+     */
+    public function isConfigured(): bool
     {
         $settings = RemoteBackup::getInstance()->settings;
         return isset($settings->b2MasterKeyID) &&
@@ -32,11 +36,12 @@ class BackblazeB2Provider extends RemoteBackupService implements Provider
      * Is Authenticated
      * 
      * @return boolean whether this provider is properly authenticated
+     * @since 1.1.0
      * @todo currently we assume that if you have the keys you are 
      * authenitcated. We should do a check here
-     * @since 1.1.0
      */
-    public function isAuthenticated() {
+    public function isAuthenticated(): bool
+    {
         return true;
     }
 
@@ -47,17 +52,18 @@ class BackblazeB2Provider extends RemoteBackupService implements Provider
      * @return array[string] An array of filenames returned from B2
      * @since 1.1.0
      */
-    public function list($filterExtension = null): array
+    public function list($filterExtension): array
     {
         $settings = RemoteBackup::getInstance()->settings;
         $b2BucketName = Craft::parseEnv($settings->b2BucketName);
-        $b2BucketPrefix = Craft::parseEnv($settings->b2BucketPrefix);
+        $b2BucketPath = Craft::parseEnv($settings->b2BucketPath);
         $client = $this->getClient();
+
         $options = [
             'BucketName' => $b2BucketName
         ];
-        if ($b2BucketPrefix) {
-            $options['Prefix'] = $b2BucketPrefix;
+        if ($b2BucketPath) {
+            $options['Prefix'] = $b2BucketPath;
         }
 
         $files = $client->listFiles($options);
@@ -67,15 +73,8 @@ class BackblazeB2Provider extends RemoteBackupService implements Provider
             array_push($filenames, basename($file->getName()));
         }
 
-        // Filter by extension
         if ($filterExtension) {
-            $filteredKeys = [];
-            foreach ($filenames as $filename) {
-                if (substr($filename, -strlen($filterExtension)) === $filterExtension) {
-                    array_push($filteredKeys, basename($filename));
-                }
-            }
-            $filenames = $filteredKeys;
+            return $this->filterByExtension($filenames, $filterExtension);
         }
 
         return $filenames;
@@ -111,7 +110,7 @@ class BackblazeB2Provider extends RemoteBackupService implements Provider
     {
         $settings = RemoteBackup::getInstance()->settings;
         $b2BucketName = Craft::parseEnv($settings->b2BucketName);
-        $b2BucketPrefix = Craft::parseEnv($settings->b2BucketPrefix);
+        $b2BucketPath = Craft::parseEnv($settings->b2BucketPath);
         $client = $this->getClient();
         $filename = $this->getPrefixedFilename($filename);
 
@@ -119,8 +118,8 @@ class BackblazeB2Provider extends RemoteBackupService implements Provider
             'BucketName' => $b2BucketName,
             'FileName' => $filename
         ];
-        if ($b2BucketPrefix) {
-            $options['Prefix'] = $b2BucketPrefix;
+        if ($b2BucketPath) {
+            $options['Prefix'] = $b2BucketPath;
         }
 
         $exists = $client->fileExists($options);
@@ -141,9 +140,9 @@ class BackblazeB2Provider extends RemoteBackupService implements Provider
     private function getPrefixedFilename($key): string
     {
         $settings = RemoteBackup::getInstance()->settings;
-        $b2BucketPrefix = Craft::parseEnv($settings->b2BucketPrefix);
-        if ($b2BucketPrefix) {
-            return $b2BucketPrefix . DIRECTORY_SEPARATOR . $key;
+        $b2BucketPath = Craft::parseEnv($settings->b2BucketPath);
+        if ($b2BucketPath) {
+            return $b2BucketPath . DIRECTORY_SEPARATOR . $key;
         }
         return $key;
     }

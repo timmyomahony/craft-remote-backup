@@ -21,7 +21,7 @@ class AWSS3Provider extends RemoteBackupService implements Provider
      * @return boolean whether this provider is properly configured
      * @since 1.1.0
      */
-    public function isConfigured()
+    public function isConfigured(): bool
     {
         $settings = RemoteBackup::getInstance()->settings;
         return isset($settings->s3AccessKey) &&
@@ -37,7 +37,7 @@ class AWSS3Provider extends RemoteBackupService implements Provider
      * authenitcated. We should do a check here
      * @since 1.1.0
      */
-    public function isAuthenticated()
+    public function isAuthenticated(): bool
     {
         return true;
     }
@@ -49,17 +49,17 @@ class AWSS3Provider extends RemoteBackupService implements Provider
      * @return array[string] An array of keys returned from S3
      * @since 1.0.0
      */
-    public function list($filterExtension = null): array
+    public function list($filterExtension): array
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketName = Craft::parseEnv($settings->s3BucketName);
-        $s3BucketPrefix = Craft::parseEnv($settings->s3BucketPrefix);
+        $s3BucketPath = Craft::parseEnv($settings->s3BucketPath);
         $client = $this->getClient();
         $kwargs = [
             'Bucket' => $s3BucketName,
         ];
-        if ($s3BucketPrefix) {
-            $kwargs['Prefix'] = $s3BucketPrefix;
+        if ($s3BucketPath) {
+            $kwargs['Prefix'] = $s3BucketPath;
         }
         $response = $client->listObjects($kwargs);
 
@@ -143,9 +143,9 @@ class AWSS3Provider extends RemoteBackupService implements Provider
     private function getPrefixedKey($key): string
     {
         $settings = RemoteBackup::getInstance()->settings;
-        $s3BucketPrefix = Craft::parseEnv($settings->s3BucketPrefix);
-        if ($s3BucketPrefix) {
-            return $s3BucketPrefix . DIRECTORY_SEPARATOR . $key;
+        $s3BucketPath = Craft::parseEnv($settings->s3BucketPath);
+        if ($s3BucketPath) {
+            return $s3BucketPath . DIRECTORY_SEPARATOR . $key;
         }
         return $key;
     }

@@ -61,7 +61,7 @@ class DropboxProvider extends RemoteBackupService implements Provider
      * @since 1.1.0
      * @todo filter results via the API as opposed to our own custom filtering
      */
-    public function list($filterExtension = null): array
+    public function list($filterExtension): array
     {
         $settings = RemoteBackup::getInstance()->settings;
         $dropboxFolder = Craft::parseEnv($settings->dropboxFolder);

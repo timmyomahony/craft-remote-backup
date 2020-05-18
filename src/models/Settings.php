@@ -15,13 +15,13 @@ class Settings extends Model
     public $s3SecretKey;
     public $s3RegionName;
     public $s3BucketName;
-    public $s3BucketPrefix;
+    public $s3BucketPath;
 
     // Backblaze
     public $b2MasterKeyID;
     public $b2MasterAppKey;
     public $b2BucketName;
-    public $b2BucketPrefix;
+    public $b2BucketPath;
 
     // Google
     public $googleProjectName;
@@ -98,8 +98,8 @@ class Settings extends Model
             [
                 [
                     'cloudProvider', 's3AccessKey', 's3SecretKey', 's3BucketName',
-                    's3RegionName', 's3BucketPrefix', 'b2MasterKeyID', 'b2MasterAppKey',
-                    'b2BucketName', 'b2BucketPrefix', 'googleClientId',
+                    's3RegionName', 's3BucketPath', 'b2MasterKeyID', 'b2MasterAppKey',
+                    'b2BucketName', 'b2BucketPath', 'googleClientId',
                     'googleClientSecret', 'googleProjectName', 'googleAuthRedirect',
                     'googleDriveFolderId', 'dropboxAppKey', 'dropboxSecretKey',
                     'dropboxAccessToken', 'dropboxFolder'

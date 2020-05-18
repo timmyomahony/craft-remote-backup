@@ -3,10 +3,6 @@
     {
       "name": "craft-remote-backup",
       "path": "."
-    },
-    {
-      "name": "craft-test",
-      "path": "/Users/timmyomahony/Repositories/craft-test"
     }
   ],
   "settings": {

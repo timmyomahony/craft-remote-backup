@@ -99,16 +99,16 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "S3 Bucket Prefix"|t('remote-backup'),
+        label: "S3 Bucket Path"|t('remote-backup'),
         instructions: "A path within your S3 bucket to prefix your backups with. Do not include a leading or trailing slash"|t('remote-backup'),
-        name: 's3BucketPrefix',
-        id: 's3BucketPrefix',
+        name: 's3BucketPath',
+        id: 's3BucketPath',
         suggestEnvVars: true,
         suggestAliases: true,
-        value: settings.s3BucketPrefix,
+        value: settings.s3BucketPath,
         placeholder: "craft-backups/my-site",
-        errors: settings.getErrors('s3BucketPrefix'),
-        warning: configWarning('s3BucketPrefix', 'remote-backup')
+        errors: settings.getErrors('s3BucketPath'),
+        warning: configWarning('s3BucketPath', 'remote-backup')
     }) }}
 </div>
 
@@ -157,16 +157,16 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "B2 Bucket Prefix"|t('remote-backup'),
-        instructions: "A path within your B2 bucket to prefix your backups with. Do not include a leading or trailing slash"|t('remote-backup'),
-        name: 'b2BucketPrefix',
-        id: 'b2BucketPrefix',
+        label: "B2 Bucket Path"|t('remote-backup'),
+        instructions: "An optional path within your B2 bucket to prefix your backups with. Do not include a leading or trailing slash. [Learn more](https://github.com/weareferal/craft-remote-backup/wiki/Backblaze-B2#optional-folder-path)"|t('remote-backup'),
+        name: 'b2BucketPath',
+        id: 'b2BucketPath',
         suggestEnvVars: true,
         suggestAliases: true,
-        value: settings.b2BucketPrefix,
+        value: settings.b2BucketPath,
         placeholder: "craft-backups/my-site",
-        errors: settings.getErrors('b2BucketPrefix'),
-        warning: configWarning('b2BucketPrefix', 'remote-backup')
+        errors: settings.getErrors('b2BucketPath'),
+        warning: configWarning('b2BucketPath', 'remote-backup')
     }) }}
 </div>
 
