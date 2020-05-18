@@ -36,11 +36,20 @@ To install the plugin, follow these instructions.
 
 ## Configuration
 
-The easiest way to configure Remote Backup is via the settings page:
+Remote Backup supports a number of destinations to push backups to. Each provider has slightly different configuration so please follow the links below to get a short guide for configuring your preferred provider.
 
-![Craft Remote Backup Overview](resources/img/settings-screenshot.png)
+Bear in mind that you will need to additionally install the relevent SDK for your provider.
 
-Alternatively, if you want to configure the plugin on a per-environment basis, you can copy the `config/remote-backup.example.php` to your project's `config/remote-backup.php` file. These settings will override the Control Panel settings.
+- [Amazon S3](https://github.com/weareferal/craft-remote-backup/wiki/Amazon-S3)
+- [Backblaze B2](https://github.com/weareferal/craft-remote-backup/wiki/Backblaze-B2)
+- [Dropbox](https://github.com/weareferal/craft-remote-backup/wiki/Dropbox)
+- [Google Drive](https://github.com/weareferal/craft-remote-backup/wiki/Google-Drive)
+
+In each case you will be required to configure the plugin via the Contorl Panel settings page and optional (but recommended) environment variables.
+
+### Multi-environment Configuration
+
+If you want to configure the plugin on a per-environment basis, you can copy the `config/remote-backup.example.php` to your project's `config/remote-backup.php` file. These settings will override the Control Panel settings.
 
 ```php
 <?php
@@ -63,30 +72,6 @@ return [
 ];
 ```
 
-Whichever approach you choose, you need to first configure your remote provider settings.
-
-### Providers
-
-Currently the only available provider is AWS S3 but more are to come soon (if you require another provider, please leave an issue on Github)
-
-#### AWS
-
-The details entered here correspond to your AWS S3 account and bucket that you want to use for backups. It's recommended to set up a new IAM user that has programmatic access (meaning via a acces/secret key) to a private S3 bucket.
-
-Once you have set this bucket up, you can either enter your AWS S3 details directly into the setting page/config file, or you can use environment variables via your `.env` file (this is the recommended approach as seen in the screenshot above). This latter approach is more portable and secure as it prevents any private access/secret key values being included in files that you might commit to Github. Furthermore is means these variables can be reused in other plugins etc.
-
-Here is an example portion of a `.env` file:
-
-```sh
-...
-
-AWS_ACCESS_KEY="..."
-AWS_SECRET_KEY="..."
-AWS_REGION="us-west-2"
-AWS_BUCKET_NAME="feral-backups"
-AWS_BUCKET_PREFIX="craft-backups/my-site"
-```
-
 ## Usage
 
 ### Control Panel Utilties
@@ -102,10 +87,12 @@ There are also console commands available for creating, pushing and pulling back
 ```sh
 - remote-backup/database                    Manage remote database backups
     remote-backup/database/create           Create a remote database backup
+    remote-backup/database/list             List remote database backups
     remote-backup/database/prune            Delete old remote database backups
 
 - remote-backup/volume                      Manage remote volume backups
-    remote-backup/volume/create             Create a remote database backup
+    remote-backup/volume/create             Create a remote volumes backup
+    remote-backup/volume/list               List remote volumes backups
     remote-backup/volume/prune              Delete old remote volume backups
 ```
 
@@ -214,7 +201,7 @@ Here is an example daily cron entry to backup and prune daily at 01:00:
 
 [Craft Remote Sync](https://github.com/weareferal/craft-remote-sync) is a complimentary plugin that allows you to sync database and volume files between environments using same remote providers. Using these plugins together is a great way to manage remote files with your website.
 
-When using these plugins together, it's sensible to use a different remote folder to hold your synced files and your backup files. To do this we recommend configuring your environment variables to include two separate file paths: one for sync and one for backup. 
+When using these plugins together, it's sensible to use a different remote folder to hold your synced files and your backup files. To do this we recommend configuring your environment variables to include two separate file paths: one for sync and one for backup.
 
 With AWS this might look like:
 
@@ -240,4 +227,4 @@ When you create a new volume backup, it's possible that your PHP memory limit wi
 
 <img src="resources/img/feral-logo.svg" width="250px">
 
-Brought to you by [Feral](https://weareferal.com). Any problems email [timmy@weareferal.com](mailto:timmy@weareferal.com?subject=Craft%20Env%20Sync%20Question) or leave an issue on Github.
+Brought to you by [Feral](https://weareferal.com). Any problems please leave an issue on Github.

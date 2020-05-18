@@ -33,12 +33,16 @@ class RemoteBackupUtility extends Utility
         $view->registerJs("new Craft.RemoteBackupUtility('rb-utilities-volumes')");
 
         $settings = RemoteBackup::getInstance()->getSettings();
-        $showVolumes = count(Craft::$app->getVolumes()->getAllVolumes()) > 0;
+        $service = RemoteBackup::getInstance()->remotebackup;
+        $haveVolumes = count(Craft::$app->getVolumes()->getAllVolumes()) > 0;
         $queueActive = Craft::$app->queue->getHasWaitingJobs();
 
         return $view->renderTemplate('remote-backup/utilities/remote-backup', [
-            "settings" => $settings,
-            "showVolumes" => $showVolumes,
+            "isConfigured" => $service->isConfigured(),
+            "isAuthenticated" => $service->isAuthenticated(),
+            "hideDatabases" => $settings->hideDatabases,
+            "hideVolumes" => $settings->hideVolumes,
+            "haveVolumes" => ! $settings->hideVolumes && $haveVolumes,
             'queueActive' => $queueActive
         ]);
     }

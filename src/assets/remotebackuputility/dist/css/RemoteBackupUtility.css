@@ -28,6 +28,17 @@
   cursor: help;
 }
 
+/* "Latest" bubble */
+.rb-utilities-table tbody tr td:first-child span {
+  border: 1px solid #9aa5b1;
+  margin: 2px 0 0 10px;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  line-height: 1;
+  color: #9aa5b1;
+}
+
 .rb-utilities-table tbody tr:not(.default-row) td:first-child:before {
   display: block;
   height: 10px;

@@ -21,8 +21,7 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.0.0-RC1",
-        "aws/aws-sdk-php": "^3.129"
+        "craftcms/cms": "^3.0.0-RC1"
     },
     "autoload": {
         "psr-4": {
@@ -36,5 +35,11 @@
         "hasCpSection": false,
         "changelogUrl": "https://raw.githubusercontent.com/weareferal/craft-remote-backup/master/CHANGELOG.md",
         "class": "weareferal\\remotebackup\\RemoteBackup"
+    },
+    "suggest": {
+        "aws/aws-sdk-php": "Required for AWS usage",
+        "gliterd/backblaze-b2": "Required for Backblaze usage",
+        "kunalvarma05/dropbox-php-sdk": "Required for Dropbox usage",
+        "google/apiclient": "Required for Google Drive usage"
     }
 }

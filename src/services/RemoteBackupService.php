@@ -8,15 +8,21 @@ use Craft\helpers\FileHelper;
 use Craft\helpers\StringHelper;
 
 use weareferal\remotebackup\RemoteBackup;
-use weareferal\remotebackup\services\providers\S3Provider;
 use weareferal\remotebackup\helpers\ZipHelper;
+use weareferal\remotebackup\helpers\TimeHelper;
+
+use weareferal\remotebackup\services\providers\AWSS3Provider;
+use weareferal\remotebackup\services\providers\BackblazeB2Provider;
+use weareferal\remotebackup\services\providers\GoogleDriveProvider;
+use weareferal\remotebackup\services\providers\DropboxProvider;
 
 
 interface Provider
 {
+    public function isConfigured(): bool;
+    public function isAuthenticated(): bool;
     public function list($filterExtensions): array;
     public function push($path);
-    public function pull($key, $path);
     public function delete($key);
 }
 
@@ -24,6 +30,7 @@ class RemoteBackupInstance
 {
     public $filename;
     public $datetime;
+    public $timesince;
     public $label;
     public $env;
 
@@ -43,12 +50,14 @@ class RemoteBackupInstance
         $env = $matches[1];
         $date = $matches[2];
         $datetime = date_create_from_format('ymd_Gis', $date);
+        $timesince = TimeHelper::time_since($datetime->getTimestamp());
         $label = $datetime->format('Y-m-d H:i:s');
         if ($env) {
             $label = $label  . ' (' . $env . ')';
         }
         $this->filename = $_filename;
         $this->datetime = $datetime;
+        $this->timesince = $timesince;
         $this->label = $label;
         $this->env = $env;
     }
@@ -70,7 +79,8 @@ class RemoteBackupService extends Component
         foreach ($backups as $i => $backup) {
             $options[$i] = [
                 "label" => $backup->label,
-                "value" => $backup->filename
+                "value" => $backup->filename,
+                "title" => $backup->timesince . " ago"
             ];
         }
         return $options;
@@ -348,6 +358,23 @@ class RemoteBackupService extends Component
     }
 
     /**
+     * Filter filenames by extension
+     * 
+     * @param string $extension the file extension to filter by
+     * @return array list of filtered filenames
+     */
+    protected function filterByExtension($filenames, $extension)
+    {
+        $filtered_filenames = [];
+        foreach ($filenames as $filename) {
+            if (substr($filename, -strlen($extension)) === $extension) {
+                array_push($filtered_filenames, basename($filename));
+            }
+        }
+        return $filtered_filenames;
+    }
+
+    /**
      * Factory method to return appropriate class depending on provider
      * setting
      * 
@@ -357,8 +384,13 @@ class RemoteBackupService extends Component
     {
         switch ($provider) {
             case "s3":
-                return S3Provider::class;
-                break;
+                return AWSS3Provider::class;
+            case "b2":
+                return BackblazeB2Provider::class;
+            case "google":
+                return GoogleDriveProvider::class;
+            case "dropbox":
+                return DropboxProvider::class;
         }
     }
 }

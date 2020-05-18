@@ -15,3 +15,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 
 - Added ability to hide either the database or volume backups from the utilities panel
+
+## 1.1.0 - 2020-05-18
+
+### Added
+
+- Dropbox provider & documentation
+- Google Drive provider & documentation
+- Backblaze provider & documentation
+- Interface improvement: show a "latest" tag
+- Interface improvement: show the "time since" when hovering over backups

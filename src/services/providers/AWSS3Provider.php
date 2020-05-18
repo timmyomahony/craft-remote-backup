@@ -1,20 +1,47 @@
 <?php
 
-namespace weareferal\RemoteBackup\services\providers;
+namespace weareferal\remotebackup\services\providers;
 
 use Craft;
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
 
-use weareferal\RemoteBackup\RemoteBackup;
-use weareferal\RemoteBackup\services\Provider;
-use weareferal\RemoteBackup\services\RemoteBackupService;
-use weareferal\RemoteBackup\exceptions\ProviderException;
+use weareferal\remotebackup\RemoteBackup;
+use weareferal\remotebackup\services\Provider;
+use weareferal\remotebackup\services\RemoteBackupService;
+use weareferal\remotebackup\exceptions\ProviderException;
 
 
 
-class S3Provider extends RemoteBackupService implements Provider
+class AWSS3Provider extends RemoteBackupService implements Provider
 {
+    /**
+     * Is Configured
+     * 
+     * @return boolean whether this provider is properly configured
+     * @since 1.1.0
+     */
+    public function isConfigured(): bool
+    {
+        $settings = RemoteBackup::getInstance()->settings;
+        return isset($settings->s3AccessKey) &&
+            isset($settings->s3SecretKey) &&
+            isset($settings->s3RegionName);
+    }
+
+    /**
+     * Is Authenticated
+     * 
+     * @return boolean whether this provider is properly authenticated
+     * @todo currently we assume that if you have the keys you are 
+     * authenitcated. We should do a check here
+     * @since 1.1.0
+     */
+    public function isAuthenticated(): bool
+    {
+        return true;
+    }
+
     /**
      * Return S3 keys
      * 
@@ -22,17 +49,17 @@ class S3Provider extends RemoteBackupService implements Provider
      * @return array[string] An array of keys returned from S3
      * @since 1.0.0
      */
-    public function list($filterExtension = null): array
+    public function list($filterExtension): array
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketName = Craft::parseEnv($settings->s3BucketName);
-        $s3BucketPrefix = Craft::parseEnv($settings->s3BucketPrefix);
-        $client = $this->getS3Client();
+        $s3BucketPath = Craft::parseEnv($settings->s3BucketPath);
+        $client = $this->getClient();
         $kwargs = [
             'Bucket' => $s3BucketName,
         ];
-        if ($s3BucketPrefix) {
-            $kwargs['Prefix'] = $s3BucketPrefix;
+        if ($s3BucketPath) {
+            $kwargs['Prefix'] = $s3BucketPath;
         }
         $response = $client->listObjects($kwargs);
 
@@ -46,15 +73,8 @@ class S3Provider extends RemoteBackupService implements Provider
             array_push($keys, basename($object['Key']));
         }
 
-        // Filter by extension
         if ($filterExtension) {
-            $filteredKeys = [];
-            foreach ($keys as $key) {
-                if (substr($key, -strlen($filterExtension)) === $filterExtension) {
-                    array_push($filteredKeys, basename($key));
-                }
-            }
-            $keys = $filteredKeys;
+            return $this->filterByExtension($keys, $filterExtension);
         }
 
         return $keys;
@@ -64,17 +84,16 @@ class S3Provider extends RemoteBackupService implements Provider
      * Push a file path to S3
      *  
      * @param string $path The full filesystem path to file
-     * @return bool If the operation was successful
      * @since 1.0.0
      */
     public function push($path)
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketName = Craft::parseEnv($settings->s3BucketName);
-        $client = $this->getS3Client();
+        $client = $this->getClient();
         $pathInfo = pathinfo($path);
 
-        $key = $this->getAWSKey($pathInfo['basename']);
+        $key = $this->getPrefixedKey($pathInfo['basename']);
 
         try {
             $client->putObject([
@@ -87,38 +106,17 @@ class S3Provider extends RemoteBackupService implements Provider
         }
     }
 
-    public function pull($key, $path)
-    {
-        $settings = RemoteBackup::getInstance()->settings;
-        $s3BucketName = Craft::parseEnv($settings->s3BucketName);
-        $client = $this->getS3Client();
-        $key = $this->getAWSKey($key);
-
-        try {
-            $client->getObject([
-                'Bucket' => $s3BucketName,
-                'SaveAs' => $path,
-                'Key' => $key,
-            ]);
-        } catch (AwsException $exception) {
-            throw new ProviderException($this->createErrorMessage($exception));
-        }
-
-        return true;
-    }
-
     /**
      * Delete a remote S3 key
      * 
-     * @return bool Remote key was successfully deleted
      * @since 1.0.0
      */
     public function delete($key)
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3BucketName = Craft::parseEnv($settings->s3BucketName);
-        $client = $this->getS3Client();
-        $key = $this->getAWSKey($key);
+        $client = $this->getClient();
+        $key = $this->getPrefixedKey($key);
 
         $exists = $client->doesObjectExist($s3BucketName, $key);
         if (!$exists) {
@@ -142,12 +140,12 @@ class S3Provider extends RemoteBackupService implements Provider
      * @return string The prefixed key
      * @since 1.0.0
      */
-    private function getAWSKey($key): string
+    private function getPrefixedKey($key): string
     {
         $settings = RemoteBackup::getInstance()->settings;
-        $s3BucketPrefix = Craft::parseEnv($settings->s3BucketPrefix);
-        if ($s3BucketPrefix) {
-            return $s3BucketPrefix . DIRECTORY_SEPARATOR . $key;
+        $s3BucketPath = Craft::parseEnv($settings->s3BucketPath);
+        if ($s3BucketPath) {
+            return $s3BucketPath . DIRECTORY_SEPARATOR . $key;
         }
         return $key;
     }
@@ -158,7 +156,7 @@ class S3Provider extends RemoteBackupService implements Provider
      * @return S3Client The S3 client object
      * @since 1.0.0
      */
-    private function getS3Client(): S3Client
+    private function getClient(): S3Client
     {
         $settings = RemoteBackup::getInstance()->settings;
         $s3AccessKey = Craft::parseEnv($settings->s3AccessKey);

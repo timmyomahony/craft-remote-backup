@@ -7,12 +7,34 @@ use craft\base\Model;
 class Settings extends Model
 {
     public $enabled = true;
+
     public $cloudProvider = 's3';
+
+    // AWS
     public $s3AccessKey;
     public $s3SecretKey;
     public $s3RegionName;
     public $s3BucketName;
-    public $s3BucketPrefix;
+    public $s3BucketPath;
+
+    // Backblaze
+    public $b2MasterKeyID;
+    public $b2MasterAppKey;
+    public $b2BucketName;
+    public $b2BucketPath;
+
+    // Google
+    public $googleProjectName;
+    public $googleClientId;
+    public $googleClientSecret;
+    public $googleAuthRedirect;
+    public $googleDriveFolderId;
+
+    // Dropbox
+    public $dropboxAppKey;
+    public $dropboxSecretKey;
+    public $dropboxAccessToken;
+    public $dropboxFolder;
 
     public $useQueue = false;
     public $keepLocal = false;
@@ -31,29 +53,71 @@ class Settings extends Model
     {
         return [
             [
-                ['s3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName', 'pruneHourlyCount'],
+                ['s3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName'],
                 'required',
                 'when' => function ($model) {
                     return $model->cloudProvider == 's3' & $model->enabled == 1;
                 }
             ],
             [
-                ['pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
+                ['b2MasterKeyID', 'b2MasterAppKey', 'b2BucketName'],
+                'required',
+                'when' => function ($model) {
+                    return $model->cloudProvider == 'b2' & $model->enabled == 1;
+                }
+            ],
+            [
+                [
+                    'googleClientId', 'googleClientSecret', 'googleProjectName',
+                    'googleAuthRedirect'
+                ],
+                'required',
+                'when' => function ($model) {
+                    return $model->cloudProvider == 'google' & $model->enabled == 1;
+                }
+            ],
+            [
+                [
+                    'dropboxAppKey', 'dropboxSecretKey', 'dropboxAccessToken',
+                ],
+                'required',
+                'when' => function ($model) {
+                    return $model->cloudProvider == 'dropbox' & $model->enabled == 1;
+                }
+            ],
+            [
+                [
+                    'pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount',
+                    'pruneYearlyCount'
+                ],
                 'required',
                 'when' => function ($model) {
                     return $model->prune == 1 & $model->enabled == 1;
                 }
             ],
             [
-                ['cloudProvider', 's3AccessKey', 's3SecretKey', 's3BucketName', 's3RegionName', 's3BucketPrefix'],
+                [
+                    'cloudProvider', 's3AccessKey', 's3SecretKey', 's3BucketName',
+                    's3RegionName', 's3BucketPath', 'b2MasterKeyID', 'b2MasterAppKey',
+                    'b2BucketName', 'b2BucketPath', 'googleClientId',
+                    'googleClientSecret', 'googleProjectName', 'googleAuthRedirect',
+                    'googleDriveFolderId', 'dropboxAppKey', 'dropboxSecretKey',
+                    'dropboxAccessToken', 'dropboxFolder'
+                ],
                 'string'
             ],
             [
-                ['enabled', 'useQueue', 'keepLocal', 'prune', 'hideDatabases', 'hideVolumes'],
+                [
+                    'enabled', 'useQueue', 'keepLocal', 'prune', 'hideDatabases',
+                    'hideVolumes'
+                ],
                 'boolean'
             ],
             [
-                ['pruneHourlyCount', 'pruneDailyCount', 'pruneWeeklyCount', 'pruneMonthlyCount', 'pruneYearlyCount'],
+                [
+                    'pruneHourlyCount', 'pruneDailyCount', 'pruneWeeklyCount',
+                    'pruneMonthlyCount', 'pruneYearlyCount'
+                ],
                 'number'
             ],
             // This seems like a poor API design in Yii 2. We want to show a 
@@ -72,21 +136,5 @@ class Settings extends Model
             $this->addError('hideDatabases', 'You cannot hide both databases and volumes');
             $this->addError('hideVolumes', 'You cannot hide both databases and volumes');
         }
-    }
-
-    public function configured(): bool
-    {
-        $vars = [
-            $this->s3AccessKey,
-            $this->s3SecretKey,
-            $this->s3RegionName,
-            $this->s3BucketName
-        ];
-        foreach ($vars as $var) {
-            if (!$var || $var == '') {
-                return false;
-            }
-        }
-        return true;
     }
 }
