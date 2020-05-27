@@ -227,4 +227,4 @@ When you create a new volume backup, it's possible that your PHP memory limit wi
 
 <img src="resources/img/feral-logo.svg" width="250px">
 
-Brought to you by [Feral](https://weareferal.com). Any problems please leave an issue on Github.
+Brought to you by [Feral](https://weareferal.com). If you have any problems please leave an issue on Github or find us on the Craft Discord (username `timmy`).
