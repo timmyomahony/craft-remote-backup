@@ -10,7 +10,7 @@ class CreateDatabaseBackupJob extends BaseJob
 {
     public function execute($queue)
     {
-        RemoteBackup::getInstance()->remotebackup->pushDatabase();
+        RemoteBackup::getInstance()->provider->pushDatabase();
     }
 
     protected function defaultDescription()

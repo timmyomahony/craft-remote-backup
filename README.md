@@ -44,6 +44,7 @@ Bear in mind that you will need to additionally install the relevent SDK for you
 - [Backblaze B2](https://github.com/weareferal/craft-remote-backup/wiki/Backblaze-B2)
 - [Dropbox](https://github.com/weareferal/craft-remote-backup/wiki/Dropbox)
 - [Google Drive](https://github.com/weareferal/craft-remote-backup/wiki/Google-Drive)
+- [Digital Ocean Spaces](https://github.com/weareferal/craft-remote-backup/wiki/Digital-Ocean-Spaces)
 
 In each case you will be required to configure the plugin via the Contorl Panel settings page and optional (but recommended) environment variables.
 
@@ -117,15 +118,11 @@ These commands can be used alongside cron or your deployment scripts to automati
 
 You can optionally use Craft's built-in queue to create new backups. This is useful when your backups are large and you don't want to have to wait on the Control Panel interface every time you backup. Instead, the backups will be pushed to the queue and completed in the background.
 
-You can enable this via the "Use Queue" lightswitch in the settings or via the `userQueue` settig in your config.
-
-#### ⚠️ Control Panel errors
-
-When not using the queue, if there is an issue pulling/pushing a backup you will get feedback (an alert box). You won't get the same feedback when using the queue. Instead it will look like the operation has been successful. To see if the operation was actually successul you'll need to check the queue manually.
+You can enable this via the "Use Queue" lightswitch in the settings or via the `useQueue` settig in your config.
 
 #### ⚠️ CLI commands and the queue
 
-The CLI commands ignore the queue setting. In other words, they will always run synchrously. This is by design as it's likely you will want to see the results of these operations if they are part of your crontab or deployment script.
+The CLI commands ignore the queue setting. In other words, they will always run synchronously. This is by design as it's likely you will want to see the results of these operations if they are part of your crontab or deployment script.
 
 ### Local Copies
 
@@ -227,4 +224,4 @@ When you create a new volume backup, it's possible that your PHP memory limit wi
 
 <img src="resources/img/feral-logo.svg" width="250px">
 
-Brought to you by [Feral](https://weareferal.com). Any problems email [timmy@weareferal.com](mailto:timmy@weareferal.com?subject=Craft%20Env%20Sync%20Question) or leave an issue on Github.
+Brought to you by [Feral](https://weareferal.com). Any problems please leave an issue on Github.

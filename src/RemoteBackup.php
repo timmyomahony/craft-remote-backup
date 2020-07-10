@@ -10,29 +10,21 @@
 namespace weareferal\remotebackup;
 
 use Craft;
-use craft\base\Plugin;
 use craft\services\Utilities;
 use craft\events\RegisterComponentTypesEvent;
-use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\services\UserPermissions;
-use craft\web\UrlManager;
 use yii\base\Event;
+
+use weareferal\remotecore\RemoteCore;
 
 use weareferal\remotebackup\utilities\RemoteBackupUtility;
 use weareferal\remotebackup\models\Settings;
-use weareferal\remotebackup\services\RemoteBackupService;
 use weareferal\remotebackup\assets\remotebackupsettings\RemoteBackupSettingAsset;
 
 
-class RemoteBackup extends Plugin
+class RemoteBackup extends RemoteCore
 {
-    public $hasCpSettings = true;
-
-    public static $plugin;
-
-    public $schemaVersion = '1.0.0';
-
     public function init()
     {
         parent::init();
@@ -40,7 +32,7 @@ class RemoteBackup extends Plugin
         self::$plugin = $this;
 
         $this->setComponents([
-            'remotebackup' => RemoteBackupService::create($this->getSettings()->cloudProvider)
+            'pruneservice' => PruneService::class
         ]);
 
         // Register console commands
@@ -73,16 +65,16 @@ class RemoteBackup extends Plugin
         }
 
         // Extra urls
-        if ($this->getSettings()->cloudProvider == "google") {
-            Event::on(
-                UrlManager::class,
-                UrlManager::EVENT_REGISTER_CP_URL_RULES,
-                function (RegisterUrlRulesEvent $event) {
-                    $event->rules['remote-backup/google-drive/auth'] = 'remote-backup/google-drive/auth';
-                    $event->rules['remote-backup/google-drive/auth-redirect'] = 'remote-backup/google-drive/auth-redirect';
-                }
-            );
-        }
+        // if ($this->getSettings()->cloudProvider == "google") {
+        //     Event::on(
+        //         UrlManager::class,
+        //         UrlManager::EVENT_REGISTER_CP_URL_RULES,
+        //         function (RegisterUrlRulesEvent $event) {
+        //             $event->rules['remote-backup/google-drive/auth'] = 'remote-backup/google-drive/auth';
+        //             $event->rules['remote-backup/google-drive/auth-redirect'] = 'remote-backup/google-drive/auth-redirect';
+        //         }
+        //     );
+        // }
     }
 
     protected function createSettingsModel(): Settings
@@ -96,8 +88,9 @@ class RemoteBackup extends Plugin
         $view->registerAssetBundle(RemoteBackupSettingAsset::class);
         $view->registerJs("new Craft.RemoteBackupSettings('main-form');");
 
-        $isAuthenticated = $this->remotebackup->isAuthenticated();
-        $isConfigured = $this->remotebackup->isConfigured();
+        $isAuthenticated = $this->provider->isAuthenticated();
+        $isConfigured = $this->provider->isConfigured();
+
         return $view->renderTemplate(
             'remote-backup/settings',
             [

@@ -32,7 +32,8 @@
         { label: 'Amazon S3', value: 's3' },
         { label: 'Backblaze B2', value: 'b2' },
         { label: 'Google Drive', value: 'google' },
-        { label: 'Dropbox', value: 'dropbox' }
+        { label: 'Dropbox', value: 'dropbox' },
+        { label: 'Digital Ocean Spaces', value: 'do' }
     ],
     value: settings.cloudProvider,
     required: true,
@@ -170,7 +171,6 @@
     }) }}
 </div>
 
-
 {# Google Drive #}
 <div class="provider provider-google">
     {{ forms.autosuggestField({
@@ -301,6 +301,78 @@
     }) }}
 </div>
 
+{# Digital Ocean Spaces #}
+<div class="provider provider-do">
+    {{ forms.autosuggestField({
+        label: "Digital Ocean Spaces Access Key"|t('remote-sync'),
+        instructions: "The Digital Ocean API access key"|t('remote-sync'),
+        name: 'doAccessKey',
+        id: 'doAccessKey',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.doAccessKey,
+        required: (settings.cloudProvider == 'do'),
+        type: 'password',
+        errors: settings.getErrors('doAccessKey'),
+        warning: configWarning('doAccessKey', 'remote-sync')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "Digital Ocean Spaces Secret Key",
+        instructions: "The Digital Ocean API secret key"|t('remote-sync'),
+        name: 'doSecretKey',
+        id: 'doSecretKey',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.doSecretKey,
+        required: (settings.cloudProvider == 'do'),
+        type: 'password',
+        errors: settings.getErrors('doSecretKey'),
+        warning: configWarning('doSecretKey', 'remote-sync')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "Digital Ocean Spaces Name"|t('remote-sync'),
+        instructions: "The name of the DO Space you want to send files to"|t('remote-sync'),
+        name: 'doSpacesName',
+        id: 'doSpacesName',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.doSpacesName,
+        placeholder: "craft-sync",
+        required: (settings.cloudProvider == 'do'),
+        errors: settings.getErrors('doSpacesName'),
+        warning: configWarning('doSpacesName', 'remote-sync')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "Digital Ocean Spaces Region Name"|t('remote-sync'),
+        instructions: "The region your DO Space is in"|t('remote-sync'),
+        name: 'doRegionName',
+        id: 'doRegionName',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.doRegionName,
+        placeholder: "fra1",
+        required: (settings.cloudProvider == 'do'),
+        errors: settings.getErrors('doRegionName'),
+        warning: configWarning('doRegionName', 'remote-sync')
+    }) }}
+
+    {{ forms.autosuggestField({
+        label: "Digital Ocean Spaces Path"|t('remote-sync'),
+        instructions: "A path within your DO Space to prefix your files with. Do not include a leading or trailing slash"|t('remote-sync'),
+        name: 'doSpacesPath',
+        id: 'doSpacesPath',
+        suggestEnvVars: true,
+        suggestAliases: true,
+        value: settings.doSpacesPath,
+        placeholder: "craft-sync/my-site",
+        errors: settings.getErrors('doSpacesPath'),
+        warning: configWarning('doSpacesPath', 'remote-sync')
+    }) }}
+</div>
+
 <hr>
 
 {{ forms.lightswitchField({
@@ -336,7 +408,6 @@
     errors: settings.getErrors('prune'),
     warning: configWarning('prune', 'remote-backup')
 }) }}
-
 
 {{ forms.textField({
     label: "Hourly backups"|t('remote-backup'),
