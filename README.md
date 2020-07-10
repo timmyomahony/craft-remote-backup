@@ -210,7 +210,6 @@ AWS_ACCESS_KEY=
 AWS_SECRET_KEY=
 AWS_REGION="us-west-1"
 AWS_BUCKET_NAME="feral-backups"
-AWS_BUCKET_NAME="feral-backups"
 AWS_BUCKET_SYNC_PREFIX="craft-sync/craft-test"
 AWS_BUCKET_BACKUP_PREFIX="craft-backups/craft-test"
 ```
