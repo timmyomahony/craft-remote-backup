@@ -47,7 +47,6 @@
     },
     "suggest": {
         "aws/aws-sdk-php": "Required for AWS usage",
-        "gliterd/backblaze-b2": "Required for Backblaze usage",
         "kunalvarma05/dropbox-php-sdk": "Required for Dropbox usage",
         "google/apiclient": "Required for Google Drive usage"
     }
