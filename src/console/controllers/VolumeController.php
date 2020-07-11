@@ -87,7 +87,7 @@ class VolumeController extends Controller
                 $this->stderr("Backup pruning disabled. Please enable via the Remote Backup control panel settings" . PHP_EOL, Console::FG_YELLOW);
                 return ExitCode::CONFIG;
             } else {
-                $filenames = RemoteBackup::getInstance()->pruneservice->pruneVolumes();
+                $filenames = RemoteBackup::getInstance()->prune->pruneVolumes();
                 if (count($filenames) <= 0) {
                     $this->stdout("No volume backups deleted" . PHP_EOL, Console::FG_YELLOW);
                 } else {

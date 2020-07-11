@@ -87,7 +87,7 @@ class DatabaseController extends Controller
                 $this->stderr("Backup pruning disabled. Please enable via the Remote Backup control panel settings" . PHP_EOL, Console::FG_YELLOW);
                 return ExitCode::CONFIG;
             } else {
-                $filenames = RemoteBackup::getInstance()->pruneservice->pruneDatabases();
+                $filenames = RemoteBackup::getInstance()->prune->pruneDatabases();
                 if (count($filenames) <= 0) {
                     $this->stdout("No databases backups deleted" . PHP_EOL, Console::FG_YELLOW);
                 } else {
