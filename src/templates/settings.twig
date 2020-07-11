@@ -1,487 +1,83 @@
+{% extends "remote-core/settings" %}
+
 {% import "_includes/forms" as forms %}
+{% from "remote-core/macros" import configWarning %}
 
-{% macro configWarning(setting, file) -%}
-    {%- set configArray = craft.app.config.getConfigFromFile(file) -%}
-    {%- if configArray[setting] is defined -%}
-        {{- "This is being overridden by the `#{setting}` setting in the `config/#{file}.php` file." |raw }}
-    {%- else -%}
-        {{ false }}
-    {%- endif -%}
-{%- endmacro %}
-
-{% from _self import configWarning %}
-
-{{ forms.lightswitchField({
-    first: true,
-    label: "Enabled"|t('remote-backup'),
-    instructions: "Enable the plugin"|t('remote-backup'),
-    name: 'enabled',
-    id: 'enabled',
-    on: settings.enabled,
-    errors: settings.getErrors('enabled'),
-    warning: configWarning('enabled', 'remote-backup')
-}) }}
-
-<hr>
-
-{{ forms.selectField({
-    label: "Cloud Provider"|t('remote-backup'),
-    id: 'cloudProvider',
-    name: 'cloudProvider',
-    options: [
-        { label: 'Amazon S3', value: 's3' },
-        { label: 'Backblaze B2', value: 'b2' },
-        { label: 'Google Drive', value: 'google' },
-        { label: 'Dropbox', value: 'dropbox' },
-        { label: 'Digital Ocean Spaces', value: 'do' }
-    ],
-    value: settings.cloudProvider,
-    required: true,
-    errors: settings.getErrors('cloudProvider'),
-    warning: configWarning('cloudProvider', 'remote-backup')
-}) }}
-
-{# AWS #}
-<div class="provider provider-s3">
-    {{ forms.autosuggestField({
-        label: "S3 Access Key"|t('remote-backup'),
-        instructions: "The access key associated with your IAM user"|t('remote-backup'),
-        name: 's3AccessKey',
-        id: 's3AccessKey',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.s3AccessKey,
-        required: (settings.cloudProvider == 's3'),
-        type: 'password',
-        errors: settings.getErrors('s3AccessKey'),
-        warning: configWarning('s3AccessKey', 'remote-backup')
+{% block customSettings %}
+    {{ forms.lightswitchField({
+        label: "Keep Local Backups"|t('remote-backup'),
+        instructions: "Keep a copy of newly created backups locally on the server"|t('remote-backup'),
+        name: 'keepLocal',
+        id: 'keepLocal',
+        on: settings.keepLocal,
+        errors: settings.getErrors('keepLocal'),
+        warning: configWarning('keepLocal', 'remote-backup')
     }) }}
 
-    {{ forms.autosuggestField({
-        label: "S3 Secret Key",
-        instructions: "The secret key associated with your IAM user"|t('remote-backup'),
-        name: 's3SecretKey',
-        id: 's3SecretKey',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.s3SecretKey,
-        required: (settings.cloudProvider == 's3'),
-        type: 'password',
-        errors: settings.getErrors('s3SecretKey'),
-        warning: configWarning('s3SecretKey', 'remote-backup')
+    <hr>
+
+    {{ forms.lightswitchField({
+        label: "Prune Backups"|t('remote-backup'),
+        instructions: "Delete old backups when new backup created"|t('remote-backup'),
+        name: 'prune',
+        id: 'prune',
+        on: settings.prune,
+        errors: settings.getErrors('prune'),
+        warning: configWarning('prune', 'remote-backup')
     }) }}
 
-    {{ forms.autosuggestField({
-        label: "S3 Bucket Name"|t('remote-backup'),
-        instructions: "The name of the S3 bucket you want to send backups to"|t('remote-backup'),
-        name: 's3BucketName',
-        id: 's3BucketName',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.s3BucketName,
-        placeholder: "my-craft-backups",
-        required: (settings.cloudProvider == 's3'),
-        errors: settings.getErrors('s3BucketName'),
-        warning: configWarning('s3BucketName', 'remote-backup')
+    {{ forms.textField({
+        label: "Hourly backups"|t('remote-backup'),
+        type: "number",
+        instructions: "The number of hourly backups to keep"|t('remote-backup'),
+        name: 'pruneHourlyCount',
+        id: 'pruneHourlyCount',
+        value: settings.pruneHourlyCount,
+        errors: settings.getErrors('pruneHourlyCount'),
+        warning: configWarning('pruneHourlyCount', 'remote-backup')
     }) }}
 
-    {{ forms.autosuggestField({
-        label: "S3 Region Name"|t('remote-backup'),
-        instructions: "The AWS region your S3 bucket is in"|t('remote-backup'),
-        name: 's3RegionName',
-        id: 's3RegionName',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.s3RegionName,
-        placeholder: "us-west-2",
-        required: (settings.cloudProvider == 's3'),
-        errors: settings.getErrors('s3RegionName'),
-        warning: configWarning('s3RegionName', 'remote-backup')
+    {{ forms.textField({
+        label: "Daily backups"|t('remote-backup'),
+        type: "number",
+        instructions: "The number of daily backups to keep"|t('remote-backup'),
+        name: 'pruneDailyCount',
+        id: 'pruneDailyCount',
+        value: settings.pruneDailyCount,
+        errors: settings.getErrors('pruneDailyCount'),
+        warning: configWarning('pruneDailyCount', 'remote-backup')
     }) }}
 
-    {{ forms.autosuggestField({
-        label: "S3 Bucket Path"|t('remote-backup'),
-        instructions: "A path within your S3 bucket to prefix your backups with. Do not include a leading or trailing slash"|t('remote-backup'),
-        name: 's3BucketPath',
-        id: 's3BucketPath',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.s3BucketPath,
-        placeholder: "craft-backups/my-site",
-        errors: settings.getErrors('s3BucketPath'),
-        warning: configWarning('s3BucketPath', 'remote-backup')
-    }) }}
-</div>
-
-{# Backblaze B2 #}
-<div class="provider provider-b2">
-    {{ forms.autosuggestField({
-        label: "B2 Master Key ID"|t('remote-backup'),
-        instructions: "Your Backblaze master 'keyID'"|t('remote-backup'),
-        name: 'b2MasterKeyID',
-        id: 'b2MasterKeyID',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.b2MasterKeyID,
-        required: (settings.cloudProvider == 'b2'),
-        type: 'password',
-        errors: settings.getErrors('b2MasterKeyID'),
-        warning: configWarning('b2MasterKeyID', 'remote-backup')
+    {{ forms.textField({
+        label: "Weekly backups"|t('remote-backup'),
+        type: "number",
+        instructions: "The number of weekly backups to keep"|t('remote-backup'),
+        name: 'pruneWeeklyCount',
+        id: 'pruneWeeklyCount',
+        value: settings.pruneWeeklyCount,
+        errors: settings.getErrors('pruneWeeklyCount'),
+        warning: configWarning('pruneWeeklyCount', 'remote-backup')
     }) }}
 
-    {{ forms.autosuggestField({
-        label: "B2 Master Application Key",
-        instructions: "Your Backblaze master 'applicationKey'"|t('remote-backup'),
-        name: 'b2MasterAppKey',
-        id: 'b2MasterAppKey',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.b2MasterAppKey,
-        required: (settings.cloudProvider == 'b2'),
-        type: 'password',
-        errors: settings.getErrors('b2MasterAppKey'),
-        warning: configWarning('b2MasterAppKey', 'remote-backup')
+    {{ forms.textField({
+        label: "Monthly backups"|t('remote-backup'),
+        type: "number",
+        instructions: "The number of monthly backups to keep"|t('remote-backup'),
+        name: 'pruneMonthlyCount',
+        id: 'pruneMonthlyCount',
+        value: settings.pruneMonthlyCount,
+        errors: settings.getErrors('pruneMonthlyCount'),
+        warning: configWarning('pruneMonthlyCount', 'remote-backup')
     }) }}
 
-    {{ forms.autosuggestField({
-        label: "S2 Bucket Name"|t('remote-backup'),
-        instructions: "The name of the B2 bucket you want to send backups to"|t('remote-backup'),
-        name: 'b2BucketName',
-        id: 'b2BucketName',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.b2BucketName,
-        placeholder: "my-craft-backups",
-        required: (settings.cloudProvider == 'b2'),
-        errors: settings.getErrors('b2BucketName'),
-        warning: configWarning('b2BucketName', 'remote-backup')
+    {{ forms.textField({
+        label: "Yearly backups"|t('remote-backup'),
+        type: "number",
+        instructions: "The number of yearly backups to keep"|t('remote-backup'),
+        name: 'pruneYearlyCount',
+        id: 'pruneYearlyCount',
+        value: settings.pruneYearlyCount,
+        errors: settings.getErrors('pruneYearlyCount'),
+        warning: configWarning('pruneYearlyCount', 'remote-backup')
     }) }}
-
-    {{ forms.autosuggestField({
-        label: "B2 Bucket Path"|t('remote-backup'),
-        instructions: "An optional path within your B2 bucket to prefix your backups with. Do not include a leading or trailing slash. [Learn more](https://github.com/weareferal/craft-remote-backup/wiki/Backblaze-B2#optional-folder-path)"|t('remote-backup'),
-        name: 'b2BucketPath',
-        id: 'b2BucketPath',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.b2BucketPath,
-        placeholder: "craft-backups/my-site",
-        errors: settings.getErrors('b2BucketPath'),
-        warning: configWarning('b2BucketPath', 'remote-backup')
-    }) }}
-</div>
-
-{# Google Drive #}
-<div class="provider provider-google">
-    {{ forms.autosuggestField({
-        label: "Google Drive Project Name",
-        instructions: "The name of your project in the Google Developer Console"|t('remote-backup'),
-        name: 'googleProjectName',
-        id: 'googleProjectName',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.googleProjectName,
-        required: (settings.cloudProvider == 'google'),
-        errors: settings.getErrors('googleProjectName'),
-        warning: configWarning('googleProjectName', 'remote-backup')
-    }) }}
-
-    {{ forms.autosuggestField({
-        label: "Google Drive Client ID"|t('remote-backup'),
-        instructions: "The generated oauth client ID"|t('remote-backup'),
-        name: 'googleClientId',
-        id: 'googleClientId',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        type: 'password',
-        value: settings.googleClientId,
-        required: (settings.cloudProvider == 'google'),
-        errors: settings.getErrors('googleClientId'),
-        warning: configWarning('googleClientId', 'remote-backup')
-    }) }}
-
-    {{ forms.autosuggestField({
-        label: "Google Drive Client Secret",
-        instructions: "The generated oauth secret key"|t('remote-backup'),
-        name: 'googleClientSecret',
-        id: 'googleClientSecret',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        type: 'password',
-        value: settings.googleClientSecret,
-        required: (settings.cloudProvider == 'google'),
-        errors: settings.getErrors('googleClientSecret'),
-        warning: configWarning('googleClientSecret', 'remote-backup')
-    }) }}
-
-    {{ forms.autosuggestField({
-        label: "Google Drive Auth Redirect",
-        instructions: "The URL to redirect to after succesful oauth authentication"|t('remote-backup'),
-        name: 'googleAuthRedirect',
-        id: 'googleAuthRedirect',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.googleAuthRedirect,
-        required: (settings.cloudProvider == 'google'),
-        errors: settings.getErrors('googleAuthRedirect'),
-        warning: configWarning('googleAuthRedirect', 'remote-backup')
-    }) }}
-
-    {{ forms.autosuggestField({
-        label: "Google Drive Folder ID",
-        instructions: "The ID for the folder you want to upload backups to (optional but recommended)"|t('remote-backup'),
-        name: 'googleDriveFolderId',
-        id: 'googleDriveFolderId',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.googleDriveFolderId,
-        errors: settings.getErrors('googleDriveFolderId'),
-        warning: configWarning('googleDriveFolderId', 'remote-backup')
-    }) }}    
-
-    {% if isConfigured and not isAuthenticated %}
-        <div>
-            <a href="/admin/remote-backup/google-drive/auth" class="btn">{{"Authenticate with Google Drive"|t}}</a>
-        </div>
-    {% endif %}
-</div>
-
-{# Dropbox #}
-<div class="provider provider-dropbox">
-    {{ forms.autosuggestField({
-        label: "Dropbox App Key",
-        instructions: "You Dropbox app's app key"|t('remote-backup'),
-        name: 'dropboxAppKey',
-        id: 'dropboxAppKey',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.dropboxAppKey,
-        required: (settings.cloudProvider == 'dropbox'),
-        errors: settings.getErrors('dropboxAppKey'),
-        warning: configWarning('dropboxAppKey', 'remote-backup')
-    }) }}
-
-    {{ forms.autosuggestField({
-        label: "Dropbox Secret Key",
-        instructions: "You Dropbox app's secret key"|t('remote-backup'),
-        name: 'dropboxSecretKey',
-        id: 'dropboxSecretKey',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.dropboxSecretKey,
-        required: (settings.cloudProvider == 'dropbox'),
-        errors: settings.getErrors('dropboxSecretKey'),
-        warning: configWarning('dropboxSecretKey', 'remote-backup')
-    }) }}
-
-    {{ forms.autosuggestField({
-        label: "Dropbox Access Token",
-        instructions: "You Dropbox app's access token"|t('remote-backup'),
-        name: 'dropboxAccessToken',
-        id: 'dropboxAccessToken',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.dropboxAccessToken,
-        required: (settings.cloudProvider == 'dropbox'),
-        errors: settings.getErrors('dropboxAccessToken'),
-        warning: configWarning('dropboxAccessToken', 'remote-backup')
-    }) }}
-
-    {{ forms.autosuggestField({
-        label: "Dropbox Folder",
-        instructions: "An optional folder path within Dropbox to store backups. Must start with a slash but not end with one"|t('remote-backup'),
-        name: 'dropboxFolder',
-        placeholder: '/craft-backups/my-backups',
-        id: 'dropboxFolder',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.dropboxFolder,
-        errors: settings.getErrors('dropboxFolder'),
-        warning: configWarning('dropboxFolder', 'remote-backup')
-    }) }}
-</div>
-
-{# Digital Ocean Spaces #}
-<div class="provider provider-do">
-    {{ forms.autosuggestField({
-        label: "Digital Ocean Spaces Access Key"|t('remote-sync'),
-        instructions: "The Digital Ocean API access key"|t('remote-sync'),
-        name: 'doAccessKey',
-        id: 'doAccessKey',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.doAccessKey,
-        required: (settings.cloudProvider == 'do'),
-        type: 'password',
-        errors: settings.getErrors('doAccessKey'),
-        warning: configWarning('doAccessKey', 'remote-sync')
-    }) }}
-
-    {{ forms.autosuggestField({
-        label: "Digital Ocean Spaces Secret Key",
-        instructions: "The Digital Ocean API secret key"|t('remote-sync'),
-        name: 'doSecretKey',
-        id: 'doSecretKey',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.doSecretKey,
-        required: (settings.cloudProvider == 'do'),
-        type: 'password',
-        errors: settings.getErrors('doSecretKey'),
-        warning: configWarning('doSecretKey', 'remote-sync')
-    }) }}
-
-    {{ forms.autosuggestField({
-        label: "Digital Ocean Spaces Name"|t('remote-sync'),
-        instructions: "The name of the DO Space you want to send files to"|t('remote-sync'),
-        name: 'doSpacesName',
-        id: 'doSpacesName',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.doSpacesName,
-        placeholder: "craft-sync",
-        required: (settings.cloudProvider == 'do'),
-        errors: settings.getErrors('doSpacesName'),
-        warning: configWarning('doSpacesName', 'remote-sync')
-    }) }}
-
-    {{ forms.autosuggestField({
-        label: "Digital Ocean Spaces Region Name"|t('remote-sync'),
-        instructions: "The region your DO Space is in"|t('remote-sync'),
-        name: 'doRegionName',
-        id: 'doRegionName',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.doRegionName,
-        placeholder: "fra1",
-        required: (settings.cloudProvider == 'do'),
-        errors: settings.getErrors('doRegionName'),
-        warning: configWarning('doRegionName', 'remote-sync')
-    }) }}
-
-    {{ forms.autosuggestField({
-        label: "Digital Ocean Spaces Path"|t('remote-sync'),
-        instructions: "A path within your DO Space to prefix your files with. Do not include a leading or trailing slash"|t('remote-sync'),
-        name: 'doSpacesPath',
-        id: 'doSpacesPath',
-        suggestEnvVars: true,
-        suggestAliases: true,
-        value: settings.doSpacesPath,
-        placeholder: "craft-sync/my-site",
-        errors: settings.getErrors('doSpacesPath'),
-        warning: configWarning('doSpacesPath', 'remote-sync')
-    }) }}
-</div>
-
-<hr>
-
-{{ forms.lightswitchField({
-    label: "Use Queue"|t('remote-backup'),
-    instructions: "Use the built-in Craft queue for performing backup operations"|t('remote-backup'),
-    name: 'useQueue',
-    id: 'useQueue',
-    on: settings.useQueue,
-    errors: settings.getErrors('useQueue'),
-    warning: configWarning('useQueue', 'remote-backup')
-}) }}
-
-<hr>
-
-{{ forms.lightswitchField({
-    label: "Keep Local Backups"|t('remote-backup'),
-    instructions: "Keep a copy of newly created backups locally on the server"|t('remote-backup'),
-    name: 'keepLocal',
-    id: 'keepLocal',
-    on: settings.keepLocal,
-    errors: settings.getErrors('keepLocal'),
-    warning: configWarning('keepLocal', 'remote-backup')
-}) }}
-
-<hr>
-
-{{ forms.lightswitchField({
-    label: "Prune Backups"|t('remote-backup'),
-    instructions: "Delete old backups when new backup created"|t('remote-backup'),
-    name: 'prune',
-    id: 'prune',
-    on: settings.prune,
-    errors: settings.getErrors('prune'),
-    warning: configWarning('prune', 'remote-backup')
-}) }}
-
-{{ forms.textField({
-    label: "Hourly backups"|t('remote-backup'),
-    type: "number",
-    instructions: "The number of hourly backups to keep"|t('remote-backup'),
-    name: 'pruneHourlyCount',
-    id: 'pruneHourlyCount',
-    value: settings.pruneHourlyCount,
-    errors: settings.getErrors('pruneHourlyCount'),
-    warning: configWarning('pruneHourlyCount', 'remote-backup')
-}) }}
-
-{{ forms.textField({
-    label: "Daily backups"|t('remote-backup'),
-    type: "number",
-    instructions: "The number of daily backups to keep"|t('remote-backup'),
-    name: 'pruneDailyCount',
-    id: 'pruneDailyCount',
-    value: settings.pruneDailyCount,
-    errors: settings.getErrors('pruneDailyCount'),
-    warning: configWarning('pruneDailyCount', 'remote-backup')
-}) }}
-
-{{ forms.textField({
-    label: "Weekly backups"|t('remote-backup'),
-    type: "number",
-    instructions: "The number of weekly backups to keep"|t('remote-backup'),
-    name: 'pruneWeeklyCount',
-    id: 'pruneWeeklyCount',
-    value: settings.pruneWeeklyCount,
-    errors: settings.getErrors('pruneWeeklyCount'),
-    warning: configWarning('pruneWeeklyCount', 'remote-backup')
-}) }}
-
-{{ forms.textField({
-    label: "Monthly backups"|t('remote-backup'),
-    type: "number",
-    instructions: "The number of monthly backups to keep"|t('remote-backup'),
-    name: 'pruneMonthlyCount',
-    id: 'pruneMonthlyCount',
-    value: settings.pruneMonthlyCount,
-    errors: settings.getErrors('pruneMonthlyCount'),
-    warning: configWarning('pruneMonthlyCount', 'remote-backup')
-}) }}
-
-{{ forms.textField({
-    label: "Yearly backups"|t('remote-backup'),
-    type: "number",
-    instructions: "The number of yearly backups to keep"|t('remote-backup'),
-    name: 'pruneYearlyCount',
-    id: 'pruneYearlyCount',
-    value: settings.pruneYearlyCount,
-    errors: settings.getErrors('pruneYearlyCount'),
-    warning: configWarning('pruneYearlyCount', 'remote-backup')
-}) }}
-
-<hr>
-
-{{ forms.lightswitchField({
-    label: "Hide Databases"|t('remote-backup'),
-    instructions: "Hide the database section altogether from the utilities page"|t('remote-backup'),
-    name: 'hideDatabases',
-    id: 'hideDatabases',
-    on: settings.hideDatabases,
-    errors: settings.getErrors('hideDatabases'),
-    warning: configWarning('hideDatabases', 'remote-backup')
-}) }}
-
-{{ forms.lightswitchField({
-    label: "Hide Volumes"|t('remote-backup'),
-    instructions: "Hide the volumes section altogether from the utiltiies page"|t('remote-backup'),
-    name: 'hideVolumes',
-    id: 'hideVolumes',
-    on: settings.hideVolumes,
-    errors: settings.getErrors('hideVolumes'),
-    warning: configWarning('hideVolumes', 'remote-backup')
-}) }}
+{% endblock %}
