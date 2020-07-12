@@ -24,14 +24,8 @@
     ],
     "require": {
         "craftcms/cms": "^3.0.0-RC1",
-        "weareferal/remote-core": "dev-feature/module"
+        "weareferal/remote-core": "^1.1.0"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../craft-remote-core"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "weareferal\\remotebackup\\": "src/"
