@@ -43,7 +43,7 @@ class VolumeController extends Controller
             } else {
                 $this->stdout("Remote volume backups:" . PHP_EOL, Console::FG_GREEN);
                 foreach ($results as $result) {
-                    $this->stdout(" " . $result['value'] . PHP_EOL);
+                    $this->stdout(" " . $result->filename . PHP_EOL);
                 }
             }
         } catch (\Exception $e) {

@@ -37,13 +37,13 @@ class DatabaseController extends Controller
             $this->requirePluginEnabled();
             $this->requirePluginConfigured();
 
-            $results = RemoteBackup::getInstance()->provider->listDatabases();
-            if (count($results) <= 0) {
+            $remoteFiles = RemoteBackup::getInstance()->provider->listDatabases();
+            if (count($remoteFiles) <= 0) {
                 $this->stdout("No remote database backups" . PHP_EOL, Console::FG_YELLOW);
             } else {
                 $this->stdout("Remote database backups:" . PHP_EOL, Console::FG_GREEN);
-                foreach ($results as $result) {
-                    $this->stdout(" " . $result['value'] . PHP_EOL);
+                foreach ($remoteFiles as $result) {
+                    $this->stdout(" " . $result->filename . PHP_EOL);
                 }
             }
         } catch (\Exception $e) {

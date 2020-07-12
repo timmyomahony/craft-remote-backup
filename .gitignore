@@ -6,6 +6,7 @@
 # COMPOSER
 /vendor
 composer.lock
+composer.json.local
 
 # BUILD FILES
 /bower_components/*
