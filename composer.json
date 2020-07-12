@@ -1,4 +1,6 @@
 {
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "name": "weareferal/remote-backup",
     "description": "Backup your database and assets to a remote location",
     "type": "craft-plugin",
@@ -21,8 +23,15 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.0.0-RC1"
+        "craftcms/cms": "^3.0.0-RC1",
+        "weareferal/remote-core": "dev-feature/module"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../craft-remote-core"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "weareferal\\remotebackup\\": "src/"
@@ -38,7 +47,6 @@
     },
     "suggest": {
         "aws/aws-sdk-php": "Required for AWS usage",
-        "gliterd/backblaze-b2": "Required for Backblaze usage",
         "kunalvarma05/dropbox-php-sdk": "Required for Dropbox usage",
         "google/apiclient": "Required for Google Drive usage"
     }

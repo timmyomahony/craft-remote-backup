@@ -10,7 +10,7 @@ class CreateVolumeBackupJob extends BaseJob
 {
     public function execute($queue)
     {
-        RemoteBackup::getInstance()->remotebackup->pushVolumes();
+        RemoteBackup::getInstance()->provider->pushVolumes();
     }
 
     protected function defaultDescription()

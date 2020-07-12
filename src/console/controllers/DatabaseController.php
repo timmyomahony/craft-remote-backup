@@ -23,7 +23,7 @@ class DatabaseController extends Controller
 
     public function requirePluginConfigured()
     {
-        if (!RemoteBackup::getInstance()->remotebackup->isConfigured()) {
+        if (!RemoteBackup::getInstance()->provider->isConfigured()) {
             throw new \Exception('Remote Backup Plugin not correctly configured');
         }
     }
@@ -37,7 +37,7 @@ class DatabaseController extends Controller
             $this->requirePluginEnabled();
             $this->requirePluginConfigured();
 
-            $results = RemoteBackup::getInstance()->remotebackup->listDatabases();
+            $results = RemoteBackup::getInstance()->provider->listDatabases();
             if (count($results) <= 0) {
                 $this->stdout("No remote database backups" . PHP_EOL, Console::FG_YELLOW);
             } else {
@@ -63,7 +63,7 @@ class DatabaseController extends Controller
             $this->requirePluginEnabled();
             $this->requirePluginConfigured();
 
-            $filename = RemoteBackup::getInstance()->remotebackup->pushDatabase();
+            $filename = RemoteBackup::getInstance()->provider->pushDatabase();
             $this->stdout("Created remote database backup:" . PHP_EOL, Console::FG_GREEN);
             $this->stdout(" " . $filename . PHP_EOL);
         } catch (\Exception $e) {
@@ -87,7 +87,7 @@ class DatabaseController extends Controller
                 $this->stderr("Backup pruning disabled. Please enable via the Remote Backup control panel settings" . PHP_EOL, Console::FG_YELLOW);
                 return ExitCode::CONFIG;
             } else {
-                $filenames = RemoteBackup::getInstance()->remotebackup->pruneDatabases();
+                $filenames = RemoteBackup::getInstance()->prune->pruneDatabases();
                 if (count($filenames) <= 0) {
                     $this->stdout("No databases backups deleted" . PHP_EOL, Console::FG_YELLOW);
                 } else {

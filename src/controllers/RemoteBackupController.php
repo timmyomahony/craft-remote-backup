@@ -13,6 +13,8 @@ use weareferal\remotebackup\queue\CreateVolumeBackupJob;
 use weareferal\remotebackup\queue\PruneDatabaseBackupsJob;
 use weareferal\remotebackup\queue\PruneVolumeBackupsJob;
 
+use weareferal\remotecore\helpers\RemoteFile;
+
 
 class RemoteBackupController extends Controller
 {
@@ -25,15 +27,11 @@ class RemoteBackupController extends Controller
 
     public function requirePluginConfigured()
     {
-        if (!RemoteBackup::getInstance()->remotebackup->isConfigured()) {
+        if (!RemoteBackup::getInstance()->provider->isConfigured()) {
             throw new BadRequestHttpException('Plugin is not correctly configured');
         }
     }
 
-    /**
-     * List database backups
-     * 
-     */
     public function actionListDatabases()
     {
         $this->requireCpRequest();
@@ -42,8 +40,10 @@ class RemoteBackupController extends Controller
         $this->requirePluginConfigured();
 
         try {
+            $remoteFiles = RemoteBackup::getInstance()->provider->listDatabases();
+            $options = RemoteFile::toHTMLOptions($remoteFiles);
             return $this->asJson([
-                "backups" => RemoteBackup::getInstance()->remotebackup->listDatabases(),
+                "options" => $options,
                 "success" => true
             ]);
         } catch (\Exception $e) {
@@ -60,8 +60,10 @@ class RemoteBackupController extends Controller
         $this->requirePluginConfigured();
 
         try {
+            $remoteFiles = RemoteBackup::getInstance()->provider->listVolumes();
+            $options = RemoteFile::toHTMLOptions($remoteFiles);
             return $this->asJson([
-                "backups" => RemoteBackup::getInstance()->remotebackup->listVolumes(),
+                "options" => $options,
                 "success" => true
             ]);
         } catch (\Exception $e) {
@@ -77,8 +79,8 @@ class RemoteBackupController extends Controller
         $this->requirePluginEnabled();
         $this->requirePluginConfigured();
 
-        $settings = RemoteBackup::getInstance()->getSettings();
-        $service = RemoteBackup::getInstance()->remotebackup;
+        $plugin = RemoteBackup::getInstance();
+        $settings = $plugin->getSettings();
         $queue = Craft::$app->queue;
 
         try {
@@ -86,7 +88,7 @@ class RemoteBackupController extends Controller
                 $queue->push(new CreateDatabaseBackupJob());
                 Craft::$app->getSession()->setNotice(Craft::t('remote-backup', 'Job added to queue'));
             } else {
-                $service->pushDatabase();
+                $plugin->provider->pushDatabase();
                 Craft::$app->getSession()->setNotice(Craft::t('remote-backup', 'Database backup created'));
             }
 
@@ -94,7 +96,7 @@ class RemoteBackupController extends Controller
                 if ($settings->useQueue) {
                     $queue->push(new PruneDatabaseBackupsJob());
                 } else {
-                    $service->pruneDatabases();
+                    $plugin->prune->pruneDatabases();
                 }
             }
         } catch (\Exception $e) {
@@ -114,8 +116,8 @@ class RemoteBackupController extends Controller
         $this->requirePluginEnabled();
         $this->requirePluginConfigured();
 
-        $settings = RemoteBackup::getInstance()->getSettings();
-        $service = RemoteBackup::getInstance()->remotebackup;
+        $plugin = RemoteBackup::getInstance();
+        $settings = $plugin->getSettings();
         $queue = Craft::$app->queue;
 
         try {
@@ -123,7 +125,7 @@ class RemoteBackupController extends Controller
                 $queue->push(new CreateVolumeBackupJob());
                 Craft::$app->getSession()->setNotice(Craft::t('remote-backup', 'Job added to queue'));
             } else {
-                $service->pushVolumes();
+                $plugin->provider->pushVolumes();
                 Craft::$app->getSession()->setNotice(Craft::t('remote-backup', 'Volume backup created'));
             }
 
@@ -131,7 +133,7 @@ class RemoteBackupController extends Controller
                 if ($settings->useQueue) {
                     $queue->push(new PruneVolumeBackupsJob());
                 } else {
-                    $service->pruneVolumes();
+                    $plugin->prune->pruneVolumes();
                 }
             }
         } catch (\Exception $e) {
