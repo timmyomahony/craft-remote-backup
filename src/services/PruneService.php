@@ -65,7 +65,7 @@ class PruneService extends Component
         $deleted_filenames = [];
 
         if (!$settings->prune) {
-            Craft::warning("Pruning disabled" . PHP_EOL, 'remote-sync');
+            Craft::warning("Pruning disabled" . PHP_EOL, 'remote-backup');
             return $deleted_filenames;
         }
 

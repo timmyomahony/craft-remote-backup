@@ -1,9 +1,10 @@
 <?php
 
-namespace weareferal\remotesync;
+namespace weareferal\remotebackup\controllers;
 
 use weareferal\remotecore\controllers\BaseGoogleDriveController;
-use weareferal\remotesync\RemoteSync;
+use weareferal\remotebackup\RemoteBackup;
+
 
 /**
  * Google Drive controller
@@ -12,6 +13,6 @@ use weareferal\remotesync\RemoteSync;
 class GoogleDriveController extends BaseGoogleDriveController
 {
     protected function pluginInstance() {
-        return RemoteSync::getInstance();
+        return RemoteBackup::getInstance();
     }
 }
