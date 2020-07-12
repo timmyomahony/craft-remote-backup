@@ -1,11 +1,11 @@
 <?php
 
-namespace weareferal\remotesync\services;
+namespace weareferal\remotebackup\services;
 
 use Craft;
 use craft\base\Component;
 
-use weareferal\remotesync\RemoteSync;
+use weareferal\remotebackup\RemoteBackup;
 
 
 /**
@@ -26,7 +26,7 @@ class PruneService extends Component
      */
     public function pruneDatabases($dryRun = false)
     {
-        $remoteFiles = RemoteSync::getInstance()->provider->listDatabases();
+        $remoteFiles = RemoteBackup::getInstance()->provider->listDatabases();
         return $this->prune($remoteFiles, $dryRun);
     }
 
@@ -41,7 +41,7 @@ class PruneService extends Component
      */
     public function pruneVolumes($dryRun = false)
     {
-        $remoteFiles = RemoteSync::getInstance()->provider->listVolumes();
+        $remoteFiles = RemoteBackup::getInstance()->provider->listVolumes();
         return $this->prune($remoteFiles, $dryRun);
     }
 
@@ -60,7 +60,7 @@ class PruneService extends Component
      */
     private function prune($remoteFiles, $dryRun = false)
     {
-        $plugin = RemoteSync::getInstance();
+        $plugin = RemoteBackup::getInstance();
         $settings = $plugin->getSettings();
         $deleted_filenames = [];
 
@@ -168,7 +168,7 @@ class PruneService extends Component
             Craft::debug('Saving:' . PHP_EOL, 'remote-backup');
             foreach ($groups as $period => $_remoteFile) {
                 Craft::debug(" " . $period . " (Most recent " . $config[$period]['limit'] . ')' . PHP_EOL, 'remote-backup');
-                foreach  $_remoteFile as $remoteFile) {
+                foreach ($_remoteFile as $remoteFile) {
                     Craft::debug(" + " . $remoteFile->datetime->format('Y-m-d H:i:s') . PHP_EOL, 'remote-backup');
                 }
             }

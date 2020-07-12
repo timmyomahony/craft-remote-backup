@@ -96,7 +96,7 @@ class RemoteBackupController extends Controller
                 if ($settings->useQueue) {
                     $queue->push(new PruneDatabaseBackupsJob());
                 } else {
-                    $plugin->provider->pruneDatabases();
+                    $plugin->prune->pruneDatabases();
                 }
             }
         } catch (\Exception $e) {
@@ -133,7 +133,7 @@ class RemoteBackupController extends Controller
                 if ($settings->useQueue) {
                     $queue->push(new PruneVolumeBackupsJob());
                 } else {
-                    $plugin->provider->pruneVolumes();
+                    $plugin->prune->pruneVolumes();
                 }
             }
         } catch (\Exception $e) {
