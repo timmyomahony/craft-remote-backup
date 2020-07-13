@@ -147,6 +147,7 @@ class RemoteBackup extends Plugin
             'remote-backup/settings',
             [
                 'plugin' => $this,
+                'pluginHandle' => $this->getHandle(),
                 'settings' => $this->getSettings(),
                 'isConfigured' => $isConfigured,
                 'isAuthenticated' => $isAuthenticated
