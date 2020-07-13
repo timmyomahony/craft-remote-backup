@@ -23,7 +23,7 @@ class VolumeController extends Controller
 
     public function requirePluginConfigured()
     {
-        if (!RemoteBackup::getInstance()->remotebackup->isConfigured()) {
+        if (!RemoteBackup::getInstance()->provider->isConfigured()) {
             throw new \Exception('Remote Backup Plugin not correctly configured');
         }
     }
@@ -37,13 +37,13 @@ class VolumeController extends Controller
             $this->requirePluginEnabled();
             $this->requirePluginConfigured();
 
-            $results = RemoteBackup::getInstance()->remotebackup->listVolumes();
+            $results = RemoteBackup::getInstance()->provider->listVolumes();
             if (count($results) <= 0) {
                 $this->stdout("No remote volume backups" . PHP_EOL, Console::FG_YELLOW);
             } else {
                 $this->stdout("Remote volume backups:" . PHP_EOL, Console::FG_GREEN);
                 foreach ($results as $result) {
-                    $this->stdout(" " . $result['value'] . PHP_EOL);
+                    $this->stdout(" " . $result->filename . PHP_EOL);
                 }
             }
         } catch (\Exception $e) {
@@ -63,7 +63,7 @@ class VolumeController extends Controller
             $this->requirePluginEnabled();
             $this->requirePluginConfigured();
 
-            $filename = RemoteBackup::getInstance()->remotebackup->pushVolumes();
+            $filename = RemoteBackup::getInstance()->provider->pushVolumes();
             $this->stdout("Created remote volumes backup:" . PHP_EOL, Console::FG_GREEN);
             $this->stdout(" " . $filename . PHP_EOL);
         } catch (\Exception $e) {
@@ -87,7 +87,7 @@ class VolumeController extends Controller
                 $this->stderr("Backup pruning disabled. Please enable via the Remote Backup control panel settings" . PHP_EOL, Console::FG_YELLOW);
                 return ExitCode::CONFIG;
             } else {
-                $filenames = RemoteBackup::getInstance()->remotebackup->pruneVolumes();
+                $filenames = RemoteBackup::getInstance()->prune->pruneVolumes();
                 if (count($filenames) <= 0) {
                     $this->stdout("No volume backups deleted" . PHP_EOL, Console::FG_YELLOW);
                 } else {

@@ -55,21 +55,21 @@
       this.$tbody.find(".errors-row").show();
     },
 
-    updateTable: function (backups, error) {
+    updateTable: function (options, error) {
       if (error) {
         this.showTableErrors();
-      } else if (backups.length > 0) {
-        for (var i = 0; i < backups.length; i++) {
+      } else if (options.length > 0) {
+        for (var i = 0; i < options.length; i++) {
           var $row = this.$tbody.find(".template-row").clone();
           var $td = $row.find("td");
           $row.removeClass("template-row default-row");
           if (i > 0) {
             $row.removeClass("first");
           }
-          $td.text(backups[i].label);
-          $td.attr("title", backups[i].title);
-          $td.attr("data-filename", backups[i].value);
-          if (backups.length > 1 && i === 0) {
+          $td.text(options[i].label);
+          $td.attr("title", options[i].title);
+          $td.attr("data-filename", options[i].value);
+          if (options.length > 1 && i === 0) {
             $td.append($("<span>").text("latest"));
           }
           this.$tbody.append($row);
@@ -100,7 +100,7 @@
         dataType: "json",
         success: function (response) {
           if (response["success"]) {
-            this.updateTable(response["backups"]);
+            this.updateTable(response["options"]);
           } else {
             var message = "Error fetching backups";
             if (response["error"]) {

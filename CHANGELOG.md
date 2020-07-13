@@ -25,3 +25,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Backblaze provider & documentation
 - Interface improvement: show a "latest" tag
 - Interface improvement: show the "time since" when hovering over backups
+
+## 1.2.0 - 2020-07-12
+
+### Changed
+
+- Moved shared code into a separate `craft-remote-core` package dependency to be shared between `craft-remote-sync` and `craft-remote-backup`
+
+### Added
+
+- Added Digital Ocean Spaces provider & documentation
+- Updated Backblaze provider to use existing AWS API (you will need to update your settings if using the old Backblaze provider)
