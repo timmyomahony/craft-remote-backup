@@ -102,10 +102,7 @@ class RemoteBackup extends Plugin
      */
     public function registerServices()
     {
-        Craft::debug('Registering services for: ' . $this->name, 'remote-backup');
-        Craft::debug('Cloud provider setting: ' . $this->getSettings()->cloudProvider, 'remote-backup');
         $provider = Craft::$app->getModule('remote-core')->providerFactory->create($this);
-        Craft::debug('Provider: ' . $provider->name, 'remote-backup');
         $this->setComponents([
             'provider' => $provider,
             'prune' => PruneService::class
