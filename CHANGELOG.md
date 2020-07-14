@@ -36,3 +36,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Added Digital Ocean Spaces provider & documentation
 - Updated Backblaze provider to use existing AWS API (you will need to update your settings if using the old Backblaze provider)
+
+## 1.2.1 - 2020-07-14
+
+### Changed
+
+- Made Backblaze B2 settings labels clearer
