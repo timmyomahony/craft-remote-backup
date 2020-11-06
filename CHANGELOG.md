@@ -42,3 +42,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 
 - Made Backblaze B2 settings labels clearer
+
+## 1.2.2 - 2020-11-06
+
+### Changed
+
+- Updated core library version
