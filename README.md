@@ -7,7 +7,7 @@ Backup your database and assets to a remote destination (AWS, Digital Ocean, Goo
 
 ![Craft Remote Backup Overview](resources/img/utilities-screenshot.png)
 
-Craft Remote Backup makes it easy to create offsite remote backups from the comfort of the Craft Control Panel. Along with a few CLI commands, this gives you the ability to take regular snapshots of your database and assets and rest assured that they are stored securely offsite.
+Craft Remote Backup makes it easy to create offsite remote backups from the comfort of the Craft Control Panel. Along with a few CLI commands, this gives you the ability to take regular automated (via cron) snapshots of your database and assets and rest assured that they are stored securely offsite.
 
 It provides an easy-to-configure settings page as well as an interface in Craft's "utilities" section to create new remote database and volume backups.
 
