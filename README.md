@@ -2,15 +2,14 @@
 
 <img src="src/icon.svg" width="125px">
 
-Backup your database and assets to a remote destination like AWS S3.
-
+Backup your database and assets to a remote destination (AWS, Digital Ocean, Google Drive, Backblaze, Dropbox).
 ## Overview
 
 ![Craft Remote Backup Overview](resources/img/utilities-screenshot.png)
 
 Craft Remote Backup makes it easy to create offsite remote backups from the comfort of the Craft Control Panel. Along with a few CLI commands, this gives you the ability to take regular snapshots of your database and assets and rest assured that they are stored securely offsite.
 
-It provides an easy-to-configure settings page as well as an interface in Craft's "utilties" section to create new remote database and volume backups.
+It provides an easy-to-configure settings page as well as an interface in Craft's "utilities" section to create new remote database and volume backups.
 
 ## Requirements
 
@@ -36,9 +35,9 @@ To install the plugin, follow these instructions.
 
 ## Configuration
 
-Remote Backup supports a number of destinations to push backups to. Each provider has slightly different configuration so please follow the links below to get a short guide for configuring your preferred provider.
+Remote Backup supports a number of cloud providers. Each provider has slightly different configuration so please follow the links below to get a short guide for configuring your preferred provider.
 
-Bear in mind that you will need to additionally install the relevent SDK for your provider.
+Bear in mind that you will need to additionally install the relevant SDK for your provider.
 
 - [Amazon S3](https://github.com/weareferal/craft-remote-backup/wiki/Amazon-S3)
 - [Backblaze B2](https://github.com/weareferal/craft-remote-backup/wiki/Backblaze-B2)
@@ -46,7 +45,7 @@ Bear in mind that you will need to additionally install the relevent SDK for you
 - [Google Drive](https://github.com/weareferal/craft-remote-backup/wiki/Google-Drive)
 - [Digital Ocean Spaces](https://github.com/weareferal/craft-remote-backup/wiki/Digital-Ocean-Spaces)
 
-In each case you will be required to configure the plugin via the Contorl Panel settings page and optional (but recommended) environment variables.
+In each case you will be required to configure the plugin via the Control Panel settings page and optional (but recommended) environment variables.
 
 ### Multi-environment Configuration
 
@@ -75,13 +74,15 @@ return [
 
 ## Usage
 
-### Control Panel Utilties
+You can either perform manual backups via the Craft utilities page or automate the process via Cron and the CLI.
+
+### Control Panel Utilities
 
 ![Craft Remote Backup Utilities Screenshot](resources/img/utilities-screenshot.png)
 
 You can view and create new remote backups via the Utilities section of the Craft Control Panel.
 
-### Command Line
+### Command Line/Cron
 
 There are also console commands available for creating, pushing and pulling backups:
 
@@ -118,7 +119,7 @@ These commands can be used alongside cron or your deployment scripts to automati
 
 You can optionally use Craft's built-in queue to create new backups. This is useful when your backups are large and you don't want to have to wait on the Control Panel interface every time you backup. Instead, the backups will be pushed to the queue and completed in the background.
 
-You can enable this via the "Use Queue" lightswitch in the settings or via the `useQueue` settig in your config.
+You can enable this via the "Use Queue" light-switch in the settings or via the `useQueue` setting in your config.
 
 #### ⚠️ CLI commands and the queue
 
@@ -128,7 +129,7 @@ The CLI commands ignore the queue setting. In other words, they will always run 
 
 You can choose to keep local copies of database and volume backups that are created on the server before being pushed to your remote provider. By default Remote Backup will delete these local copies after they have been pushed.
 
-If you'd prefer to keep them, enable the "Keep Local" lightswitch on the settings page or via the `keepLocal` setting in your config.
+If you'd prefer to keep them, enable the "Keep Local" light-switch on the settings page or via the `keepLocal` setting in your config.
 
 ### Deleting/Pruning Old Backups
 
