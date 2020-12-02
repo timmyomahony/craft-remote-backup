@@ -10,6 +10,7 @@
       this.$form = $("form", this.$element);
       this.$table = $("table", this.$element);
       this.$tbody = $("tbody", this.$table);
+      this.$showAllRow = $(".show-all-row", this.$tbody);
       this.$submit = $("input.submit", this.$form);
       this.$loadingOverlay = $(".rb-utilities-overlay", this.$element);
 
@@ -19,6 +20,17 @@
       this.csrfToken = this.$form.find('input[name="CRAFT_CSRF_TOKEN"]').val();
 
       this.$form.on("submit", this.push.bind(this));
+
+      // Show all rows
+      this.$showAllRow.find("a").on(
+        "click",
+        function (e) {
+          this.$showAllRow.hide();
+          this.$table.removeClass("rb-utilities-table--collapsed");
+          e.preventDefault();
+        }.bind(this)
+      );
+
       this.list();
     },
 
@@ -58,25 +70,41 @@
     updateTable: function (options, error) {
       if (error) {
         this.showTableErrors();
-      } else if (options.length > 0) {
-        for (var i = 0; i < options.length; i++) {
-          var $row = this.$tbody.find(".template-row").clone();
-          var $td = $row.find("td");
-          $row.removeClass("template-row default-row");
-          if (i > 0) {
-            $row.removeClass("first");
-          }
-          $td.text(options[i].label);
-          $td.attr("title", options[i].title);
-          $td.attr("data-filename", options[i].value);
-          if (options.length > 1 && i === 0) {
-            $td.append($("<span>").text("latest"));
-          }
-          this.$tbody.append($row);
-        }
-      } else {
-        this.showTableNoResults();
+        return false;
       }
+
+      if (options.length <= 0) {
+        this.showTableNoResults();
+        return false;
+      }
+
+      // Backups are ordered newest to oldest ([0] = most recent) but we
+      // prepend them instead of append them to make it easier to style
+      for (var i = options.length - 1; i >= 0; i--) {
+        var $row = this.$tbody
+          .find(".template-row")
+          .clone()
+          .removeClass("template-row default-row");
+
+        var $td = $row.find("td:first");
+        $td.text(options[i].label);
+        $td.attr("title", options[i].value);
+        $td.attr("data-filename", options[i].value);
+
+        if (i === 0) {
+          $td.append($("<span>").text("latest"));
+        } else {
+          $row.removeClass("first");
+        }
+
+        this.$tbody.prepend($row);
+      }
+
+      if (options.length > 3) {
+        this.$showAllRow.show();
+      }
+
+      return true;
     },
 
     /**

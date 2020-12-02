@@ -1,25 +1,30 @@
 <section id="{{ id }}" class='rb-utilities-section'>
     <h2 data-icon="{{ icon }}">{{ "Remote " ~ label ~ " Backups"|t('remote-backup') }}</h2>
-    <table class="data fullwidth rb-utilities-table"
+    <table class="data fullwidth rb-utilities-table rb-utilities-table--collapsed"
         data-list-action="{{ listAction }}"
         data-push-action="{{ pushAction }}">
         <tbody>
             <tr class="first template-row default-row">
                 <td class="light"></td>
             </tr>
-            <tr class="first loading-row default-row">
+            <tr class="loading-row default-row">
                 <td class="light">
                     <img src="{{ craft.app.getAssetManager().getPublishedUrl('@app/web/assets/cp/dist', true, 'images/spinner.gif')}}">
                 </td>
             </tr>
-            <tr class="first no-results-row default-row">
+            <tr class="no-results-row default-row">
                 <td class="light">
                     {{ "No " ~ labelPlural|t('remote-backup') }}
                 </td>
             </tr>
-            <tr class="first errors-row default-row">
+            <tr class="errors-row default-row">
                 <td class="error">
                     {{ "Error Fetching " ~ labelPlural|t('remote-backup') }}
+                </td>
+            </tr>
+            <tr class="last default-row show-all-row">
+                <td>
+                    <a class="light" href="">{{ "Show All"|t('remote-sync') }}</a>
                 </td>
             </tr>
         </tbody>
