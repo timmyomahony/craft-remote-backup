@@ -49,15 +49,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Updated core library version
 
-## 1.2.3 - [TODO]
+## 1.4.0 - [TODO]
 
 ### Added
 
+- Added support for remote volumes
 - Added TTR to queue jobs (issue #38 on craft-remote-sync)
+- Added time and duration to console command output
 
 ### Changed
 
-- Added support for transfering files to and from all volume backends, not just local
+- Bumped version number for parity between sync & backup plugins
 - Updated readme to call-out cron requirement
 - Fixed filename regex (issue #26 on craft-remote-sync)
 - Moved shared utilities JS and CSS to core module
