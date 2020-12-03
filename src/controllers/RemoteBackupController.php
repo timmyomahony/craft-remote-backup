@@ -39,9 +39,12 @@ class RemoteBackupController extends Controller
         $this->requirePluginEnabled();
         $this->requirePluginConfigured();
 
+        $plugin = RemoteBackup::getInstance();
+        $settings = $plugin->getSettings();
+
         try {
             $remoteFiles = RemoteBackup::getInstance()->provider->listDatabases();
-            $options = RemoteFile::toHTMLOptions($remoteFiles);
+            $options = RemoteFile::toHTMLOptions($remoteFiles, $settings->displayDateFormat);
             return $this->asJson([
                 "options" => $options,
                 "success" => true
@@ -58,10 +61,13 @@ class RemoteBackupController extends Controller
         $this->requirePermission('remotebackup');
         $this->requirePluginEnabled();
         $this->requirePluginConfigured();
+        
+        $plugin = RemoteBackup::getInstance();
+        $settings = $plugin->getSettings();
 
         try {
             $remoteFiles = RemoteBackup::getInstance()->provider->listVolumes();
-            $options = RemoteFile::toHTMLOptions($remoteFiles);
+            $options = RemoteFile::toHTMLOptions($remoteFiles, $settings->displayDateFormat);
             return $this->asJson([
                 "options" => $options,
                 "success" => true
