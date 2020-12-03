@@ -51,8 +51,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.2.3 - [TODO]
 
+### Added
+
+- Added TTR to queue jobs (issue #38 on craft-remote-sync)
+
 ### Changed
 
+- Updated readme to call-out cron requirement
+- Fixed filename regex (issue #26 on craft-remote-sync)
 - Moved shared utilities JS and CSS to core module
-- Added show/hide display logic to utilities (already in sync)
-- Updated the formatting for file table
+- Added show/hide display logic to utilities (issue #7)
+- Updated the formatting for file table (issue #10 on craft-remote-backup)
