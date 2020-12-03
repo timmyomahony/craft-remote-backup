@@ -57,6 +57,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 
+- Added support for transfering files to and from all volume backends, not just local
 - Updated readme to call-out cron requirement
 - Fixed filename regex (issue #26 on craft-remote-sync)
 - Moved shared utilities JS and CSS to core module
