@@ -2,7 +2,6 @@
 
 namespace weareferal\remotebackup\queue;
 
-use Craft;
 use craft\queue\BaseJob;
 use yii\queue\RetryableJobInterface;
 
@@ -20,9 +19,9 @@ class CreateDatabaseBackupJob extends BaseJob implements RetryableJobInterface
         RemoteBackup::getInstance()->provider->pushDatabase();
     }
 
-    protected function defaultDescription(): string
+    protected function defaultDescription()
     {
-        return Craft::t('remote-backup', 'Pushing .sql database backup to remote destination');
+        return 'Create a new remote database backup';
     }
     
     public function canRetry($attempt, $error)
