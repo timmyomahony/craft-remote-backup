@@ -2,6 +2,7 @@
 
 namespace weareferal\remotebackup\queue;
 
+use Craft;
 use craft\queue\BaseJob;
 use yii\queue\RetryableJobInterface;
 
@@ -19,9 +20,9 @@ class CreateVolumeBackupJob extends BaseJob implements RetryableJobInterface
         RemoteBackup::getInstance()->provider->pushVolumes();
     }
 
-    protected function defaultDescription()
+    protected function defaultDescription(): string
     {
-        return 'Create a new remote volumes backup';
+        return Craft::t('remote-backup', 'Zipping volumes and pushing to remote destination');
     }
     
     public function canRetry($attempt, $error)

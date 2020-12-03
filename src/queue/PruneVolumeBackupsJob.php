@@ -2,6 +2,7 @@
 
 namespace weareferal\remotebackup\queue;
 
+use Craft;
 use craft\queue\BaseJob;
 use yii\queue\RetryableJobInterface;
 
@@ -19,9 +20,9 @@ class PruneVolumeBackupsJob extends BaseJob implements RetryableJobInterface
         RemoteBackup::getInstance()->prune->pruneVolumes();
     }
 
-    protected function defaultDescription()
+    protected function defaultDescription(): string
     {
-        return 'Prune remote volume backups';
+        return Craft::t('remote-backup', 'Removing old zip backups from remote destination');
     }
     
     public function canRetry($attempt, $error)

@@ -2,6 +2,7 @@
 
 namespace weareferal\remotebackup\queue;
 
+use Craft;
 use craft\queue\BaseJob;
 use yii\queue\RetryableJobInterface;
 
@@ -19,9 +20,9 @@ class PruneDatabaseBackupsJob extends BaseJob implements RetryableJobInterface
         RemoteBackup::getInstance()->prune->pruneDatabases();
     }
 
-    protected function defaultDescription()
+    protected function defaultDescription(): string
     {
-        return 'Prune remote database backups';
+        return Craft::t('remote-backup', 'Removing old sql backups from remote destination');
     }
     
     public function canRetry($attempt, $error)
