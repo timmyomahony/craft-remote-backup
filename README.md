@@ -221,6 +221,18 @@ If you are getting errors, the first thing to check is the Craft logs at `storag
 
 When you create a new volume backup, it's possible that your PHP memory limit will cause the process to crash. Make sure your memory limit is > than the volume folder you are trying to backup.
 
+### Queue Operations Failing
+
+If you are backing up via the web interface and using the queue, you might notice backup operations failing (sometimes silently)
+
+#### TTR (Time to Reserve)
+
+TTR ("Time To Reserve") is the max time (in seconds) that a queue operation can take. This is a Craft setting and not a PHP setting, so it's not affected by the `max_execution` time.
+
+Remote Backup offers an easy way to adjust this value via the settings page, so if you are noticing issues backing-up then increase this value from the default 300 (5 minutes).
+
+![TTR setting](resources/img/ttr.png)
+
 ## Support
 
 <img src="resources/img/feral-logo.svg" width="250px">
