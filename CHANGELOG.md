@@ -49,7 +49,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Updated core library version
 
-## 1.4.0 - [TODO]
+## 1.4.0 - 2020-12-08
 
 ### Added
 

@@ -215,23 +215,46 @@ AWS_BUCKET_BACKUP_PREFIX="craft-backups/craft-test"
 
 ## Troubleshooting
 
-If you are getting errors, the first thing to check is the Craft logs at `storage/logs/web.log`. The most likely issue is with your credentials, so double check that those are OK.
+If you are getting errors, the first thing to check is the Craft logs.
 
-### Memory limit creating volumes
+- `storage/logs/web.log` if you are running backups via the web interface
+- `storage/logs/queue.log` if you are running backups via the web interface and using the queue
+- `storage/logs/cli.log` if you are running backups via the command line
 
-When you create a new volume backup, it's possible that your PHP memory limit will cause the process to crash. Make sure your memory limit is > than the volume folder you are trying to backup.
+### Large Backups
 
-### Queue Operations Failing
+You can 
+
+#### Storage Issues
+
+If you are backing up large volume folders you might run into issues with server storage space. Something like:
+
+> Error (time: 77.245s): stream_copy_to_stream(): write of 8192 bytes failed with errno=28 No space left on device
+
+This is because we have to create a copy of all data first, then zip it up before sending it to the remote location.
+
+For example if you have 5Gb of files in your volumes, you will need an extra 10Gb of space on the server:
+
+- 5Gb to hold a copy of the volume data
+- Another 5Gb for the zip file created from the above data
+
+These files should all be deleted after a successful backup.
+
+#### Queue Operations
 
 If you are backing up via the web interface and using the queue, you might notice backup operations failing (sometimes silently)
 
-#### TTR (Time to Reserve)
+##### TTR (Time to Reserve)
 
 TTR ("Time To Reserve") is the max time (in seconds) that a queue operation can take. This is a Craft setting and not a PHP setting, so it's not affected by the `max_execution` time.
 
 Remote Backup offers an easy way to adjust this value via the settings page, so if you are noticing issues backing-up then increase this value from the default 300 (5 minutes).
 
 ![TTR setting](resources/img/ttr.png)
+
+#### Data Costs
+
+If you have large volumes make sure you are aware of any data caps on inbound or outbound data. For example if you are hosting 5Gb of files on S3 and then backing them up to a different bucket you will have read 5Gb of files and sent another 5Gb when performing a single backup.
 
 ## Support
 
