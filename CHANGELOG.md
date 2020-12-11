@@ -48,3 +48,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 
 - Updated core library version
+
+## 1.4.0 - 2020-12-08
+
+### Added
+
+- Added support for remote volumes
+- Added TTR to queue jobs (issue #38 on craft-remote-sync)
+- Added time and duration to console command output
+
+### Changed
+
+- Bumped version number for parity between sync & backup plugins
+- Updated readme to call-out cron requirement
+- Fixed filename regex (issue #26 on craft-remote-sync)
+- Moved shared utilities JS and CSS to core module
+- Added show/hide display logic to utilities (issue #7)
+- Updated the formatting for file table (issue #10 on craft-remote-backup)

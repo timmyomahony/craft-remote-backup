@@ -20,10 +20,6 @@ class RemoteBackupUtilityAsset extends AssetBundle
             'js/RemoteBackupUtility.js'
         ];
 
-        $this->css = [
-            'css/RemoteBackupUtility.css',
-        ];
-
         parent::init();
     }
 }

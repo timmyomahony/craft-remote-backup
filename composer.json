@@ -2,6 +2,7 @@
     "name": "weareferal/remote-backup",
     "description": "Backup your database and assets to a remote location",
     "type": "craft-plugin",
+    "version": "1.4.0",
     "keywords": [
         "craft",
         "cms",
@@ -22,7 +23,7 @@
     ],
     "require": {
         "craftcms/cms": "^3.0.0-RC1",
-        "weareferal/remote-core": "^1.1.5"
+        "weareferal/remote-core": "1.4.0"
     },
     "autoload": {
         "psr-4": {
