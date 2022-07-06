@@ -9,7 +9,7 @@
             </tr>
             <tr class="loading-row default-row">
                 <td class="light">
-                    <img src="{{ craft.app.getAssetManager().getPublishedUrl('@app/web/assets/cp/dist', true, 'images/spinner.gif')}}">
+                    <div class="update-spinner spinner"></div>
                 </td>
             </tr>
             <tr class="no-results-row default-row">
@@ -37,7 +37,7 @@
         </div>
     </form>
     <div class="rb-utilities-overlay">
-        <img src="{{ craft.app.getAssetManager().getPublishedUrl('@app/web/assets/cp/dist', true, 'images/spinner.gif')}}">
+        <div class="update-spinner spinner"></div>
     </div>
     {% block message %}{% endblock %}
 </section>
