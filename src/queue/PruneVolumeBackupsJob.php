@@ -15,12 +15,12 @@ class PruneVolumeBackupsJob extends BaseJob implements RetryableJobInterface
         return RemoteBackup::getInstance()->getSettings()->queueTtr;
     }
 
-    public function execute($queue)
+    public function execute($queue): void
     {
         RemoteBackup::getInstance()->prune->pruneVolumes();
     }
 
-    protected function defaultDescription()
+    protected function defaultDescription(): string|null
     {
         return Craft::t('remote-backup', 'Prune remote volume backups');
     }

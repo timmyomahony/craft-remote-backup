@@ -27,7 +27,7 @@
         "weareferal/remote-core": "dev-craft-4"
     },
     "require-dev": {
-        "phpstan/phpstan": "^1.7",
+        "phpstan/phpstan": "1.8.x-dev",
         "craftcms/phpstan": "dev-main",
         "craftcms/rector": "dev-main"
     },
@@ -57,5 +57,11 @@
         "aws/aws-sdk-php": "Required for AWS usage",
         "kunalvarma05/dropbox-php-sdk": "Required for Dropbox usage",
         "google/apiclient": "Required for Google Drive usage"
+    },
+    "config": {
+        "allow-plugins": {
+            "craftcms/plugin-installer": true,
+            "yiisoft/yii2-composer": true
+        }
     }
 }

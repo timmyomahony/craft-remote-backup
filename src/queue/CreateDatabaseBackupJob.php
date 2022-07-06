@@ -15,12 +15,12 @@ class CreateDatabaseBackupJob extends BaseJob implements RetryableJobInterface
         return RemoteBackup::getInstance()->getSettings()->queueTtr;
     }
 
-    public function execute($queue)
+    public function execute($queue): void
     {
         RemoteBackup::getInstance()->provider->pushDatabase();
     }
 
-    protected function defaultDescription()
+    protected function defaultDescription(): string|null
     {
         return Craft::t('remote-backup', 'Create a new remote database backup');
     }
