@@ -54,7 +54,7 @@
         "class": "weareferal\\remotebackup\\RemoteBackup"
     },
     "suggest": {
-        "aws/aws-sdk-php": "Required for AWS usage",
+        "aws/aws-sdk-php": "Required for AWS S3, Backblaze or Digital Ocean Spaces usage",
         "kunalvarma05/dropbox-php-sdk": "Required for Dropbox usage",
         "google/apiclient": "Required for Google Drive usage"
     },
