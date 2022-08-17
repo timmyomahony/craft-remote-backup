@@ -1,8 +1,7 @@
 # Craft Remote Backup
 
-<img src="src/icon.svg" width="125px">
-
 Backup your database and assets to a remote destination (AWS, Digital Ocean, Google Drive, Backblaze, Dropbox).
+
 ## Overview
 
 ![Craft Remote Backup Overview](resources/img/utilities-screenshot.png)
@@ -258,6 +257,4 @@ If you have large volumes make sure you are aware of any data caps on inbound or
 
 ## Support
 
-<img src="resources/img/feral-logo.svg" width="250px">
-
-Brought to you by [Feral](https://weareferal.com). Any problems please leave an issue on Github.
+If you have any problems please leave an issue on Github or find us on the Craft Discord (username timmy).
