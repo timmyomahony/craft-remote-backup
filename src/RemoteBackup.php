@@ -10,6 +10,7 @@
 namespace weareferal\remotebackup;
 
 use Craft;
+use craft\console\Application as ConsoleApplication;
 use craft\base\Plugin;
 use craft\web\UrlManager;
 use craft\services\Utilities;
@@ -30,11 +31,11 @@ use weareferal\remotecore\assets\RemoteCoreSettings\RemoteCoreSettingsAsset;
 
 class RemoteBackup extends Plugin
 {
-    public $hasCpSettings = true;
+    public bool $hasCpSettings =true;
 
     public static $plugin;
 
-    public $schemaVersion = '1.0.0';
+    public string $schemaVersion = '1.0.0';
 
     public function init()
     {

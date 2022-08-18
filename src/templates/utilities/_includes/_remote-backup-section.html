@@ -9,17 +9,17 @@
             </tr>
             <tr class="loading-row default-row">
                 <td class="light">
-                    <img src="{{ craft.app.getAssetManager().getPublishedUrl('@app/web/assets/cp/dist', true, 'images/spinner.gif')}}">
+                    <div class="update-spinner spinner"></div>
                 </td>
             </tr>
             <tr class="no-results-row default-row">
                 <td class="light">
-                    {{ "No " ~ labelPlural|t('remote-backup') }}
+                    {{ "No " ~ label|t('remote-backup') ~ " Backups"}}
                 </td>
             </tr>
             <tr class="errors-row default-row">
                 <td class="error">
-                    {{ "Error Fetching " ~ labelPlural|t('remote-backup') }}
+                    {{ "Error Fetching " ~ label|t('remote-backup') ~ " Backups"}}
                 </td>
             </tr>
             <tr class="last default-row show-all-row">
@@ -37,7 +37,7 @@
         </div>
     </form>
     <div class="rb-utilities-overlay">
-        <img src="{{ craft.app.getAssetManager().getPublishedUrl('@app/web/assets/cp/dist', true, 'images/spinner.gif')}}">
+        <div class="update-spinner spinner"></div>
     </div>
     {% block message %}{% endblock %}
 </section>

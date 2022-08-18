@@ -65,3 +65,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Moved shared utilities JS and CSS to core module
 - Added show/hide display logic to utilities (issue #7)
 - Updated the formatting for file table (issue #10 on craft-remote-backup)
+
+## 4.0.0 - 2022-08-18
+
+### Added
+
+- Craft 4 compatibility. Version has jumped from 1.X.X to 4.X.X to make following Craft easier.
