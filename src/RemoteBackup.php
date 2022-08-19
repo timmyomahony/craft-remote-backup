@@ -64,7 +64,9 @@ class RemoteBackup extends Plugin
                 $event->permissions[] = [
                     'heading' => 'Remote Backup',
                     'permissions' => [
-                        'label' => 'Create remote backups of database and assets',
+                        'permissionName' => [
+                            'label' => 'Create remote backups of database and assets',
+                        ],
                     ],
                 ];
             }
