@@ -61,9 +61,12 @@ class RemoteBackup extends Plugin
             UserPermissions::class,
             UserPermissions::EVENT_REGISTER_PERMISSIONS,
             function (RegisterUserPermissionsEvent $event) {
-                $event->permissions['Remote Backup'] = [
-                    'remotebackup' => [
-                        'label' => 'Create remote backups of database and assets',
+                $event->permissions[] = [
+                    'heading' => 'Remote Backup',
+                    'permissions' => [
+                        'permissionName' => [
+                            'label' => 'Create remote backups of database and assets',
+                        ],
                     ],
                 ];
             }
