@@ -32,8 +32,9 @@
         <div class="rb-utilities">
             {% if not hideDatabases %}
                 {% include 'remote-backup/utilities/_includes/_remote-backup-section' with {
-                    label: 'Database',
-                    labelPlural: 'Databases',
+                    label: ("Database" | t),
+                    labelPlural: ("Databases" | t),
+                    backupText: ("Backup Database" | t),
                     icon: 'database',
                     id: 'rb-utilities-database',
                     listAction: 'remote-backup/remote-backup/list-databases',
@@ -43,9 +44,9 @@
             {% endif %}
             {% if not hideVolumes %}
                 {% embed 'remote-backup/utilities/_includes/_remote-backup-section' with {
-                    label: 'Volume',
-                    labelPlural: 'Volumes',
-                    label: 'Volume',
+                    label: ("Volume" | t),
+                    labelPlural: ("Volumes" | t),
+                    backupText: ("Backup Volumes" | t),
                     icon: 'asset',
                     id: 'rb-utilities-volumes',
                     listAction: 'remote-backup/remote-backup/list-volumes',
