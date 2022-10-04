@@ -41,6 +41,7 @@ class RemoteBackupUtility extends Utility
         $queueActive = Craft::$app->queue->getHasWaitingJobs();
 
         return $view->renderTemplate('remote-backup/utilities/remote-backup', [
+            "cloudProvider" => $settings->cloudProvider,
             "isConfigured" => $provider->isConfigured(),
             "isAuthenticated" => $provider->isAuthenticated(),
             "hideDatabases" => $settings->hideDatabases,

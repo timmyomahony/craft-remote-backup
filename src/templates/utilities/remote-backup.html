@@ -30,6 +30,7 @@
             </script>
         {% endif %}
         <div class="rb-utilities">
+            <img class="rb-utilities-provider-icon" src="{{ craft.app.assetManager.publishedUrl('@remote-core/assets/RemoteCoreUtility/dist/img/' ~ cloudProvider ~'.png', true) }}" />
             {% if not hideDatabases %}
                 {% include 'remote-backup/utilities/_includes/_remote-backup-section' with {
                     label: ("Database" | t),
