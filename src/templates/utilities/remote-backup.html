@@ -7,7 +7,7 @@
 {% else %}
     {% if not isAuthenticated %}
         <div class="field">
-            <p class="warning"><strong>{{ 'You need to authenticate with your provider'|t('remote-backup') }}</strong></p>
+            <p class="warning"><strong>{{ 'You need to authenticate with your provider. Please visit the plugin settings page.'|t('remote-backup') }}</strong></p>
         </div>
     {% else %}
         {% if queueActive %}

@@ -44,7 +44,7 @@ class RemoteBackupController extends Controller
 
         try {
             $remoteFiles = RemoteBackup::getInstance()->provider->listDatabases();
-            $files = RemoteFile::toObject($remoteFiles, $settings->displayDateFormat);
+            $files = RemoteFile::serialize($remoteFiles, $settings->displayDateFormat);
             return $this->asJson([
                 "files" => $files,
                 "success" => true
@@ -67,7 +67,7 @@ class RemoteBackupController extends Controller
 
         try {
             $remoteFiles = RemoteBackup::getInstance()->provider->listVolumes();
-            $files = RemoteFile::toObject($remoteFiles, $settings->displayDateFormat);
+            $files = RemoteFile::serialize($remoteFiles, $settings->displayDateFormat);
             return $this->asJson([
                 "files" => $files,
                 "success" => true

@@ -9,6 +9,7 @@
                 <th>{{ "Time" | t("remote-backup") }}</th>
                 <th>{{ "Environment" | t("remote-backup") }}</th>
                 <th>{{ "Version" | t("remote-backup") }}</th>
+                <td>{{ "Size" | t("remote-backup") }}</td>
                 <th></th>
             </tr>
         </thead>
@@ -19,21 +20,37 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
             </tr>
             <tr class="loading-row default-row">
                 <td class="light">
                     <div class="update-spinner spinner"></div>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </td>
             </tr>
             <tr class="no-results-row default-row">
                 <td class="light">
                     {{ "No " ~ label|t('remote-backup') ~ " Backups"}}
                 </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr class="errors-row default-row">
                 <td class="error">
                     {{ "Error Fetching " ~ label|t('remote-backup') ~ " Backups"}}
                 </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
         </tbody>
     </table>
