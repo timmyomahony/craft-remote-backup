@@ -7,7 +7,7 @@
 {% else %}
     {% if not isAuthenticated %}
         <div class="field">
-            <p class="warning"><strong>{{ 'You need to authenticate with your provider'|t('remote-backup') }}</strong></p>
+            <p class="warning"><strong>{{ 'You need to authenticate with your provider. Please visit the plugin settings page.'|t('remote-backup') }}</strong></p>
         </div>
     {% else %}
         {% if queueActive %}
@@ -30,10 +30,12 @@
             </script>
         {% endif %}
         <div class="rb-utilities">
+            <img class="rb-utilities-provider-icon" src="{{ craft.app.assetManager.publishedUrl('@weareferal/remotecore/assets/RemoteCoreUtility/dist/img/' ~ cloudProvider ~'.png', true) }}" />
             {% if not hideDatabases %}
                 {% include 'remote-backup/utilities/_includes/_remote-backup-section' with {
-                    label: 'Database',
-                    labelPlural: 'Databases',
+                    label: ("Database" | t),
+                    labelPlural: ("Databases" | t),
+                    backupText: ("Backup Database" | t),
                     icon: 'database',
                     id: 'rb-utilities-database',
                     listAction: 'remote-backup/remote-backup/list-databases',
@@ -43,9 +45,9 @@
             {% endif %}
             {% if not hideVolumes %}
                 {% embed 'remote-backup/utilities/_includes/_remote-backup-section' with {
-                    label: 'Volume',
-                    labelPlural: 'Volumes',
-                    label: 'Volume',
+                    label: ("Volume" | t),
+                    labelPlural: ("Volumes" | t),
+                    backupText: ("Backup Volumes" | t),
                     icon: 'asset',
                     id: 'rb-utilities-volumes',
                     listAction: 'remote-backup/remote-backup/list-volumes',

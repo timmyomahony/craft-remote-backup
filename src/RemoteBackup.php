@@ -26,7 +26,7 @@ use weareferal\remotebackup\models\Settings;
 use weareferal\remotebackup\services\PruneService;
 
 use weareferal\remotecore\RemoteCoreHelper;
-use weareferal\remotecore\assets\RemoteCoreSettings\RemoteCoreSettingsAsset;
+use weareferal\remotecore\assets\remotecoresettings\RemoteCoreSettingsAsset;
 
 
 class RemoteBackup extends Plugin

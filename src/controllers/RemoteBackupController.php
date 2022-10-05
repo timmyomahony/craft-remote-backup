@@ -32,6 +32,36 @@ class RemoteBackupController extends Controller
         }
     }
 
+    /**
+     * Test Provider
+     * 
+     * 
+     * @since 4.1.0
+     */
+    public function actionTestProvider()
+    {
+        $this->requireCpRequest();
+        $this->requirePermission('remotebackup');
+        $this->requirePluginEnabled();
+        
+        $plugin = RemoteBackup::getInstance();
+
+        try {
+            // Simply attempt to list all files
+            $plugin->provider->list('.sql');
+            return $this->asJson([
+                "success" => true
+            ]);
+        } catch (\Exception $e) {
+            return $this->asFailure(
+                Craft::t('remote-backup', 'Test failed'),
+                [
+                    "message" => $e->getMessage(),
+                    "trace" => $e->getTraceAsString()
+                ]);
+        }
+    }
+
     public function actionListDatabases()
     {
         $this->requireCpRequest();
@@ -43,10 +73,10 @@ class RemoteBackupController extends Controller
         $settings = $plugin->getSettings();
 
         try {
-            $remoteFiles = RemoteBackup::getInstance()->provider->listDatabases();
-            $options = RemoteFile::toHTMLOptions($remoteFiles, $settings->displayDateFormat);
+            $remoteFiles = $plugin->provider->listDatabases();
+            $files = RemoteFile::serialize($remoteFiles, $settings->displayDateFormat);
             return $this->asJson([
-                "options" => $options,
+                "files" => $files,
                 "success" => true
             ]);
         } catch (\Exception $e) {
@@ -66,10 +96,10 @@ class RemoteBackupController extends Controller
         $settings = $plugin->getSettings();
 
         try {
-            $remoteFiles = RemoteBackup::getInstance()->provider->listVolumes();
-            $options = RemoteFile::toHTMLOptions($remoteFiles, $settings->displayDateFormat);
+            $remoteFiles = $plugin->provider->listVolumes();
+            $files = RemoteFile::serialize($remoteFiles, $settings->displayDateFormat);
             return $this->asJson([
-                "options" => $options,
+                "files" => $files,
                 "success" => true
             ]);
         } catch (\Exception $e) {
