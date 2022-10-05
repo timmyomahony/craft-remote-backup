@@ -1,10 +1,10 @@
 # Craft Remote Backup
 
-Backup your database and assets to a remote destination (AWS, Digital Ocean, Google Drive, Backblaze, Dropbox).
+Backup your database and assets to a remote destination (AWS, Digital Ocean, Google Drive, Backblaze).
 
 ## Overview
 
-![Craft Remote Backup Overview](resources/img/utilities-screenshot.png)
+![Craft Remote Backup Overview](resources/img/utilities-screenshot.jpg)
 
 Craft Remote Backup makes it easy to create offsite remote backups from the comfort of the Craft Control Panel. Along with a few CLI commands, this gives you the ability to take regular automated (via cron) snapshots of your database and assets and rest assured that they are stored securely offsite.
 
@@ -12,7 +12,7 @@ It provides an easy-to-configure settings page as well as an interface in Craft'
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0 or later.
+This plugin requires Craft CMS 3.0.0 or later (Craft 4 supported).
 
 ## Installation
 
@@ -40,7 +40,6 @@ Bear in mind that you will need to additionally install the relevant SDK for you
 
 - [Amazon S3](https://github.com/weareferal/craft-remote-backup/wiki/Amazon-S3)
 - [Backblaze B2](https://github.com/weareferal/craft-remote-backup/wiki/Backblaze-B2)
-- [Dropbox](https://github.com/weareferal/craft-remote-backup/wiki/Dropbox)
 - [Google Drive](https://github.com/weareferal/craft-remote-backup/wiki/Google-Drive)
 - [Digital Ocean Spaces](https://github.com/weareferal/craft-remote-backup/wiki/Digital-Ocean-Spaces)
 
@@ -77,7 +76,7 @@ You can either perform manual backups via the Craft utilities page or automate t
 
 ### Control Panel Utilities
 
-![Craft Remote Backup Utilities Screenshot](resources/img/utilities-screenshot.png)
+![Craft Remote Backup Utilities Screenshot](resources/img/utilities-screenshot.jpg)
 
 You can view and create new remote backups via the Utilities section of the Craft Control Panel.
 
@@ -113,6 +112,10 @@ These commands can be used alongside cron or your deployment scripts to automati
 ## Features
 
 ![Pruning settings](resources/img/pruning-screenshot.png)
+
+### Connection Testing
+
+When setting up your remote destination, you can test the connection right from the settings page making it easy to troubleshoot issues. Use the "Test Connection" button below your provider settings to try it out.
 
 ### Queue
 
@@ -221,7 +224,7 @@ If you are getting errors, the first thing to check is the Craft logs.
 
 ### Large Backups
 
-You can 
+If you have a lot of volume files or a large database to back up, there are a number of potential issues you may face.
 
 #### Storage Issues
 
