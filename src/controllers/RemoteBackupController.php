@@ -61,6 +61,7 @@ class RemoteBackupController extends Controller
                 ]);
         }
     }
+
     public function actionListDatabases()
     {
         $this->requireCpRequest();
@@ -72,7 +73,7 @@ class RemoteBackupController extends Controller
         $settings = $plugin->getSettings();
 
         try {
-            $remoteFiles = RemoteBackup::getInstance()->provider->listDatabases();
+            $remoteFiles = $plugin->provider->listDatabases();
             $files = RemoteFile::serialize($remoteFiles, $settings->displayDateFormat);
             return $this->asJson([
                 "files" => $files,
@@ -95,7 +96,7 @@ class RemoteBackupController extends Controller
         $settings = $plugin->getSettings();
 
         try {
-            $remoteFiles = RemoteBackup::getInstance()->provider->listVolumes();
+            $remoteFiles = $plugin->provider->listVolumes();
             $files = RemoteFile::serialize($remoteFiles, $settings->displayDateFormat);
             return $this->asJson([
                 "files" => $files,
