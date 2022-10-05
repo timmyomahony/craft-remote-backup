@@ -1,6 +1,6 @@
 <?php
 
-namespace weareferal\remotebackup\assets\remotebackuputility;
+namespace weareferal\remotebackup\assets\RemoteBackupUtility;
 
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
@@ -10,7 +10,7 @@ class RemoteBackupUtilityAsset extends AssetBundle
 {
     public function init()
     {
-        $this->sourcePath = __DIR__ . '/dist';
+        $this->sourcePath = '@weareferal/remotebackup/assets/RemoteBackupUtility/dist';
 
         $this->depends = [
             CpAsset::class,
