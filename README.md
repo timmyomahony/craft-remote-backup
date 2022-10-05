@@ -225,7 +225,7 @@ If you are getting errors, the first thing to check is the Craft logs.
 
 ### Large Backups
 
-You can 
+If you have a lot of volume files or a large database to back up, there are a number of potential issues you may face.
 
 #### Storage Issues
 
