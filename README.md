@@ -12,7 +12,7 @@ It provides an easy-to-configure settings page as well as an interface in Craft'
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0 or later.
+This plugin requires Craft CMS 3.0.0 or later (Craft 4 supported).
 
 ## Installation
 
@@ -76,7 +76,7 @@ You can either perform manual backups via the Craft utilities page or automate t
 
 ### Control Panel Utilities
 
-![Craft Remote Backup Utilities Screenshot](resources/img/utilities-screenshot.png)
+![Craft Remote Backup Utilities Screenshot](resources/img/utilities-screenshot.jpg)
 
 You can view and create new remote backups via the Utilities section of the Craft Control Panel.
 
@@ -112,6 +112,10 @@ These commands can be used alongside cron or your deployment scripts to automati
 ## Features
 
 ![Pruning settings](resources/img/pruning-screenshot.png)
+
+### Connection Testing
+
+When setting up your remote destination, you can test the connection right from the settings page making it easy to troubleshoot issues. Use the "Test Connection" button below your provider settings to try it out.
 
 ### Queue
 
