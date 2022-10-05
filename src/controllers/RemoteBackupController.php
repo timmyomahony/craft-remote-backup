@@ -32,6 +32,35 @@ class RemoteBackupController extends Controller
         }
     }
 
+    /**
+     * Test Provider
+     * 
+     * 
+     * @since 4.1.0
+     */
+    public function actionTestProvider()
+    {
+        $this->requireCpRequest();
+        $this->requirePermission('remotebackup');
+        $this->requirePluginEnabled();
+        
+        $plugin = RemoteBackup::getInstance();
+
+        try {
+            // Simply attempt to list all files
+            $plugin->provider->list('.sql');
+            return $this->asJson([
+                "success" => true
+            ]);
+        } catch (\Exception $e) {
+            return $this->asFailure(
+                Craft::t('remote-backup', 'Test failed'),
+                [
+                    "message" => $e->getMessage(),
+                    "trace" => $e->getTraceAsString()
+                ]);
+        }
+    }
     public function actionListDatabases()
     {
         $this->requireCpRequest();
