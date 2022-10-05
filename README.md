@@ -1,6 +1,6 @@
 # Craft Remote Backup
 
-Backup your database and assets to a remote destination (AWS, Digital Ocean, Google Drive, Backblaze, Dropbox).
+Backup your database and assets to a remote destination (AWS, Digital Ocean, Google Drive, Backblaze).
 
 ## Overview
 
@@ -40,7 +40,6 @@ Bear in mind that you will need to additionally install the relevant SDK for you
 
 - [Amazon S3](https://github.com/weareferal/craft-remote-backup/wiki/Amazon-S3)
 - [Backblaze B2](https://github.com/weareferal/craft-remote-backup/wiki/Backblaze-B2)
-- [Dropbox](https://github.com/weareferal/craft-remote-backup/wiki/Dropbox)
 - [Google Drive](https://github.com/weareferal/craft-remote-backup/wiki/Google-Drive)
 - [Digital Ocean Spaces](https://github.com/weareferal/craft-remote-backup/wiki/Digital-Ocean-Spaces)
 
