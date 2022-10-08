@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.1.1 - 2022-10-5
+
+### Fixed
+
+- [Issue #40](https://github.com/weareferal/craft-remote-backup/issues/40)
+
 ## 4.1.0 - 2022-10-5
 
 ### Added
