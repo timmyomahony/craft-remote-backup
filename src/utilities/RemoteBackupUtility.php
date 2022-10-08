@@ -5,7 +5,7 @@ namespace weareferal\remotebackup\utilities;
 use Craft;
 use craft\base\Utility;
 
-use weareferal\remotebackup\assets\remotebackuputility\RemoteBackupUtilityAsset;
+use weareferal\remotebackup\assets\RemoteBackupUtility\RemoteBackupUtilityAsset;
 use weareferal\remotecore\assets\RemoteCoreUtility\RemoteCoreUtilityAsset;
 use weareferal\remotebackup\RemoteBackup;
 
