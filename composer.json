@@ -1,4 +1,5 @@
 {
+    "minimum-stability": "dev",
     "name": "weareferal/remote-backup",
     "description": "Backup your database and assets to a remote location",
     "type": "craft-plugin",
@@ -23,7 +24,7 @@
     "require": {
         "craftcms/cms": "^4.0.0",
         "php": "^8.0.2",
-        "weareferal/remote-core": "4.1.0"
+        "weareferal/remote-core": "dev-develop"
     },
     "repositories": [
         {
