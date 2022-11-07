@@ -26,7 +26,7 @@ use weareferal\remotebackup\models\Settings;
 use weareferal\remotebackup\services\PruneService;
 
 use weareferal\remotecore\RemoteCoreHelper;
-use weareferal\remotecore\assets\remotecoresettings\RemoteCoreSettingsAsset;
+use weareferal\remotecore\assets\RemoteCoreSettings\RemoteCoreSettingsAsset;
 
 
 class RemoteBackup extends Plugin
@@ -53,7 +53,7 @@ class RemoteBackup extends Plugin
 
     /**
      * Register Permissions
-     * 
+     *
      */
     public function registerPermissions()
     {
@@ -70,12 +70,12 @@ class RemoteBackup extends Plugin
                     ],
                 ];
             }
-        );        
+        );
     }
 
     /**
      * Register URLs
-     * 
+     *
      */
     public function registerURLs()
     {
@@ -91,7 +91,7 @@ class RemoteBackup extends Plugin
 
     /**
      * Register Console Controllers
-     * 
+     *
      */
     public function registerConsoleControllers()
     {
@@ -102,7 +102,7 @@ class RemoteBackup extends Plugin
 
     /**
      * Register Services
-     * 
+     *
      */
     public function registerServices()
     {
@@ -115,7 +115,7 @@ class RemoteBackup extends Plugin
 
     /**
      * Register Utilities
-     * 
+     *
      */
     public function registerUtilties()
     {
