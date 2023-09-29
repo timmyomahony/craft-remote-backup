@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.1.4 - 2023-09-29
+
+### Changed
+
+- Bumped remote core version
+
+### Fixed
+
+- Issue with volume interface button not disabling
+
 ## 4.1.3 - 2022-11-07
 
 ### Fixed

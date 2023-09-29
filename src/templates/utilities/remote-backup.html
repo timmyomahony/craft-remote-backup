@@ -55,7 +55,7 @@
                     disabled: not haveVolumes
                 } %}
                     {% block message %}
-                        {% if not haveVolumes %}<p class="light">{{ 'No volumes created yet'|t('remote-backup') }}</p>{% endif %}
+                        {% if not haveVolumes %}<p class="light">{{ 'No volumes are configured for this site'|t('remote-backup') }}</p>{% endif %}
                     {% endblock %}
                 {% endembed %}
                 {% if queueActive %}

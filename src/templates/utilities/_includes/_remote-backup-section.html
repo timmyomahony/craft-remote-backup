@@ -60,7 +60,7 @@
     <form class="rb-utilities-form" method="post">
         {{ csrfInput() }}
         <div class='rb-utilities-submit'>
-            <input class="btn submit {{ not disabled ? '' : 'disabled' }}" type="submit" value="{{ backupText }}">
+            <input class="btn submit {{ not disabled ? '' : 'disabled' }}" type="submit" value="{{ backupText }}" {% if disabled %}disabled{% endif %}>
             <div class="utility-status"></div>
         </div>
     </form>
