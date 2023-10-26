@@ -2,11 +2,11 @@
 
 ![Header image for plugin](/resources/img/remote-backup-plugin-header.png)
 
-📓 [**Read the Docs**](https://craft-plugins.timmyomahony.com/remote-backup) | 💳 [**Purchase via plugin store**](https://plugins.craftcms.com/remote-backup?craft4) | 🤷🏻‍♂️ [**Get help**](https://github.com/timmyomahony/craft-remote-backup/issues)
+📓 [Documentation](https://craft-plugins.timmyomahony.com/remote-backup) | 💳 [Purchase](https://plugins.craftcms.com/remote-backup?craft4) | 🤷🏻‍♂️ [Get help](https://github.com/timmyomahony/craft-remote-backup/issues)
 
-Remote Backup is a [Craft CMS](https://craftcms.com/) plugin that allows you to automaticaly backup your database and volumes to remote cloud destinations like AWS S3, Digital Ocean, Backblaze and more, giving you peace of mind when making sites updates, content changes or adding new features.
+Remote Backup is a Craft CMS plugin that allows you to automaticaly backup your database and volumes to remote cloud destinations like AWS S3, Digital Ocean, Backblaze and more, giving you peace of mind when making sites updates, content changes or adding new features.
 
-It provides a useful interface for *manually* backing up your data via the Craft CMS Control Panel utilites section:
+It provides a useful interface for manually backing up your data via the Craft CMS Control Panel utilites section:
 
 ![Craft Remote Backup Overview](resources/img/utilities-screenshot.jpg)
 
