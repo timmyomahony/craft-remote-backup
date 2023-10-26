@@ -4,7 +4,17 @@
 
 A [Craft CMS](https://craftcms.com/) plugin allowing you to automatically backup your database and volumes to remote cloud destinations like AWS S3, Digital Ocean, Backblaze and more.
 
+It provides a useful interface for manually backing up your data via the Craft CMS Control Panel utilites section:
+
 ![Craft Remote Backup Overview](resources/img/utilities-screenshot.jpg)
+
+Remote Backup also lets you create backups with custom CLI commands, for example:
+
+```bash
+./craft remote-backup/database/create
+```
+
+Together with [cron](https://en.wikipedia.org/wiki/Cron) these commands can be used to take totally automated backups.
 
 ## Features
 
