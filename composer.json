@@ -10,8 +10,8 @@
         "backup"
     ],
     "support": {
-        "docs": "https://github.com/weareferal/craft-remote-backup/blob/master/README.md",
-        "issues": "https://github.com/weareferal/craft-remote-backup/issues"
+        "docs": "https://craft-plugins.timmyomahony.com/remote-backup",
+        "issues": "https://github.com/timmyomahony/craft-remote-backup/issues"
     },
     "license": "proprietary",
     "authors": [
@@ -40,7 +40,7 @@
         "handle": "remote-backup",
         "hasCpSettings": true,
         "hasCpSection": false,
-        "changelogUrl": "https://raw.githubusercontent.com/weareferal/craft-remote-backup/master/CHANGELOG.md",
+        "changelogUrl": "https://raw.githubusercontent.com/timmyomahony/craft-remote-backup/master/CHANGELOG.md",
         "class": "weareferal\\remotebackup\\RemoteBackup"
     },
     "suggest": {
