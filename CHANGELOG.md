@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.1.6 - 2023-12-07
+
+### Added
+
+- Merged support for IAM profiles. See [Issue #44](https://github.com/timmyomahony/craft-remote-backup/issues/44).
+
+### Fixed
+
+- Simplified the regex to accept all characters in the system name & env. Hopefully avoiding further interface errors. See [Issue #49](https://github.com/timmyomahony/craft-remote-backup/issues/49)
+
 ## 4.1.5 - 2023-10-26
 
 ### Changed
