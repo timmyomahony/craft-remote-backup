@@ -1,5 +1,7 @@
 # Remote Backup Craft CMS Plugin
 
+🚨 **Craft 5 support is on the way (June 2024)**
+
 ![Header image for plugin](https://craft-plugins-cdn.timmyomahony.com/website/remote-backup/remote-backup-plugin-header.png)
 
 📓 [**Documentation**](https://craft-plugins.timmyomahony.com/remote-backup?utm_source=github&utm_campaign=documentation-launch) | 💳 [**Purchase**](https://plugins.craftcms.com/remote-backup?craft4) | 🤷🏻‍♂️ [**Get help**](https://craft-plugins.timmyomahony.com/remote-backup/docs/get-help)
