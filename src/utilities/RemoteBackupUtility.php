@@ -21,7 +21,7 @@ class RemoteBackupUtility extends Utility
         return 'remote-backup';
     }
 
-    public static function iconPath(): string|null
+    public static function icon(): string|null
     {
         return RemoteBackup::getInstance()->getBasePath() . DIRECTORY_SEPARATOR . 'utility-icon.svg';
     }
