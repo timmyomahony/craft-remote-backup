@@ -1,14 +1,4 @@
 {
-    "minimum-stability": "dev",
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../craft-remote-core",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "name": "weareferal/remote-backup",
     "description": "Backup your database and assets to a remote location",
     "type": "craft-plugin",
@@ -33,7 +23,7 @@
     "require": {
         "craftcms/cms": "^5.0.0",
         "php": "^8.0.2",
-        "weareferal/remote-core": "dev-main"
+        "weareferal/remote-core": "5.0.0"
     },
     "require-dev": {
         "phpstan/phpstan": "1.12.x-dev",
