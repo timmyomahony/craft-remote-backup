@@ -53,6 +53,7 @@ class RemoteBackupController extends Controller
                 "success" => true
             ]);
         } catch (\Exception $e) {
+            Craft::error($e->getTraceAsString(), __METHOD__);
             return $this->asFailure(
                 Craft::t('remote-backup', 'Test failed'),
                 [
