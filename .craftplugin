@@ -1,11 +1,11 @@
 {
     "pluginName": "Crate Remote Backup",
     "pluginDescription": "Backup your database and assets to a remote destination like S3",
-    "pluginVersion": "1.0.0",
+    "pluginVersion": "5.0.0",
     "pluginAuthorName": "Timmy O'Mahony",
     "pluginVendorName": "weareferal",
-    "pluginAuthorUrl": "https://weareferal.com",
-    "pluginAuthorGithub": "weareferal",
+    "pluginAuthorUrl": "https://craft-plugins.timmyomahony.com/remote-backup",
+    "pluginAuthorGithub": "timmyomahony",
     "codeComments": "yes",
     "pluginComponents": [
         "controllers",
