@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.1.7 - 2024-08-16
+
+### Fixed
+
+- Cleaned up logging. See Remote Backup [Issue #59](https://github.com/timmyomahony/craft-remote-backup/issues/59) and Remote Core [PR #25](https://github.com/timmyomahony/craft-remote-core/pull/25)
+
 ## 4.1.6 - 2023-12-07
 
 ### Added
