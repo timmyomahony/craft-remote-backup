@@ -10,7 +10,7 @@ class RemoteBackupUtilityAsset extends AssetBundle
 {
     public function init()
     {
-        $this->sourcePath = '@weareferal/remotebackup/assets/RemoteBackupUtility/dist';
+        $this->sourcePath = "@weareferal/remotebackup/assets/RemoteBackupUtility/dist";
 
         $this->depends = [
             CpAsset::class,
@@ -18,6 +18,10 @@ class RemoteBackupUtilityAsset extends AssetBundle
 
         $this->js = [
             'js/RemoteBackupUtility.js'
+        ];
+
+        $this->css = [
+            'css/RemoteBackupUtility.css',
         ];
 
         parent::init();

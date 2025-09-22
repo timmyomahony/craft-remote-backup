@@ -6,7 +6,6 @@ use Craft;
 use craft\base\Utility;
 
 use weareferal\remotebackup\assets\RemoteBackupUtility\RemoteBackupUtilityAsset;
-use weareferal\remotecore\assets\RemoteCoreUtility\RemoteCoreUtilityAsset;
 use weareferal\remotebackup\RemoteBackup;
 
 class RemoteBackupUtility extends Utility
@@ -29,7 +28,7 @@ class RemoteBackupUtility extends Utility
     public static function contentHtml(): string
     {
         $view = Craft::$app->getView();
-        $view->registerAssetBundle(RemoteCoreUtilityAsset::class);
+        $view->registerAssetBundle(RemoteBackupUtilityAsset::class);
         $view->registerAssetBundle(RemoteBackupUtilityAsset::class);
         $view->registerJs("new Craft.RemoteBackupUtility('rb-utilities-database')");
         $view->registerJs("new Craft.RemoteBackupUtility('rb-utilities-volumes')");

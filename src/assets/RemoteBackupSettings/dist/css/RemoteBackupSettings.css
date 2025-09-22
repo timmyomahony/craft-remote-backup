@@ -1,0 +1,11 @@
+.settings-rc-test-provider-modal {
+    overflow-y: auto;
+}
+
+.settings-rc-test-provider-modal pre {
+    padding: 10px;
+    border: 1px solid #e9eced;
+    background-color: #f2f2f2;
+    border-radius: 7px;
+    overflow-y: auto;
+}
