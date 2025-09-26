@@ -184,61 +184,6 @@ class GoogleDriveProvider extends ProviderService
         return $giantChunk;
     }
 
-    /**
-     * Download file
-     *
-     * https://developers.google.com/drive/api/v3/reference/files/get
-     *
-     * @param string $filename the filename to pull and restore
-     * @param string $localPath  the local absolute path to save the download
-     * @return boolean if download was successful
-     * @throws ProviderException if there was a Google API error downloading the file
-     * @throws ProviderException if there was an issue saving the file contents locally
-     * @since 1.0.0
-     */
-    public function pull($filename, $localPath)
-    {
-        $fileId = $this->getFileID($filename);
-        $service = new Google_Service_Drive($this->getClient());
-        $response = $service->files->get($fileId, [
-            'supportsAllDrives' => true,
-            'alt' => 'media'
-        ]);
-
-        try {
-            $out = fopen($localPath, "w+");
-            while (!$response->getBody()->eof()) {
-                fwrite($out, $response->getBody()->read(1024));
-            }
-            fclose($out);
-            return true;
-        } catch (\Exception $exception) {
-            // TODO make sure file deleted
-            throw new ProviderException("Couldn't save Google Drive file");
-        }
-
-        return false;
-    }
-
-    /**
-     * Delete a remote Google Drive file
-     *
-     * https://developers.google.com/drive/api/v3/reference/files/delete
-     *
-     * @param $filename string the filename to delete
-     * @return boolean if successful
-     * @throws ProviderException if there was an API error deleting the file
-     * @since 1.0.0
-     */
-    public function delete($filename)
-    {
-        $fileId = $this->getFileID($filename);
-        $service = new Google_Service_Drive($this->getClient());
-        $service->files->delete($fileId, [
-            'supportsAllDrives' => true
-        ]);
-        return true;
-    }
 
     /**
      * Get file ID

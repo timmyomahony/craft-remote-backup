@@ -109,55 +109,6 @@ class AWSProvider extends ProviderService
     }
 
     /**
-     * Pull a remote S3 file
-     *
-     * @since 1.0.0
-     */
-    public function pull($key, $localPath)
-    {
-        $client = $this->getClient();
-        $key = $this->getPrefixedKey($key);
-
-        Craft::info("AWS: Remote path: " . $key, "remote-backup");
-        Craft::info("AWS: Local path: " . $localPath, "remote-backup");
-
-        try {
-            $client->getObject([
-                'Bucket' => $this->getBucketName(),
-                'SaveAs' => $localPath,
-                'Key' => $key,
-            ]);
-        } catch (AwsException $exception) {
-            throw new ProviderException($this->createErrorMessage($exception));
-        }
-
-        return true;
-    }
-
-    /**
-     * Delete a remote S3 key
-     *
-     * @since 1.0.0
-     */
-    public function delete($key)
-    {
-        $client = $this->getClient();
-        $key = $this->getPrefixedKey($key);
-        $exists = $client->doesObjectExist($this->getBucketName(), $key);
-        if (!$exists) {
-            throw new ProviderException("File does not exist on AWS");
-        }
-        try {
-            $client->deleteObject([
-                'Bucket' => $this->getBucketName(),
-                'Key'    => $key
-            ]);
-        } catch (AwsException $exception) {
-            throw new ProviderException($this->createErrorMessage($exception));
-        }
-    }
-
-    /**
      * Return the AWS key, including any prefix folders
      *
      * @param string $key The key for the key
