@@ -3,8 +3,8 @@
 
 {{ forms.lightswitchField({
     first: true,
-    label: "Enabled"|t('remote-core'),
-    instructions: "Enable the plugin"|t('remote-core'),
+    label: "Enabled"|t('remote-backup'),
+    instructions: "Enable the plugin"|t('remote-backup'),
     name: 'enabled',
     id: 'enabled',
     on: settings.enabled,
@@ -15,7 +15,7 @@
 <hr>
 
 {{ forms.selectField({
-    label: "Cloud Provider"|t('remote-core'),
+    label: "Cloud Provider"|t('remote-backup'),
     id: 'cloudProvider',
     name: 'cloudProvider',
     options: [
@@ -34,8 +34,8 @@
 {# AWS #}
 <div class="provider provider-s3">
     {{ forms.autosuggestField({
-        label: "S3 Access Key"|t('remote-core'),
-        instructions: "The access key associated with your IAM user"|t('remote-core'),
+        label: "S3 Access Key"|t('remote-backup'),
+        instructions: "The access key associated with your IAM user"|t('remote-backup'),
         name: 's3AccessKey',
         id: 's3AccessKey',
         suggestEnvVars: true,
@@ -48,7 +48,7 @@
 
     {{ forms.autosuggestField({
         label: "S3 Secret Key",
-        instructions: "The secret key associated with your IAM user"|t('remote-core'),
+        instructions: "The secret key associated with your IAM user"|t('remote-backup'),
         name: 's3SecretKey',
         id: 's3SecretKey',
         suggestEnvVars: true,
@@ -60,8 +60,8 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "S3 Bucket Name"|t('remote-core'),
-        instructions: "The name of the S3 bucket you want to send backups to"|t('remote-core'),
+        label: "S3 Bucket Name"|t('remote-backup'),
+        instructions: "The name of the S3 bucket you want to send backups to"|t('remote-backup'),
         name: 's3BucketName',
         id: 's3BucketName',
         suggestEnvVars: true,
@@ -74,8 +74,8 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "S3 Region Name"|t('remote-core'),
-        instructions: "The AWS region your S3 bucket is in"|t('remote-core'),
+        label: "S3 Region Name"|t('remote-backup'),
+        instructions: "The AWS region your S3 bucket is in"|t('remote-backup'),
         name: 's3RegionName',
         id: 's3RegionName',
         suggestEnvVars: true,
@@ -88,8 +88,8 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "S3 Bucket Path"|t('remote-core'),
-        instructions: "A path within your S3 bucket to prefix your backups with. Do not include a leading or trailing slash"|t('remote-core'),
+        label: "S3 Bucket Path"|t('remote-backup'),
+        instructions: "A path within your S3 bucket to prefix your backups with. Do not include a leading or trailing slash"|t('remote-backup'),
         name: 's3BucketPath',
         id: 's3BucketPath',
         suggestEnvVars: true,
@@ -104,8 +104,8 @@
 {# Backblaze B2 #}
 <div class="provider provider-b2">
     {{ forms.autosuggestField({
-        label: "B2 Key ID"|t('remote-core'),
-        instructions: "Your Backblaze 'keyID'"|t('remote-core'),
+        label: "B2 Key ID"|t('remote-backup'),
+        instructions: "Your Backblaze 'keyID'"|t('remote-backup'),
         name: 'b2MasterKeyID',
         id: 'b2MasterKeyID',
         suggestEnvVars: true,
@@ -119,7 +119,7 @@
 
     {{ forms.autosuggestField({
         label: "B2 Application Key",
-        instructions: "Your Backblaze 'applicationKey'"|t('remote-core'),
+        instructions: "Your Backblaze 'applicationKey'"|t('remote-backup'),
         name: 'b2MasterAppKey',
         id: 'b2MasterAppKey',
         suggestEnvVars: true,
@@ -132,8 +132,8 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "B2 Region Name"|t('remote-core'),
-        instructions: "The region your B2 bucket is in"|t('remote-core'),
+        label: "B2 Region Name"|t('remote-backup'),
+        instructions: "The region your B2 bucket is in"|t('remote-backup'),
         name: 'b2RegionName',
         id: 'b2RegionName',
         suggestEnvVars: true,
@@ -146,8 +146,8 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "B2 Bucket Name"|t('remote-core'),
-        instructions: "The name of the B2 bucket you want to send backups to"|t('remote-core'),
+        label: "B2 Bucket Name"|t('remote-backup'),
+        instructions: "The name of the B2 bucket you want to send backups to"|t('remote-backup'),
         name: 'b2BucketName',
         id: 'b2BucketName',
         suggestEnvVars: true,
@@ -160,8 +160,8 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "B2 Bucket Path"|t('remote-core'),
-        instructions: "An optional path within your B2 bucket to prefix your backups with. Do not include a leading or trailing slash. [Learn more](https://github.com/weareferal/craft-remote-core/wiki/Backblaze-B2#optional-folder-path)"|t('remote-core'),
+        label: "B2 Bucket Path"|t('remote-backup'),
+        instructions: "An optional path within your B2 bucket to prefix your backups with. Do not include a leading or trailing slash. [Learn more](https://github.com/weareferal/craft-remote-backup/wiki/Backblaze-B2#optional-folder-path)"|t('remote-backup'),
         name: 'b2BucketPath',
         id: 'b2BucketPath',
         suggestEnvVars: true,
@@ -177,7 +177,7 @@
 <div class="provider provider-google">
     {{ forms.autosuggestField({
         label: "Google Drive Project Name",
-        instructions: "The name of your project in the Google Developer Console"|t('remote-core'),
+        instructions: "The name of your project in the Google Developer Console"|t('remote-backup'),
         name: 'googleProjectName',
         id: 'googleProjectName',
         suggestEnvVars: true,
@@ -189,8 +189,8 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "Google Drive Client ID"|t('remote-core'),
-        instructions: "The generated oauth client ID"|t('remote-core'),
+        label: "Google Drive Client ID"|t('remote-backup'),
+        instructions: "The generated oauth client ID"|t('remote-backup'),
         name: 'googleClientId',
         id: 'googleClientId',
         suggestEnvVars: true,
@@ -204,7 +204,7 @@
 
     {{ forms.autosuggestField({
         label: "Google Drive Client Secret",
-        instructions: "The generated oauth secret key"|t('remote-core'),
+        instructions: "The generated oauth secret key"|t('remote-backup'),
         name: 'googleClientSecret',
         id: 'googleClientSecret',
         suggestEnvVars: true,
@@ -218,7 +218,7 @@
 
     {{ forms.autosuggestField({
         label: "Google Drive Auth Redirect",
-        instructions: "The URL to redirect to after succesful oauth authentication"|t('remote-core'),
+        instructions: "The URL to redirect to after succesful oauth authentication"|t('remote-backup'),
         name: 'googleAuthRedirect',
         id: 'googleAuthRedirect',
         suggestEnvVars: true,
@@ -231,7 +231,7 @@
 
     {{ forms.autosuggestField({
         label: "Google Drive Folder ID",
-        instructions: "The ID for the folder you want to upload backups to (optional but recommended)"|t('remote-core'),
+        instructions: "The ID for the folder you want to upload backups to (optional but recommended)"|t('remote-backup'),
         name: 'googleDriveFolderId',
         id: 'googleDriveFolderId',
         suggestEnvVars: true,
@@ -252,7 +252,7 @@
 <div class="provider provider-dropbox">
     {{ forms.autosuggestField({
         label: "Dropbox App Key",
-        instructions: "You Dropbox app's app key"|t('remote-core'),
+        instructions: "You Dropbox app's app key"|t('remote-backup'),
         name: 'dropboxAppKey',
         id: 'dropboxAppKey',
         suggestEnvVars: true,
@@ -265,7 +265,7 @@
 
     {{ forms.autosuggestField({
         label: "Dropbox Secret Key",
-        instructions: "You Dropbox app's secret key"|t('remote-core'),
+        instructions: "You Dropbox app's secret key"|t('remote-backup'),
         name: 'dropboxSecretKey',
         id: 'dropboxSecretKey',
         suggestEnvVars: true,
@@ -278,7 +278,7 @@
 
     {{ forms.autosuggestField({
         label: "Dropbox Access Token",
-        instructions: "You Dropbox app's access token"|t('remote-core'),
+        instructions: "You Dropbox app's access token"|t('remote-backup'),
         name: 'dropboxAccessToken',
         id: 'dropboxAccessToken',
         suggestEnvVars: true,
@@ -291,7 +291,7 @@
 
     {{ forms.autosuggestField({
         label: "Dropbox Folder",
-        instructions: "An optional folder path within Dropbox to store backups. Must start with a slash but not end with one"|t('remote-core'),
+        instructions: "An optional folder path within Dropbox to store backups. Must start with a slash but not end with one"|t('remote-backup'),
         name: 'dropboxFolder',
         placeholder: '/craft-backups/my-backups',
         id: 'dropboxFolder',
@@ -378,8 +378,8 @@
 {# Other S3 compliant #}
 <div class="provider provider-other-s3">
     {{ forms.autosuggestField({
-        label: "Access Key"|t('remote-core'),
-        instructions: "The access key associated with your account"|t('remote-core'),
+        label: "Access Key"|t('remote-backup'),
+        instructions: "The access key associated with your account"|t('remote-backup'),
         name: 'otherS3AccessKey',
         id: 'otherS3AccessKey',
         suggestEnvVars: true,
@@ -393,7 +393,7 @@
 
     {{ forms.autosuggestField({
         label: "Secret Key",
-        instructions: "The secret key associated with your account"|t('remote-core'),
+        instructions: "The secret key associated with your account"|t('remote-backup'),
         name: 'otherS3SecretKey',
         id: 'otherS3SecretKey',
         suggestEnvVars: true,
@@ -406,8 +406,8 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "Endpoint"|t('remote-core'),
-        instructions: "The endpoint for the S3-compliant provider"|t('remote-core'),
+        label: "Endpoint"|t('remote-backup'),
+        instructions: "The endpoint for the S3-compliant provider"|t('remote-backup'),
         name: 'otherS3Endpoint',
         id: 'otherS3Endpoint',
         suggestEnvVars: true,
@@ -419,8 +419,8 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "Bucket Name"|t('remote-core'),
-        instructions: "The name of the bucket you want to send backups to"|t('remote-core'),
+        label: "Bucket Name"|t('remote-backup'),
+        instructions: "The name of the bucket you want to send backups to"|t('remote-backup'),
         name: 'otherS3BucketName',
         id: 'otherS3BucketName',
         suggestEnvVars: true,
@@ -433,8 +433,8 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "Region Name"|t('remote-core'),
-        instructions: "The region your bucket is in"|t('remote-core'),
+        label: "Region Name"|t('remote-backup'),
+        instructions: "The region your bucket is in"|t('remote-backup'),
         name: 'otherS3RegionName',
         id: 'otherS3RegionName',
         suggestEnvVars: true,
@@ -446,8 +446,8 @@
     }) }}
 
     {{ forms.autosuggestField({
-        label: "Bucket Path"|t('remote-core'),
-        instructions: "A path within your bucket to prefix your backups with. Do not include a leading or trailing slash"|t('remote-core'),
+        label: "Bucket Path"|t('remote-backup'),
+        instructions: "A path within your bucket to prefix your backups with. Do not include a leading or trailing slash"|t('remote-backup'),
         name: 'otherS3BucketPath',
         id: 'otherS3BucketPath',
         suggestEnvVars: true,
@@ -460,15 +460,15 @@
 </div>
 
 <div class="field last flex" style="align-items: center;">
-    <button id="rc-test-provider" type="button" class="btn" data-plugin-handle="{{ pluginHandle }}">{{ "Test connection"|t('remote-core') }}</button>
+    <button id="rc-test-provider" type="button" class="btn" data-plugin-handle="{{ pluginHandle }}">{{ "Test connection"|t('remote-backup') }}</button>
     <p class="instructions" style="margin: 0;"><small>Make sure to save your settings before testing.</small></p>
 </div>
 
 <hr>
 
 {{ forms.lightswitchField({
-    label: "Use Queue"|t('remote-core'),
-    instructions: "Use the built-in Craft queue for performing backup operations"|t('remote-core'),
+    label: "Use Queue"|t('remote-backup'),
+    instructions: "Use the built-in Craft queue for performing backup operations"|t('remote-backup'),
     name: 'useQueue',
     id: 'useQueue',
     on: settings.useQueue,
@@ -477,14 +477,14 @@
 }) }}
 
 {{ forms.textField({
-    label: "Queue 'Time To Reserve'"|t('remote-core'),
+    label: "Queue 'Time To Reserve'"|t('remote-backup'),
     type: "text",
-    instructions: "Max time for job execution"|t('remote-core'),
+    instructions: "Max time for job execution"|t('remote-backup'),
     name: 'queueTtr',
     id: 'queueTtr',
     value: settings.queueTtr,
     errors: settings.getErrors('queueTtr'),
-    warning: configWarning('queueTtr', 'remote-core')
+    warning: configWarning('queueTtr', 'remote-backup')
 }) }}
 
 <hr>
@@ -569,8 +569,8 @@
 <hr>
 
 {{ forms.lightswitchField({
-    label: "Hide Databases"|t('remote-core'),
-    instructions: "Hide the database section altogether from the utilities page"|t('remote-core'),
+    label: "Hide Databases"|t('remote-backup'),
+    instructions: "Hide the database section altogether from the utilities page"|t('remote-backup'),
     name: 'hideDatabases',
     id: 'hideDatabases',
     on: settings.hideDatabases,
@@ -579,8 +579,8 @@
 }) }}
 
 {{ forms.lightswitchField({
-    label: "Hide Volumes"|t('remote-core'),
-    instructions: "Hide the volumes section altogether from the utilities page"|t('remote-core'),
+    label: "Hide Volumes"|t('remote-backup'),
+    instructions: "Hide the volumes section altogether from the utilities page"|t('remote-backup'),
     name: 'hideVolumes',
     id: 'hideVolumes',
     on: settings.hideVolumes,
@@ -591,12 +591,12 @@
 <hr>
 
 {{ forms.textField({
-    label: "Display Date Format"|t('remote-core'),
+    label: "Display Date Format"|t('remote-backup'),
     type: "text",
-    instructions: "The date format to use to display files in the utilities section"|t('remote-core'),
+    instructions: "The date format to use to display files in the utilities section"|t('remote-backup'),
     name: 'displayDateFormat',
     id: 'displayDateFormat',
     value: settings.displayDateFormat,
     errors: settings.getErrors('displayDateFormat'),
-    warning: configWarning('displayDateFormat', 'remote-core')
+    warning: configWarning('displayDateFormat', 'remote-backup')
 }) }}

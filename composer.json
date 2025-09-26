@@ -23,23 +23,13 @@
   ],
   "require": {
     "craftcms/cms": "^5.0.0",
-    "php": "^8.0.2",
-    "weareferal/remote-core": "dev-craft-5"
+    "php": "^8.0.2"
   },
   "require-dev": {
     "phpstan/phpstan": "1.12.x-dev",
     "craftcms/phpstan": "dev-main",
     "craftcms/rector": "dev-main"
   },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../craft-remote-core",
-      "options": {
-        "symlink": true
-      }
-    }
-  ],
   "autoload": {
     "psr-4": {
       "weareferal\\remotebackup\\": "src/"

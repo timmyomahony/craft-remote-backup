@@ -3,6 +3,7 @@ namespace weareferal\remotebackup\services;
 
 use Craft;
 use craft\base\Component;
+use weareferal\remotebackup\exceptions\ProviderException;
 
 
 /**
@@ -34,6 +35,17 @@ class ProviderFactory extends Component {
                 $ProviderClass = \weareferal\remotebackup\services\providers\OtherS3Provider::class;
                 break;
         }
-        return new $ProviderClass($plugin);
+        try {
+            return new $ProviderClass($plugin);
+        } catch (\Error $e) {
+            // Check if it's a class not found error related to AWS SDK
+            if (strpos($e->getMessage(), 'Aws\\') !== false ||
+                strpos($e->getMessage(), 'Class \'Aws') !== false) {
+                throw new ProviderException("AWS SDK is required for Backblaze B2, Digital Ocean, and other S3-compatible providers. Please install it with: composer require aws/aws-sdk-php");
+            }
+            throw $e;
+        } catch (\Exception $e) {
+            throw new ProviderException("Failed to create provider: " . $e->getMessage());
+        }
     }
 }

@@ -101,7 +101,7 @@ class GoogleDriveProvider extends ProviderService
 
         $remote_files = [];
         foreach ($files as $file) {
-            Craft::info($file->getSize(), "remote-core");
+            Craft::info($file->getSize(), "remote-backup");
             array_push($remote_files, new RemoteFile($file->getName(), $file->getSize()));
         }
 

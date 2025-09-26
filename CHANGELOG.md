@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.1.0 - 2025-09-26
+
+### Changed
+
+- Consolidated the external `remote-core` module into the codebase, removing the necessity for an external depdency, making development easier.
+
 ## 5.0.0 - 2024-08-03
 
 ### Added

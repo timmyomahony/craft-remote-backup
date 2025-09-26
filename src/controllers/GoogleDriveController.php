@@ -9,6 +9,7 @@ use Craft;
 use craft\web\Controller;
 use craft\web\View;
 
+use weareferal\remotebackup\RemoteBackup;
 use weareferal\remotebackup\exceptions\ProviderException;
 
 
@@ -66,13 +67,13 @@ class GoogleDriveController extends Controller
         }
 
         if (!$isExpired) {
-            Craft::$app->session->setFlash('notice', Craft::t("remote-core", "Google Drive already authenticated"));
-            return $this->redirect("/admin/settings/plugins/remote-core");
+            Craft::$app->session->setFlash('notice', Craft::t("remote-backup", "Google Drive already authenticated"));
+            return $this->redirect("/admin/settings/plugins/remote-backup");
         }
 
         $externalOAuthUrl = $client->createAuthUrl();
 
-        return $this->renderTemplate('remote-core/google-drive/auth.twig', [
+        return $this->renderTemplate('remote-backup/google-drive/auth.twig', [
             'plugin' => $plugin,
             'url' => $externalOAuthUrl
         ], View::TEMPLATE_MODE_CP);
@@ -113,7 +114,7 @@ class GoogleDriveController extends Controller
         }
         file_put_contents($tokenPath, json_encode($client->getAccessToken()));
 
-        return $this->renderTemplate('remote-core/google-drive/auth-redirect.twig', [
+        return $this->renderTemplate('remote-backup/google-drive/auth-redirect.twig', [
             'plugin' => $plugin
         ], View::TEMPLATE_MODE_CP);
     }

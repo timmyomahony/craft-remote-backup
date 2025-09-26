@@ -62,10 +62,10 @@
         url: url,
         dataType: "json"
       }, function() {
-        Craft.cp.displayNotice(Craft.t('remote-core', 'Test succeeded'));
+        Craft.cp.displayNotice(Craft.t('remote-backup', 'Test succeeded'));
       }.bind(this))
         .fail(function(xhr) {
-          Craft.cp.displayError(Craft.t('remote-core', 'Test failed'));
+          Craft.cp.displayError(Craft.t('remote-backup', 'Test failed'));
           new TestFailedModal(xhr.responseJSON);
         }.bind(this))
         .always(function() {

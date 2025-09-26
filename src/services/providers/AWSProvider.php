@@ -57,20 +57,20 @@ class AWSProvider extends ProviderService
             $kwargs['Prefix'] = $this->getBucketPath();
         }
         Craft::info("Listing AWS objects");
-        Craft::info($kwargs, "remote-core");
+        Craft::info($kwargs, "remote-backup");
         $response = $client->listObjects($kwargs);
 
 
         $files = $response['Contents'];
         if (!$files) {
-            Craft::info("AWS: No files exist", "remote-core");
+            Craft::info("AWS: No files exist", "remote-backup");
             return [];
         }
 
         $remote_files = [];
         foreach ($files as $file) {
             if ($file['StorageClass'] == "STANDARD" && $file['Size'] > 0) {
-                Craft::info("File:".$file['Key'] ,"remote-core");
+                Craft::info("File:".$file['Key'] ,"remote-backup");
                 array_push($remote_files, new RemoteFile(basename($file['Key']), $file['Size']));
             }
         }
@@ -94,8 +94,8 @@ class AWSProvider extends ProviderService
         $pathInfo = pathinfo($path);
         $key = $this->getPrefixedKey($pathInfo['basename']);
 
-        Craft::info("AWS: Local path: " . $path, "remote-core");
-        Craft::info("AWS: Remote path: " . $key, "remote-core");
+        Craft::info("AWS: Local path: " . $path, "remote-backup");
+        Craft::info("AWS: Remote path: " . $key, "remote-backup");
 
         try {
             $uploader = new MultipartUploader($client, $path, [
@@ -118,8 +118,8 @@ class AWSProvider extends ProviderService
         $client = $this->getClient();
         $key = $this->getPrefixedKey($key);
 
-        Craft::info("AWS: Remote path: " . $key, "remote-core");
-        Craft::info("AWS: Local path: " . $localPath, "remote-core");
+        Craft::info("AWS: Remote path: " . $key, "remote-backup");
+        Craft::info("AWS: Local path: " . $localPath, "remote-backup");
 
         try {
             $client->getObject([
