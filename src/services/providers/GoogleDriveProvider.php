@@ -194,6 +194,26 @@ class GoogleDriveProvider extends ProviderService
     }
 
     /**
+     * Delete a remote Google Drive file
+     *
+     * https://developers.google.com/drive/api/v3/reference/files/delete
+     *
+     * @param $filename string the filename to delete
+     * @return boolean if successful
+     * @throws ProviderException if there was an API error deleting the file
+     * @since 1.0.0
+     */
+    public function delete($filename)
+    {
+        $fileId = $this->getFileID($filename);
+        $service = new Google_Service_Drive($this->getClient());
+        $service->files->delete($fileId, [
+            'supportsAllDrives' => true
+        ]);
+        return true;
+    }
+
+    /**
      * Get file ID
      *
      * Search for the file by filename across all drives in Google Drive

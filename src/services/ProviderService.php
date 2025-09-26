@@ -28,6 +28,7 @@ interface ProviderInterface
     public function isAuthenticated(): bool;
     public function list($filterExtensions): array;
     public function push($path);
+    public function delete($key);
 }
 
 
@@ -182,6 +183,34 @@ abstract class ProviderService extends Component implements ProviderInterface
         Craft::info("Volumes successfully pushed in : " . (string) (microtime(true) - $time)  . " seconds", "remote-backup");
 
         return $filename;
+    }
+
+    /**
+     * Delete Database
+     *
+     * Delete a remote database .sql file
+     *
+     * @param string The filename to delete
+     * @since 1.0.0
+     */
+    public function deleteDatabase($filename)
+    {
+        Craft::info("Deleting database: " . $filename, "remote-backup");
+        $this->delete($filename);
+    }
+
+    /**
+     * Delete Volume
+     *
+     * Delete a remote volume .zip file
+     *
+     * @param string The filename to delete
+     * @since 1.0.0
+     */
+    public function deleteVolume($filename)
+    {
+        Craft::info("Deleting volume: " . $filename, "remote-backup");
+        $this->delete($filename);
     }
 
     /**

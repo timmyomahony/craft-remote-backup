@@ -109,6 +109,29 @@ class AWSProvider extends ProviderService
     }
 
     /**
+     * Delete a remote S3 key
+     *
+     * @since 1.0.0
+     */
+    public function delete($key)
+    {
+        $client = $this->getClient();
+        $key = $this->getPrefixedKey($key);
+        $exists = $client->doesObjectExist($this->getBucketName(), $key);
+        if (!$exists) {
+            throw new ProviderException("File does not exist on AWS");
+        }
+        try {
+            $client->deleteObject([
+                'Bucket' => $this->getBucketName(),
+                'Key'    => $key
+            ]);
+        } catch (AwsException $exception) {
+            throw new ProviderException($this->createErrorMessage($exception));
+        }
+    }
+
+    /**
      * Return the AWS key, including any prefix folders
      *
      * @param string $key The key for the key

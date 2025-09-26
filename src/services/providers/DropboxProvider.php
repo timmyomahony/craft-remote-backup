@@ -93,6 +93,20 @@ class DropboxProvider extends ProviderService implements ProviderInterface
     }
 
     /**
+     * Delete a remote Dropbox file
+     *
+     * https://github.com/kunalvarma05/dropbox-php-sdk/wiki/Working-with-files#delete-filefolder
+     *
+     * @since 1.3.0
+     */
+    public function delete($filename)
+    {
+        $dstPath = $this->getDestinationPath($filename);
+        $dropbox = $this->getClient();
+        $dropbox->delete($dstPath);
+    }
+
+    /**
      * Return the destination file path, including any prefix folder. The
      * path must be of the format "/file.txt" or /folder/file.txt" (with a
      * opening slash)
