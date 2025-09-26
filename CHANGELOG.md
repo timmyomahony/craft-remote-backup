@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Consolidated the external `remote-core` module into the codebase, removing the necessity for an external depdency, making development easier.
 
+### Fixed
+
+- Addressed issue with AWS client being required, even when not being used
+
 ## 5.0.0 - 2024-08-03
 
 ### Added
