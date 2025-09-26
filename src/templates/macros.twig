@@ -1,0 +1,8 @@
+{% macro configWarning(setting, handle) -%}
+    {%- set configArray = craft.app.config.getConfigFromFile(handle) -%}
+    {%- if configArray[setting] is defined -%}
+        {{- "This is being overridden by the `#{setting}` setting in the `config/#{handle}.php` file." |raw }}
+    {%- else -%}
+        {{ false }}
+    {%- endif -%}
+{%- endmacro %}

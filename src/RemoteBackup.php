@@ -24,9 +24,9 @@ use yii\base\Event;
 use weareferal\remotebackup\utilities\RemoteBackupUtility;
 use weareferal\remotebackup\models\Settings;
 use weareferal\remotebackup\services\PruneService;
+use weareferal\remotebackup\services\ProviderFactory;
 
-use weareferal\remotecore\RemoteCoreHelper;
-use weareferal\remotecore\assets\RemoteCoreSettings\RemoteCoreSettingsAsset;
+use weareferal\remotebackup\assets\RemoteBackupSettings\RemoteBackupSettingsAsset;
 
 
 class RemoteBackup extends Plugin
@@ -41,8 +41,6 @@ class RemoteBackup extends Plugin
     {
         parent::init();
         self::$plugin = $this;
-
-        RemoteCoreHelper::registerModule();
 
         $this->registerServices();
         $this->registerURLs();
@@ -106,7 +104,8 @@ class RemoteBackup extends Plugin
      */
     public function registerServices()
     {
-        $provider = Craft::$app->getModule('remote-core')->providerFactory->create($this);
+        $factory = new ProviderFactory();
+        $provider = $factory->create($this);
         $this->setComponents([
             'provider' => $provider,
             'prune' => PruneService::class
@@ -138,8 +137,8 @@ class RemoteBackup extends Plugin
     protected function settingsHtml(): string
     {
         $view = Craft::$app->getView();
-        $view->registerAssetBundle(RemoteCoreSettingsAsset::class);
-        $view->registerJs("new Craft.RemoteCoreSettings('main-form');");
+        $view->registerAssetBundle(RemoteBackupSettingsAsset::class);
+        $view->registerJs("new Craft.RemoteBackupSettings('main-form');");
 
         $isAuthenticated = $this->provider->isAuthenticated();
         $isConfigured = $this->provider->isConfigured();

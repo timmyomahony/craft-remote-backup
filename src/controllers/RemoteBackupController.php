@@ -13,7 +13,7 @@ use weareferal\remotebackup\queue\CreateVolumeBackupJob;
 use weareferal\remotebackup\queue\PruneDatabaseBackupsJob;
 use weareferal\remotebackup\queue\PruneVolumeBackupsJob;
 
-use weareferal\remotecore\helpers\RemoteFile;
+use weareferal\remotebackup\helpers\RemoteFile;
 
 
 class RemoteBackupController extends Controller
@@ -34,8 +34,8 @@ class RemoteBackupController extends Controller
 
     /**
      * Test Provider
-     * 
-     * 
+     *
+     *
      * @since 4.1.0
      */
     public function actionTestProvider()
@@ -43,7 +43,7 @@ class RemoteBackupController extends Controller
         $this->requireCpRequest();
         $this->requirePermission('remotebackup');
         $this->requirePluginEnabled();
-        
+
         $plugin = RemoteBackup::getInstance();
 
         try {
@@ -92,7 +92,7 @@ class RemoteBackupController extends Controller
         $this->requirePermission('remotebackup');
         $this->requirePluginEnabled();
         $this->requirePluginConfigured();
-        
+
         $plugin = RemoteBackup::getInstance();
         $settings = $plugin->getSettings();
 
