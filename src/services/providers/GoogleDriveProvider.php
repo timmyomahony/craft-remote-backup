@@ -84,6 +84,7 @@ class GoogleDriveProvider extends ProviderService
             $q = "'${googleDriveFolderId}' in parents and " . $q;
         }
 
+
         $params = array(
             'corpora' => 'allDrives',
             'includeItemsFromAllDrives' => true,
@@ -93,6 +94,11 @@ class GoogleDriveProvider extends ProviderService
             'fields' => 'files(name, size)'
         );
 
+        Craft::info("Listing files on Google Drive");
+        Craft::info("Google Drive folder ID: [".$googleDriveFolderId."]", "remote-backup");
+        Craft::info("Google Drive query: [".$q."]", "remote-backup");
+        Craft::info("Google Drive files:'".$q."'", "remote-backup");
+
         try {
             $files = $service->files->listFiles($params);
         } catch (Google_Exception $exception) {
@@ -101,7 +107,7 @@ class GoogleDriveProvider extends ProviderService
 
         $remote_files = [];
         foreach ($files as $file) {
-            Craft::info($file->getSize(), "remote-backup");
+            Craft::info(" - ".$file->getName(), "remote-backup");
             array_push($remote_files, new RemoteFile($file->getName(), $file->getSize()));
         }
 
@@ -128,6 +134,9 @@ class GoogleDriveProvider extends ProviderService
 
         // Set chunk size
         $chunkSizeBytes = 1 * 1024 * 1024;
+
+        Craft::info("Pushing file to Google Drive");
+        Craft::info("Google Drive remote file path: [".$googleDriveFolderId."/".$driveFile->getName()."]", "remote-backup");
 
         // Call the API with the media upload, defer so it doesn't immediately return.
         $client = $this->getClient();
