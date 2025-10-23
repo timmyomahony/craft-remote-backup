@@ -143,7 +143,9 @@ class GoogleDriveProvider extends ProviderService
         $client->setDefer(true);
         $client->setUseBatch(true);
         $service = new Google_Service_Drive($client);
-        $request = $service->files->create($driveFile);
+        $request = $service->files->create($driveFile, [
+            'supportsAllDrives' => true
+        ]);
 
         // Create a media file upload to represent our upload process.
         $media = new \Google\Http\MediaFileUpload(
@@ -271,7 +273,7 @@ class GoogleDriveProvider extends ProviderService
     function getClient(): Google_Client
     {
         $client = new Google_Client();
-        $client->setScopes(Google_Service_Drive::DRIVE_FILE);
+        $client->setScopes(Google_Service_Drive::DRIVE);
         $config = [
             'client_id' => Craft::parseEnv($this->plugin->settings->googleClientId),
             "project_id" => Craft::parseEnv($this->plugin->settings->googleProjectName),
