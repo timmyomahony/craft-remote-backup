@@ -20,5 +20,5 @@
 
 {% block content %}
     <p>{{ "Access token successfully saved."|t }}</p>
-    <p><a href="/admin/settings/plugins/remote-backup" class="btn submit">Back to settings</a></p>
+    <p><a href="/{{ craft.app.config.general.cpTrigger }}/settings/plugins/remote-backup" class="btn submit">Back to settings</a></p>
 {% endblock %}

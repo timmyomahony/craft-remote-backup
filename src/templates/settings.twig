@@ -243,7 +243,7 @@
 
     {% if isConfigured and not isAuthenticated %}
         <div>
-            <a href="/admin/{{ pluginHandle }}/google-drive/auth" class="btn">{{"Authenticate with Google Drive"|t}}</a>
+            <a href="/{{ craft.app.config.general.cpTrigger }}/{{ pluginHandle }}/google-drive/auth" class="btn">{{"Authenticate with Google Drive"|t}}</a>
         </div>
     {% endif %}
 </div>

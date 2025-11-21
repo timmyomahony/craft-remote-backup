@@ -68,7 +68,8 @@ class GoogleDriveController extends Controller
 
         if (!$isExpired) {
             Craft::$app->session->setFlash('notice', Craft::t("remote-backup", "Google Drive already authenticated"));
-            return $this->redirect("/admin/settings/plugins/remote-backup");
+            $cpTrigger = Craft::$app->config->general->cpTrigger;
+            return $this->redirect("/" . $cpTrigger . "/settings/plugins/remote-backup");
         }
 
         $externalOAuthUrl = $client->createAuthUrl();

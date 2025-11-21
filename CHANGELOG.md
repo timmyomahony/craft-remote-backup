@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.2.2] - 2025-11-21
+
+### Fixed
+
+- Issue with hard-coded 'admin' strings addressed
+
 ## [5.2.1] - 2025-10-23
 
 ### Fixed
