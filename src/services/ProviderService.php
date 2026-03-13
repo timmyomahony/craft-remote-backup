@@ -80,11 +80,7 @@ abstract class ProviderService extends Component implements ProviderInterface
     public function listDatabases(): array
     {
         Craft::info("Listing databases", "remote-backup");
-        $sqlZipFiles = $this->list(".sql.zip");
-        $sqlFiles = $this->list(".sql");
-        
-        // Merge both file types
-        $remote_files = array_merge($sqlZipFiles, $sqlFiles);
+        $remote_files = $this->list(".sql");
         return RemoteFile::sort($remote_files);
     }
 
@@ -98,12 +94,6 @@ abstract class ProviderService extends Component implements ProviderInterface
     {
         Craft::info("Listing volumes", "remote-backup");
         $remote_files = $this->list(".zip");
-        
-        // Filter out .sql.zip files
-        $remote_files = array_filter($remote_files, function($file) {
-            return !str_ends_with($file->filename, ".sql.zip");
-        });
-        
         return RemoteFile::sort($remote_files);
     }
 
@@ -353,12 +343,7 @@ abstract class ProviderService extends Component implements ProviderInterface
     {
         $path = $this->getLocalDir() . DIRECTORY_SEPARATOR . $filename . '.sql';
         Craft::$app->getDb()->backupTo($path);
-
-        // Zip it up and delete the SQL file
-        $zipPath = FileHelper::zip($path);
-        unlink($path);
-
-        return $zipPath;
+        return $path;
     }
 
     /**
