@@ -343,7 +343,12 @@ abstract class ProviderService extends Component implements ProviderInterface
     {
         $path = $this->getLocalDir() . DIRECTORY_SEPARATOR . $filename . '.sql';
         Craft::$app->getDb()->backupTo($path);
-        return $path;
+
+        // Zip it up and delete the SQL file
+        $zipPath = FileHelper::zip($path);
+        unlink($path);
+
+        return $zipPath;
     }
 
     /**
